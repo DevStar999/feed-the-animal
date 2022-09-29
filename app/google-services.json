@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "275989011693",
+    "project_id": "feed-the-animal-afe03",
+    "storage_bucket": "feed-the-animal-afe03.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:275989011693:android:07e164ffaef99101cf00e4",
+        "android_client_info": {
+          "package_name": "com.nerdcoredevelopment.inappbillingdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "275989011693-d8v1rqmdce0sv57r55h499ocsucg0o94.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nerdcoredevelopment.inappbillingdemo",
+            "certificate_hash": "26af4727096de680a2deaa8f78b17fda045a7a67"
+          }
+        },
+        {
+          "client_id": "275989011693-2nuh0o4g0t147p4gqc6g89l6h2370o84.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCvxLbNYVd3LxU-E7djJFEIZTUwsyVpGU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "275989011693-2nuh0o4g0t147p4gqc6g89l6h2370o84.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
