@@ -7,5 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
     <color name="transparent_color">@android:color/transparent</color>
+    <!-- Current opacity for following color = 75% i.e. in hex = BF -->
+    <color name="white_translucent_splash_screen">#BFFFFFFF</color>
+    <!-- Current opacity for following color = 40% i.e. in hex = 66 -->
+    <color name="white_dialog_background_translucent">#66FFFFFF</color>
 </resources>
