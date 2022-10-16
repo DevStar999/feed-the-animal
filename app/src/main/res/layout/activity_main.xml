@@ -17,29 +17,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/barn_outdoor" />
 
-    <TextView
-        android:id="@+id/itemName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:scrollHorizontally="false"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/itemPrice"
-        app:layout_constraintEnd_toStartOf="@+id/itemPrice"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/itemPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:scrollHorizontally="false"
-        android:text="Button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

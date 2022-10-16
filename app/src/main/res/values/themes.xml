@@ -11,8 +11,8 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Customize your theme here. -->
         <item name="colorBackgroundFloating">@color/white_dialog_background_translucent</item>
-        <item name="android:statusBarColor">@color/white</item>
-        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:statusBarColor">@color/transparent_color</item>
+        <item name="android:navigationBarColor">@color/transparent_color</item>
         <item name="android:windowBackground">@color/white</item>
     </style>
 
