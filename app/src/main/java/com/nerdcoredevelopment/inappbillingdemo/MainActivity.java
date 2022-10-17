@@ -10,8 +10,15 @@ import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-public class MainActivity extends AppCompatActivity {
-    private void initialise() {}
+import com.nerdcoredevelopment.inappbillingdemo.fragment.NavigationFragment;
+
+public class MainActivity extends AppCompatActivity implements
+        NavigationFragment.OnNavigationFragmentInteractionListener {
+    private NavigationFragment navigationFragment;
+
+    private void initialise() {
+        navigationFragment = new NavigationFragment();
+    }
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -46,6 +53,10 @@ public class MainActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
         initialise();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.navigation_fragment_container, navigationFragment)
+                .commit();
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -65,5 +76,16 @@ public class MainActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            // Back button was pressed from activity, do nothing as we want to eliminate this option
+            // to exit from the homepage
+        } else {
+            // Back button was pressed from fragment
+            getSupportFragmentManager().popBackStack();
+        }
     }
 }
