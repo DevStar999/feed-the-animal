@@ -3,6 +3,7 @@ package com.nerdcoredevelopment.inappbillingdemo;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -10,11 +11,21 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.nerdcoredevelopment.inappbillingdemo.fragment.FarmerFragment;
+import com.nerdcoredevelopment.inappbillingdemo.fragment.FeedingFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.NavigationFragment;
+import com.nerdcoredevelopment.inappbillingdemo.fragment.SettingsFragment;
+import com.nerdcoredevelopment.inappbillingdemo.fragment.ShopFragment;
 
 public class MainActivity extends AppCompatActivity implements
-        NavigationFragment.OnNavigationFragmentInteractionListener {
+        NavigationFragment.OnNavigationFragmentInteractionListener,
+        FarmerFragment.OnFarmerFragmentInteractionListener,
+        FeedingFragment.OnFeedingFragmentInteractionListener,
+        SettingsFragment.OnSettingsFragmentInteractionListener,
+        ShopFragment.OnShopFragmentInteractionListener {
     private NavigationFragment navigationFragment;
 
     private void initialise() {
@@ -82,8 +93,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            // Back button was pressed from activity, do nothing as we want to eliminate this option
-            // to exit from the homepage
+            super.onBackPressed();
         } else {
             // Back button was pressed from fragment
             getSupportFragmentManager().popBackStack();
@@ -91,22 +101,50 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onNavigationFragmentFeedAnimalsClicked() {
-        Toast.makeText(this, "Feed Animals Clicked", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void onNavigationFragmentMeetTheFarmerClicked() {
-        Toast.makeText(this, "Meet The Farmer Clicked", Toast.LENGTH_SHORT).show();
+        FarmerFragment fragment = new FarmerFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right,
+                R.anim.enter_from_right, R.anim.exit_to_right);
+        transaction.addToBackStack(null);
+        transaction.add(R.id.full_screen_fragment_container_main_activity,
+                fragment, "FARMER_FRAGMENT").commit();
     }
 
     @Override
-    public void onNavigationFragmentShopFeedClicked() {
-        Toast.makeText(this, "Shop Feed Clicked", Toast.LENGTH_SHORT).show();
+    public void onNavigationFragmentFeedAnimalsClicked() {
+        FeedingFragment fragment = new FeedingFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right,
+                R.anim.enter_from_right, R.anim.exit_to_right);
+        transaction.addToBackStack(null);
+        transaction.add(R.id.full_screen_fragment_container_main_activity,
+                fragment, "FEEDING_FRAGMENT").commit();
     }
 
     @Override
     public void onNavigationFragmentSettingsClicked() {
-        Toast.makeText(this, "Settings Clicked", Toast.LENGTH_SHORT).show();
+        SettingsFragment fragment = new SettingsFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right,
+                R.anim.enter_from_right, R.anim.exit_to_right);
+        transaction.addToBackStack(null);
+        transaction.add(R.id.full_screen_fragment_container_main_activity,
+                fragment, "SETTINGS_FRAGMENT").commit();
+    }
+
+    @Override
+    public void onNavigationFragmentShopFeedClicked() {
+        ShopFragment fragment = new ShopFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right,
+                R.anim.enter_from_right, R.anim.exit_to_right);
+        transaction.addToBackStack(null);
+        transaction.add(R.id.full_screen_fragment_container_main_activity,
+                fragment, "SHOP_FRAGMENT").commit();
     }
 }
