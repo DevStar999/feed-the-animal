@@ -90,7 +90,7 @@ public class NavigationFragment extends Fragment {
             mListener = (OnNavigationFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnNavigationFragmentInteractionListener");
         }
     }
 
