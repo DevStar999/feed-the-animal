@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements
         initialise();
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.navigation_fragment_container, navigationFragment)
+                .replace(R.id.navigation_fragment_container_main_activity, navigationFragment)
                 .commit();
     }
 
@@ -87,5 +88,25 @@ public class MainActivity extends AppCompatActivity implements
             // Back button was pressed from fragment
             getSupportFragmentManager().popBackStack();
         }
+    }
+
+    @Override
+    public void onNavigationFragmentFeedAnimalsClicked() {
+        Toast.makeText(this, "Feed Animals Clicked", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNavigationFragmentMeetTheFarmerClicked() {
+        Toast.makeText(this, "Meet The Farmer Clicked", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNavigationFragmentShopFeedClicked() {
+        Toast.makeText(this, "Shop Feed Clicked", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNavigationFragmentSettingsClicked() {
+        Toast.makeText(this, "Settings Clicked", Toast.LENGTH_SHORT).show();
     }
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 
 import com.nerdcoredevelopment.inappbillingdemo.R;
@@ -34,11 +35,52 @@ public class NavigationFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_navigation, container, false);
 
+        AppCompatTextView feedAnimalsTextView = view.findViewById(R.id.feed_animals_navigation_fragment);
+        AppCompatTextView meetTheFarmerTextView = view.findViewById(R.id.meet_the_farmer_navigation_fragment);
+        AppCompatTextView shopFeedTextView = view.findViewById(R.id.shop_feed_navigation_fragment);
+        AppCompatTextView settingsTextView = view.findViewById(R.id.settings_navigation_fragment);
+
+        feedAnimalsTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null) {
+                    mListener.onNavigationFragmentFeedAnimalsClicked();
+                }
+            }
+        });
+        meetTheFarmerTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null) {
+                    mListener.onNavigationFragmentMeetTheFarmerClicked();
+                }
+            }
+        });
+        shopFeedTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null) {
+                    mListener.onNavigationFragmentShopFeedClicked();
+                }
+            }
+        });
+        settingsTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null) {
+                    mListener.onNavigationFragmentSettingsClicked();
+                }
+            }
+        });
+
         return view;
     }
 
     public interface OnNavigationFragmentInteractionListener {
-
+        void onNavigationFragmentFeedAnimalsClicked();
+        void onNavigationFragmentMeetTheFarmerClicked();
+        void onNavigationFragmentShopFeedClicked();
+        void onNavigationFragmentSettingsClicked();
     }
 
     @Override

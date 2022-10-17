@@ -13,4 +13,6 @@
     <color name="white_translucent_splash_screen">#BFFFFFFF</color>
     <!-- Current opacity for following color = 40% i.e. in hex = 66 -->
     <color name="white_dialog_background_translucent">#66FFFFFF</color>
+    <color name="brown_dark">#7B3F00</color>
+    <color name="brown_light">#C4A484</color>
 </resources>
