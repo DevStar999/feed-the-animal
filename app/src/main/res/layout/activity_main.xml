@@ -10,7 +10,7 @@
         android:id="@+id/barn_imageview_main_activity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleX="1.5"
+        android:scaleX="1.4"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
