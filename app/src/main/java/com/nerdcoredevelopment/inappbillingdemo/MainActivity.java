@@ -147,4 +147,9 @@ public class MainActivity extends AppCompatActivity implements
         transaction.add(R.id.full_screen_fragment_container_main_activity,
                 fragment, "SHOP_FRAGMENT").commit();
     }
+
+    @Override
+    public void onFeedingFragmentInteractionBackClicked() {
+        onBackPressed();
+    }
 }
