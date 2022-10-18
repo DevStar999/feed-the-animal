@@ -19,6 +19,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/barn_indoor" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_guide_left_1_fragment_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.10" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_guide_right_1_fragment_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.90" />
+
     <FrameLayout
         android:id="@+id/settings_fragment_title_frame_layout"
         android:layout_width="match_parent"
@@ -52,5 +66,167 @@
             android:padding="6dp"
             app:srcCompat="@drawable/back_arrow" />
     </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/game_options_pregame_fragment_linear_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="20dp"
+        android:divider="@drawable/gap_vertical_settings"
+        android:background="@drawable/rounded_corner_settings_menu"
+        android:orientation="vertical"
+        android:showDividers="middle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/vertical_guide_right_1_fragment_settings"
+        app:layout_constraintStart_toStartOf="@id/vertical_guide_left_1_fragment_settings"
+        app:layout_constraintTop_toBottomOf="@id/settings_fragment_title_frame_layout">
+
+        <LinearLayout
+            android:id="@+id/facebook_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/click_settings_button"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/facebook_icon_image_view"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="12dp"
+                app:srcCompat="@drawable/settings_facebook_icon" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/facebook_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Like Us"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/instagram_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/click_settings_button"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/instagram_icon_image_view"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="12dp"
+                app:srcCompat="@drawable/settings_instagram_icon" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/instagram_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Follow Us"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/twitter_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/click_settings_button"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/twitter_icon_image_view"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="12dp"
+                app:srcCompat="@drawable/settings_twitter_icon" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/twitter_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Follow Us"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/privacy_policy_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/click_settings_button"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/privacy_policy_icon_image_view"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="12dp"
+                app:srcCompat="@drawable/settings_privacy_icon" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/privacy_policy_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Privacy Policy"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/feedback_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/click_settings_button"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/feedback_icon_image_view"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="12dp"
+                app:srcCompat="@drawable/settings_feedback_icon" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/feedback_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Feedback"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

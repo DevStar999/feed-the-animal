@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Source Link -> https://www.svgrepo.com/svg/341930/instagram -->
+
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M12,16C14.209,16 16,14.209 16,12C16,9.791 14.209,8 12,8C9.791,8 8,9.791 8,12C8,14.209 9.791,16 12,16Z"
+        android:strokeWidth="1.5"
+        android:strokeColor="@color/white"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M3,16V8C3,5.239 5.239,3 8,3H16C18.761,3 21,5.239 21,8V16C21,18.761 18.761,21 16,21H8C5.239,21 3,18.761 3,16Z"
+        android:strokeWidth="1.5"
+        android:strokeColor="@color/white" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M17.5,6.51L17.51,6.499"
+        android:strokeWidth="1.5"
+        android:strokeColor="@color/white"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>
