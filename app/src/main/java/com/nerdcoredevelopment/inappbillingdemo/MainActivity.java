@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -164,5 +165,22 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onShopFragmentInteractionBackClicked() {
         onBackPressed();
+    }
+    
+    @Override
+    public void onShopFragmentInteractionPurchaseOptionClicked(int purchaseOptionViewId) {
+        if (purchaseOptionViewId == R.id.shop_feed_level1_constraint_layout
+                || purchaseOptionViewId == R.id.shop_feed_level1_purchase_button) {
+            Toast.makeText(MainActivity.this, "Shop Option 1 Clicked", Toast.LENGTH_SHORT).show();
+        } else if (purchaseOptionViewId == R.id.shop_feed_level2_constraint_layout
+                || purchaseOptionViewId == R.id.shop_feed_level2_purchase_button) {
+            Toast.makeText(MainActivity.this, "Shop Option 2 Clicked", Toast.LENGTH_SHORT).show();
+        } else if (purchaseOptionViewId == R.id.shop_feed_level3_constraint_layout
+                || purchaseOptionViewId == R.id.shop_feed_level3_purchase_button) {
+            Toast.makeText(MainActivity.this, "Shop Option 3 Clicked", Toast.LENGTH_SHORT).show();
+        } else if (purchaseOptionViewId == R.id.shop_feed_level4_constraint_layout
+                || purchaseOptionViewId == R.id.shop_feed_level4_purchase_button) {
+            Toast.makeText(MainActivity.this, "Shop Option 4 Clicked", Toast.LENGTH_SHORT).show();
+        }
     }
 }
