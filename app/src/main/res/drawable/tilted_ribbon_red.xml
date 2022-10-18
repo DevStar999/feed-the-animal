@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="100dp"
+    android:width="100dp"
+    android:viewportHeight="100"
+    android:viewportWidth="100">
+    <!-- Source -> Custom made with reference from stackoverflow.com -->
+
+    <!-- This path tag is for -> Left-top triangle -->
+    <path
+        android:fillColor="#EE4B2B"
+        android:pathData="M 0,0 L 100,0 0,100 z" />
+
+    <!-- This path tag is for -> Right-bottom triangle -->
+    <path
+        android:fillColor="@color/transparent_color"
+        android:pathData="M 100,0 L 0,100 100,100 z" />
+</vector>

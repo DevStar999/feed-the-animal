@@ -68,7 +68,7 @@
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/game_options_pregame_fragment_linear_layout"
+        android:id="@+id/settings_buttons_fragment_linear_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingHorizontal="24dp"

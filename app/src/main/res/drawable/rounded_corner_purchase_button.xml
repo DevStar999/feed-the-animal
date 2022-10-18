@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- For start to end colors:
+         (1) Angle 0 = Left to Right
+         (2) Angle 45 = Left Bottom to Right Top
+         (3) Angle 90 = Bottom to Top
+         (4) Angle 135 = Right Bottom to Left Top
+         (5) Angle 180 = Right to Left
+         (6) Angle 225 = Right Top to Left Bottom
+         (7) Angle 270 = Top to Bottom
+         (8) Angle 315 = Left Top to Right Bottom -->
+    <gradient
+        android:startColor="@color/malachite_green"
+        android:endColor="@color/spotify_green"
+        android:angle="270" />
+
+    <corners android:radius="8dp" />
+</shape>

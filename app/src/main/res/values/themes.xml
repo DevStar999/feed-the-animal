@@ -33,4 +33,12 @@
         <item name="android:windowEnterAnimation">@anim/open_dialog</item>
         <item name="android:windowExitAnimation">@anim/close_dialog</item>
     </style>
+
+    <style name="RoundedCornerTiltedRibbon">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">8dp</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
 </resources>
