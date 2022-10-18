@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 
 import com.nerdcoredevelopment.inappbillingdemo.R;
@@ -34,10 +35,22 @@ public class ShopFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_shop, container, false);
 
+        AppCompatImageView backButton = view.findViewById(R.id.title_back_shop_fragment_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null) {
+                    mListener.onShopFragmentInteractionBackClicked();
+                }
+            }
+        });
+
         return view;
     }
 
-    public interface OnShopFragmentInteractionListener {}
+    public interface OnShopFragmentInteractionListener {
+        void onShopFragmentInteractionBackClicked();
+    }
 
     @Override
     public void onAttach(Context context) {

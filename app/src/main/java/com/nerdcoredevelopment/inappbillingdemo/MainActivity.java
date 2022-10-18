@@ -3,11 +3,9 @@ package com.nerdcoredevelopment.inappbillingdemo;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -149,7 +147,22 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onFarmerFragmentInteractionBackClicked() {
+        onBackPressed();
+    }
+
+    @Override
     public void onFeedingFragmentInteractionBackClicked() {
+        onBackPressed();
+    }
+
+    @Override
+    public void onSettingsFragmentInteractionBackClicked() {
+        onBackPressed();
+    }
+
+    @Override
+    public void onShopFragmentInteractionBackClicked() {
         onBackPressed();
     }
 }
