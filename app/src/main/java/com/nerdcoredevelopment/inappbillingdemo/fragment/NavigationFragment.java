@@ -35,10 +35,10 @@ public class NavigationFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_navigation, container, false);
 
-        AppCompatTextView feedAnimalsTextView = view.findViewById(R.id.feed_animals_navigation_fragment);
-        AppCompatTextView meetTheFarmerTextView = view.findViewById(R.id.meet_the_farmer_navigation_fragment);
-        AppCompatTextView shopFeedTextView = view.findViewById(R.id.shop_feed_navigation_fragment);
-        AppCompatTextView settingsTextView = view.findViewById(R.id.settings_navigation_fragment);
+        AppCompatTextView feedAnimalsTextView = view.findViewById(R.id.feed_animals_text_view_navigation_fragment);
+        AppCompatTextView meetTheFarmerTextView = view.findViewById(R.id.meet_the_farmer_text_view_navigation_fragment);
+        AppCompatTextView shopFeedTextView = view.findViewById(R.id.shop_feed_text_view_navigation_fragment);
+        AppCompatTextView settingsTextView = view.findViewById(R.id.settings_text_view_navigation_fragment);
 
         feedAnimalsTextView.setOnClickListener(new View.OnClickListener() {
             @Override

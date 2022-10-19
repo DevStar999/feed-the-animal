@@ -8,86 +8,68 @@
     android:orientation="vertical"
     tools:context=".fragment.NavigationFragment">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/vertical_guide_left_1_navigation_fragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.1" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/vertical_guide_right_1_navigation_fragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.9" />
-
     <LinearLayout
+        android:id="@+id/navigation_buttons_fragment_linear_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corner_menu"
+        android:divider="@drawable/gap_vertical_settings"
         android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="20dp"
         android:showDividers="middle"
-        android:divider="@drawable/gap_vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/vertical_guide_right_1_navigation_fragment"
-        app:layout_constraintStart_toStartOf="@id/vertical_guide_left_1_navigation_fragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/feed_animals_navigation_fragment"
+            android:id="@+id/feed_animals_text_view_navigation_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="10dp"
-            android:scrollHorizontally="false"
+            android:padding="16dp"
             android:background="@drawable/click_navigation_button"
-            android:layout_gravity="center"
             android:text="FEED ANIMALS"
             android:textAlignment="center"
-            android:textColor="@color/brown_dark"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="normal" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/meet_the_farmer_navigation_fragment"
+            android:id="@+id/meet_the_farmer_text_view_navigation_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="10dp"
-            android:scrollHorizontally="false"
+            android:padding="16dp"
             android:background="@drawable/click_navigation_button"
-            android:layout_gravity="center"
             android:text="MEET THE FARMER"
             android:textAlignment="center"
-            android:textColor="@color/brown_dark"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="normal" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/shop_feed_navigation_fragment"
+            android:id="@+id/shop_feed_text_view_navigation_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="10dp"
-            android:scrollHorizontally="false"
+            android:padding="16dp"
             android:background="@drawable/click_navigation_button"
-            android:layout_gravity="center"
             android:text="SHOP FEED"
             android:textAlignment="center"
-            android:textColor="@color/brown_dark"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="normal" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/settings_navigation_fragment"
+            android:id="@+id/settings_text_view_navigation_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="10dp"
-            android:scrollHorizontally="false"
+            android:padding="16dp"
             android:background="@drawable/click_navigation_button"
-            android:layout_gravity="center"
             android:text="SETTINGS"
             android:textAlignment="center"
-            android:textColor="@color/brown_dark"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="normal" />
 
     </LinearLayout>
 

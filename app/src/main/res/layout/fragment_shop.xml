@@ -61,7 +61,7 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="20dp"
         android:divider="@drawable/gap_vertical_settings"
-        android:background="@drawable/rounded_corner_settings_menu"
+        android:background="@drawable/rounded_corner_menu"
         android:orientation="vertical"
         android:showDividers="middle"
         app:layout_constraintBottom_toBottomOf="parent"
