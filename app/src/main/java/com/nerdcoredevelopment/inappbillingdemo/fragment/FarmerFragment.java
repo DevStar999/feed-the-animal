@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
@@ -13,6 +14,8 @@ import com.nerdcoredevelopment.inappbillingdemo.R;
 
 public class FarmerFragment extends Fragment {
     private OnFarmerFragmentInteractionListener mListener;
+    private AppCompatImageView backButton;
+    private LinearLayout aboutFarmerLinearLayout;
 
     public FarmerFragment() {
         // Required empty public constructor
@@ -21,6 +24,25 @@ public class FarmerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    private void settingOnClickListeners() {
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null) {
+                    mListener.onFarmerFragmentInteractionBackClicked();
+                }
+            }
+        });
+        aboutFarmerLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null) {
+                    mListener.onFarmerFragmentInteractionAboutFarmerClicked();
+                }
+            }
+        });
     }
 
     @Override
@@ -35,21 +57,17 @@ public class FarmerFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_farmer, container, false);
 
-        AppCompatImageView backButton = view.findViewById(R.id.title_back_farmer_fragment_button);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mListener != null) {
-                    mListener.onFarmerFragmentInteractionBackClicked();
-                }
-            }
-        });
+        backButton = view.findViewById(R.id.title_back_farmer_fragment_button);
+        aboutFarmerLinearLayout = view.findViewById(R.id.about_farmer_linear_layout);
+
+        settingOnClickListeners();
 
         return view;
     }
 
     public interface OnFarmerFragmentInteractionListener {
         void onFarmerFragmentInteractionBackClicked();
+        void onFarmerFragmentInteractionAboutFarmerClicked();
     }
 
     @Override

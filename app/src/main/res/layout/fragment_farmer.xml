@@ -88,17 +88,38 @@
             app:srcCompat="@drawable/back_arrow" />
     </FrameLayout>
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/farmer_imageview_farmer_fragment"
+    <LinearLayout
+        android:id="@+id/about_farmer_linear_layout"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:scaleType="fitXY"
-        android:scaleY="1.2"
-        app:layout_constraintBottom_toBottomOf="@id/horizontal_guide_bottom_1_farmer_fragment"
+        android:layout_height="wrap_content"
+        android:background="@drawable/click_settings_about_display"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        app:layout_constraintBottom_toTopOf="@id/premium_member_frame_layout_farmer_fragment"
         app:layout_constraintEnd_toEndOf="@id/vertical_guide_right_1_farmer_fragment"
         app:layout_constraintStart_toStartOf="@id/vertical_guide_left_1_farmer_fragment"
-        app:layout_constraintTop_toTopOf="@id/horizontal_guide_top_1_farmer_fragment"
-        app:srcCompat="@drawable/farmer" />
+        app:layout_constraintTop_toBottomOf="@+id/farmer_fragment_title_frame_layout">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/about_farmer_info_icon_image_view"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="12dp"
+            app:srcCompat="@drawable/settings_about_icon" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/about_farmer_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="About John, The Farmer"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="normal" />
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/premium_member_frame_layout_farmer_fragment"
@@ -134,5 +155,17 @@
             app:srcCompat="@drawable/farmer_premium_locked" />
 
     </FrameLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/farmer_imageview_farmer_fragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:scaleY="1.2"
+        app:layout_constraintBottom_toBottomOf="@id/horizontal_guide_bottom_1_farmer_fragment"
+        app:layout_constraintEnd_toEndOf="@id/vertical_guide_right_1_farmer_fragment"
+        app:layout_constraintStart_toStartOf="@id/vertical_guide_left_1_farmer_fragment"
+        app:layout_constraintTop_toTopOf="@id/horizontal_guide_top_1_farmer_fragment"
+        app:srcCompat="@drawable/farmer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

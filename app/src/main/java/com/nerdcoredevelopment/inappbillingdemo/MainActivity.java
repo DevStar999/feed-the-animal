@@ -163,6 +163,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onFarmerFragmentInteractionAboutFarmerClicked() {
+        Toast.makeText(this, "About Farmer from Farmer fragment, clicked", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onFeedingFragmentInteractionBackClicked() {
         onBackPressed();
     }
