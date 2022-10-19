@@ -35,12 +35,15 @@
             android:textSize="18sp"
             android:textStyle="normal" />
 
+        <!-- TODO -> Implement the FarmerFragment and change
+                     visibility to android:visibility="visible" -->
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/meet_the_farmer_text_view_navigation_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:background="@drawable/click_navigation_button"
+            android:visibility="gone"
             android:text="MEET THE FARMER"
             android:textAlignment="center"
             android:textColor="@color/white"
