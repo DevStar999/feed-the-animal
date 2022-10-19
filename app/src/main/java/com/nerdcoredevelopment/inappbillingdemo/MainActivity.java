@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.nerdcoredevelopment.inappbillingdemo.dialogs.GameExitDialog;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.FarmerFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.FeedingFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.NavigationFragment;
@@ -92,7 +93,16 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            super.onBackPressed();
+            GameExitDialog gameExitDialog = new GameExitDialog(this);
+            gameExitDialog.show();
+            gameExitDialog.setGameExitDialogListener(new GameExitDialog.GameExitDialogListener() {
+                @Override
+                public void getResponseOfExitDialog(boolean response) {
+                    if (response) {
+                        MainActivity.this.finish();
+                    }
+                }
+            });
         } else {
             // Back button was pressed from fragment
             getSupportFragmentManager().popBackStack();
