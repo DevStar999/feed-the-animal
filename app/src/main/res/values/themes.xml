@@ -25,7 +25,7 @@
     <style name="CustomDialogTheme" parent="@android:style/Theme.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">false</item>
-        <item name="android:windowBackground">@color/white_dialog_background_translucent</item>
+        <item name="android:windowBackground">@color/black_dialog_background_translucent</item>
         <item name="android:windowAnimationStyle">@style/CustomDialogAnimation</item>
     </style>
 
