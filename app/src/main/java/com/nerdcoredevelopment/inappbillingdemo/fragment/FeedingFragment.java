@@ -13,7 +13,11 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.nerdcoredevelopment.inappbillingdemo.AnimalImageSpecs;
 import com.nerdcoredevelopment.inappbillingdemo.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FeedingFragment extends Fragment {
     private Context context;
@@ -23,6 +27,7 @@ public class FeedingFragment extends Fragment {
     /* Views related to this fragment */
     private AppCompatImageView backButton;
     private AppCompatTextView feedAnimalTextView;
+    private AppCompatImageView animalImageView;
     private AppCompatTextView consumptionRateTextView;
     private AppCompatTextView stockLeftTextView;
     private ConstraintLayout animalCowConstraintLayout;
@@ -41,6 +46,7 @@ public class FeedingFragment extends Fragment {
     /* Variables related to this fragment */
     private int consumptionRate;
     private int stockLeft;
+    private List<AnimalImageSpecs> animalOptions;
 
     public FeedingFragment() {
         // Required empty public constructor
@@ -49,6 +55,30 @@ public class FeedingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    private void settingsAnimalOptions(View layoutView) {
+        // Setting the selected animal image view
+        for (AnimalImageSpecs element: animalOptions) {
+            AppCompatImageView selectionImageView = layoutView.findViewById(element.getAnimalSelectionImageResId());
+            if (element.isCurrentlySelected()) {
+                // Assign the 'Selected' image view for the selection image view
+                selectionImageView.setImageResource(R.drawable.selected);
+
+                // Assign the animal image view the selected animal
+                animalImageView.setImageResource(element.getImageSrcDrawableResId());
+                animalImageView.setScaleX(element.getImageScaleX());
+                animalImageView.setScaleY(element.getImageScaleY());
+            } else {
+                if (!element.isAnimalUnlocked()) {
+                    // Assign the 'Locked' image view for the selection image view
+                    selectionImageView.setImageResource(R.drawable.access_locked);
+                } else {
+                    // Assign nothing image view for the selection image view
+                    selectionImageView.setImageResource(0);
+                }
+            }
+        }
     }
 
     private void settingOnClickListeners() {
@@ -120,6 +150,7 @@ public class FeedingFragment extends Fragment {
 
         backButton = view.findViewById(R.id.title_back_feeding_fragment_button);
         feedAnimalTextView = view.findViewById(R.id.feed_animal_text_view_feeding_fragment);
+        animalImageView = view.findViewById(R.id.animal_imageview_feeding_fragment);
         consumptionRateTextView = view.findViewById(R.id.consumption_rate_text_view);
         stockLeftTextView = view.findViewById(R.id.stock_left_text_view_feeding_fragment);
 
@@ -142,6 +173,31 @@ public class FeedingFragment extends Fragment {
         stockLeft = sharedPreferences.getInt("stockLeft", 50);
         stockLeftTextView.setText(String.valueOf(stockLeft));
         //stockLeft = 10; /* Comment this line when not testing */
+        animalOptions = new ArrayList<>() {{
+            add(new AnimalImageSpecs(R.drawable.animal_cow, R.id.cow_selection_image_view,
+                    1.5f, 1.5f, true,
+                    sharedPreferences.getBoolean("cowIsSelected", true)));
+            add(new AnimalImageSpecs(R.drawable.animal_goat, R.id.goat_selection_image_view,
+                    1.8f, 1.8f, true,
+                    sharedPreferences.getBoolean("goatIsSelected", false)));
+            add(new AnimalImageSpecs(R.drawable.animal_rabbit, R.id.rabbit_selection_image_view,
+                    1.0f, 1.0f, true,
+                    sharedPreferences.getBoolean("rabbitIsSelected", false)));
+            add(new AnimalImageSpecs(R.drawable.animal_horse, R.id.horse_selection_image_view,
+                    1.5f, 1.6f,
+                    sharedPreferences.getBoolean("animalHorseIsUnlocked", false),
+                    sharedPreferences.getBoolean("horseIsSelected", false)));
+            add(new AnimalImageSpecs(R.drawable.animal_reindeer, R.id.reindeer_selection_image_view,
+                    1.6f, 1.4f,
+                    sharedPreferences.getBoolean("animalReindeerIsUnlocked", false),
+                    sharedPreferences.getBoolean("reindeerIsSelected", false)));
+            add(new AnimalImageSpecs(R.drawable.animal_zebra, R.id.zebra_selection_image_view,
+                    1.4f, 1.35f,
+                    sharedPreferences.getBoolean("animalZebraIsUnlocked", false),
+                    sharedPreferences.getBoolean("zebraIsSelected", false)));
+        }};
+
+        settingsAnimalOptions(view);
 
         settingOnClickListeners();
 

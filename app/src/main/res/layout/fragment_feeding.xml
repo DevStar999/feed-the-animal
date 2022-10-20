@@ -445,7 +445,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/animal_imageview_farmer_fragment"
+        android:id="@+id/animal_imageview_feeding_fragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="fitXY"
