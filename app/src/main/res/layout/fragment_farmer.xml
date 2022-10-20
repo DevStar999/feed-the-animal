@@ -92,7 +92,7 @@
         android:id="@+id/about_farmer_linear_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/click_settings_display"
+        android:background="@drawable/click_about_display"
         android:orientation="horizontal"
         android:padding="12dp"
         app:layout_constraintBottom_toTopOf="@id/premium_member_frame_layout_farmer_fragment"
