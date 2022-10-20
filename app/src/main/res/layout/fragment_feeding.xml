@@ -350,7 +350,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="Hay required for animal = "
+            android:text="Hay required for animal =  "
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="normal" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/consumption_rate_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="normal" />
@@ -458,12 +467,20 @@
         app:layout_constraintTop_toBottomOf="@id/horizontal_guide_bottom_1_feeding_fragment">
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/stock_left_text_view_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="Stock of hay left =  "
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="normal" />
+
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/stock_left_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:text="Stock of hay left = "
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="normal" />

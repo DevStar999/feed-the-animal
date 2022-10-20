@@ -1,6 +1,7 @@
 package com.nerdcoredevelopment.inappbillingdemo.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,9 +16,15 @@ import androidx.fragment.app.Fragment;
 import com.nerdcoredevelopment.inappbillingdemo.R;
 
 public class FeedingFragment extends Fragment {
+    private Context context;
     private OnFeedingFragmentInteractionListener mListener;
+    private SharedPreferences sharedPreferences;
+
+    /* Views related to this fragment */
     private AppCompatImageView backButton;
     private AppCompatTextView feedAnimalTextView;
+    private AppCompatTextView consumptionRateTextView;
+    private AppCompatTextView stockLeftTextView;
     private ConstraintLayout animalCowConstraintLayout;
     private ConstraintLayout animalRabbitConstraintLayout;
     private ConstraintLayout animalGoatConstraintLayout;
@@ -30,6 +37,10 @@ public class FeedingFragment extends Fragment {
     private AppCompatImageView animalReindeerSelectionImageView;
     private AppCompatImageView animalHorseSelectionImageView;
     private AppCompatImageView animalZebraSelectionImageView;
+
+    /* Variables related to this fragment */
+    private int consumptionRate;
+    private int stockLeft;
 
     public FeedingFragment() {
         // Required empty public constructor
@@ -103,10 +114,14 @@ public class FeedingFragment extends Fragment {
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
+        sharedPreferences = context.getSharedPreferences("com.nerdcoredevelopment.inappbillingdemo", Context.MODE_PRIVATE);
+
         View view = inflater.inflate(R.layout.fragment_feeding, container, false);
 
         backButton = view.findViewById(R.id.title_back_feeding_fragment_button);
         feedAnimalTextView = view.findViewById(R.id.feed_animal_text_view_feeding_fragment);
+        consumptionRateTextView = view.findViewById(R.id.consumption_rate_text_view);
+        stockLeftTextView = view.findViewById(R.id.stock_left_text_view);
 
         animalCowConstraintLayout = view.findViewById(R.id.animal_cow_constraint_layout);
         animalRabbitConstraintLayout = view.findViewById(R.id.animal_rabbit_constraint_layout);
@@ -121,6 +136,12 @@ public class FeedingFragment extends Fragment {
         animalReindeerSelectionImageView = view.findViewById(R.id.reindeer_selection_image_view);
         animalHorseSelectionImageView = view.findViewById(R.id.horse_selection_image_view);
         animalZebraSelectionImageView = view.findViewById(R.id.zebra_selection_image_view);
+
+        consumptionRate = sharedPreferences.getInt("consumptionRate", 2);
+        consumptionRateTextView.setText(String.valueOf(consumptionRate));
+        stockLeft = sharedPreferences.getInt("stockLeft", 50);
+        stockLeftTextView.setText(String.valueOf(stockLeft));
+        //stockLeft = 10; /* Comment this line when not testing */
 
         settingOnClickListeners();
 
@@ -140,6 +161,7 @@ public class FeedingFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFeedingFragmentInteractionListener");
         }
+        this.context = context;
     }
 
     @Override
