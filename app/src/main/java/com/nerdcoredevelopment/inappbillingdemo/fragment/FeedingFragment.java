@@ -121,7 +121,7 @@ public class FeedingFragment extends Fragment {
         backButton = view.findViewById(R.id.title_back_feeding_fragment_button);
         feedAnimalTextView = view.findViewById(R.id.feed_animal_text_view_feeding_fragment);
         consumptionRateTextView = view.findViewById(R.id.consumption_rate_text_view);
-        stockLeftTextView = view.findViewById(R.id.stock_left_text_view);
+        stockLeftTextView = view.findViewById(R.id.stock_left_text_view_feeding_fragment);
 
         animalCowConstraintLayout = view.findViewById(R.id.animal_cow_constraint_layout);
         animalRabbitConstraintLayout = view.findViewById(R.id.animal_rabbit_constraint_layout);

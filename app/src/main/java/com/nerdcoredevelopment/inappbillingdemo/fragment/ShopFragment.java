@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
@@ -18,19 +19,21 @@ public class ShopFragment extends Fragment {
     private Context context;
     private OnShopFragmentInteractionListener mListener;
     private SharedPreferences sharedPreferences;
-    private AppCompatImageView backButton;
 
-    /* Layouts of all purchase options */
+    /* Views related to this fragment */
+    private AppCompatImageView backButton;
+    private AppCompatTextView stockLeftTextView;
     private ConstraintLayout shopFeedLevel1ConstraintLayout;
     private ConstraintLayout shopFeedLevel2ConstraintLayout;
     private ConstraintLayout shopFeedLevel3ConstraintLayout;
     private ConstraintLayout shopFeedLevel4ConstraintLayout;
-
-    /* Purchase buttons of all purchase options */
     private AppCompatButton shopFeedLevel1PurchaseButton;
     private AppCompatButton shopFeedLevel2PurchaseButton;
     private AppCompatButton shopFeedLevel3PurchaseButton;
     private AppCompatButton shopFeedLevel4PurchaseButton;
+
+    /* Variables related to this fragment */
+    private int stockLeft;
 
     public ShopFragment() {
         // Required empty public constructor
@@ -110,6 +113,7 @@ public class ShopFragment extends Fragment {
 
         backButton = view.findViewById(R.id.title_back_shop_fragment_button);
 
+        stockLeftTextView = view.findViewById(R.id.stock_left_text_view_shop_fragment);
         shopFeedLevel1ConstraintLayout = view.findViewById(R.id.shop_feed_level1_constraint_layout);
         shopFeedLevel2ConstraintLayout = view.findViewById(R.id.shop_feed_level2_constraint_layout);
         shopFeedLevel3ConstraintLayout = view.findViewById(R.id.shop_feed_level3_constraint_layout);
@@ -119,6 +123,9 @@ public class ShopFragment extends Fragment {
         shopFeedLevel2PurchaseButton = view.findViewById(R.id.shop_feed_level2_purchase_button);
         shopFeedLevel3PurchaseButton = view.findViewById(R.id.shop_feed_level3_purchase_button);
         shopFeedLevel4PurchaseButton = view.findViewById(R.id.shop_feed_level4_purchase_button);
+
+        stockLeft = sharedPreferences.getInt("stockLeft", 50);
+        stockLeftTextView.setText(String.valueOf(stockLeft));
 
         settingOnClickListeners();
 

@@ -455,7 +455,7 @@
         app:layout_constraintTop_toTopOf="@id/horizontal_guide_bottom_2_feeding_fragment" />
 
     <LinearLayout
-        android:id="@+id/stock_left_linear_layout"
+        android:id="@+id/stock_left_linear_layout_feeding_fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_corner_display"
@@ -467,7 +467,7 @@
         app:layout_constraintTop_toBottomOf="@id/horizontal_guide_bottom_1_feeding_fragment">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/stock_left_text_view_start"
+            android:id="@+id/stock_left_text_view_start_feeding_fragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -477,7 +477,7 @@
             android:textStyle="normal" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/stock_left_text_view"
+            android:id="@+id/stock_left_text_view_feeding_fragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -486,12 +486,13 @@
             android:textStyle="normal" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/stock_left_icon_image_view"
+            android:id="@+id/stock_left_icon_image_view_feeding_fragment"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="end|center_vertical"
             android:layout_marginStart="8dp"
             app:srcCompat="@drawable/hay" />
+
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -509,6 +510,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stock_left_linear_layout" />
+        app:layout_constraintTop_toBottomOf="@id/stock_left_linear_layout_feeding_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
