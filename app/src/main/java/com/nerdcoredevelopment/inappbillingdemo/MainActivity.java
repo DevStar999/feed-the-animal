@@ -185,6 +185,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onFeedingFragmentInteractionAccessLockedAnimal() {
+        Toast.makeText(this, "Locked animal clicked", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onSettingsFragmentInteractionBackClicked() {
         onBackPressed();
     }
