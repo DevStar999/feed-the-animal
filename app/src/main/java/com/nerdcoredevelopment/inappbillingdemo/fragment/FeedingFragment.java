@@ -1,5 +1,8 @@
 package com.nerdcoredevelopment.inappbillingdemo.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -30,6 +33,8 @@ public class FeedingFragment extends Fragment {
     private AppCompatImageView animalImageView;
     private AppCompatTextView consumptionRateTextView;
     private AppCompatTextView stockLeftTextView;
+    private ConstraintLayout postFeedingMessageLeft;
+    private ConstraintLayout postFeedingMessageRight;
     private ConstraintLayout animalCowConstraintLayout;
     private ConstraintLayout animalRabbitConstraintLayout;
     private ConstraintLayout animalGoatConstraintLayout;
@@ -132,6 +137,42 @@ public class FeedingFragment extends Fragment {
                 Log.i("Custom Debugging", "onClick: FeedingFragment, Zebra button clicked");
             }
         });
+        feedAnimalTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 1. Appear then fading disappear effect for post feeding messages
+                postFeedingMessageLeft.setVisibility(View.VISIBLE);
+                postFeedingMessageRight.setVisibility(View.VISIBLE);
+                ObjectAnimator messageFadingDisappearLeft = ObjectAnimator
+                        .ofFloat(postFeedingMessageLeft, View.ALPHA, 1f, 0f).setDuration(2500);
+                ObjectAnimator messageFadingDisappearRight = ObjectAnimator
+                        .ofFloat(postFeedingMessageRight, View.ALPHA, 1f, 0f).setDuration(2500);
+                AnimatorSet postFeedingMessagesAnimator = new AnimatorSet();
+                postFeedingMessagesAnimator
+                        .playTogether(messageFadingDisappearLeft, messageFadingDisappearRight);
+                postFeedingMessagesAnimator.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+                        feedAnimalTextView.setEnabled(false);
+                        feedAnimalTextView.setText("FEED ANIMAL ⌛");
+                    }
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+                        postFeedingMessageLeft.setVisibility(View.INVISIBLE);
+                        postFeedingMessageRight.setVisibility(View.INVISIBLE);
+                        postFeedingMessageLeft.setAlpha(0f);
+                        postFeedingMessageRight.setAlpha(0f);
+                        feedAnimalTextView.setEnabled(true);
+                        feedAnimalTextView.setText("FEED ANIMAL");
+                    }
+                    @Override
+                    public void onAnimationCancel(Animator animator) {}
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {}
+                });
+                postFeedingMessagesAnimator.start();
+            }
+        });
     }
 
     @Override
@@ -153,6 +194,8 @@ public class FeedingFragment extends Fragment {
         animalImageView = view.findViewById(R.id.animal_imageview_feeding_fragment);
         consumptionRateTextView = view.findViewById(R.id.consumption_rate_text_view);
         stockLeftTextView = view.findViewById(R.id.stock_left_text_view_feeding_fragment);
+        postFeedingMessageLeft = view.findViewById(R.id.post_feeding_message_left);
+        postFeedingMessageRight = view.findViewById(R.id.post_feeding_message_right);
 
         animalCowConstraintLayout = view.findViewById(R.id.animal_cow_constraint_layout);
         animalRabbitConstraintLayout = view.findViewById(R.id.animal_rabbit_constraint_layout);
