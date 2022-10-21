@@ -170,7 +170,18 @@ public class FeedingFragment extends Fragment {
                     @Override
                     public void onAnimationRepeat(Animator animator) {}
                 });
-                postFeedingMessagesAnimator.start();
+
+                // 2. Handling the consumption of hay by the animal
+                if (stockLeft >= consumptionRate) {
+                    postFeedingMessagesAnimator.start();
+                    stockLeft -= consumptionRate;
+                    stockLeftTextView.setText(String.valueOf(stockLeft));
+                    sharedPreferences.edit().putInt("stockLeft", stockLeft).apply();
+                } else {
+                    if (mListener != null) {
+                        mListener.onFeedingFragmentInteractionOutOfStock();
+                    }
+                }
             }
         });
     }
@@ -213,9 +224,9 @@ public class FeedingFragment extends Fragment {
 
         consumptionRate = sharedPreferences.getInt("consumptionRate", 2);
         consumptionRateTextView.setText(String.valueOf(consumptionRate));
-        stockLeft = sharedPreferences.getInt("stockLeft", 50);
-        stockLeftTextView.setText(String.valueOf(stockLeft));
+        stockLeft = sharedPreferences.getInt("stockLeft", 20);
         //stockLeft = 10; /* Comment this line when not testing */
+        stockLeftTextView.setText(String.valueOf(stockLeft));
         animalOptions = new ArrayList<>() {{
             add(new AnimalImageSpecs(R.drawable.animal_cow, R.id.cow_selection_image_view,
                     1.5f, 1.5f, true,
@@ -249,6 +260,7 @@ public class FeedingFragment extends Fragment {
 
     public interface OnFeedingFragmentInteractionListener {
         void onFeedingFragmentInteractionBackClicked();
+        void onFeedingFragmentInteractionOutOfStock();
     }
 
     @Override

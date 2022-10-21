@@ -173,6 +173,18 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onFeedingFragmentInteractionOutOfStock() {
+        ShopFragment fragment = new ShopFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right,
+                R.anim.enter_from_right, R.anim.exit_to_right);
+        transaction.addToBackStack(null);
+        transaction.add(R.id.full_screen_fragment_container_main_activity,
+                fragment, "SHOP_FRAGMENT").commit();
+    }
+
+    @Override
     public void onSettingsFragmentInteractionBackClicked() {
         onBackPressed();
     }
