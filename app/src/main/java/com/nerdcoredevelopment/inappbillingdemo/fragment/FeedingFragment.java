@@ -101,11 +101,9 @@ public class FeedingFragment extends Fragment {
                         sharedPreferences.edit().putBoolean(animalOptions.get(index)
                                 .getSharedPreferencesSelectionKey(), false).apply();
                         if (!animalOptions.get(index).isAnimalUnlocked()) {
-                            // Assign the 'Locked' image view for the selection image view
                             animalOptions.get(index).getAnimalSelectionImageView()
                                     .setImageResource(R.drawable.access_locked);
                         } else {
-                            // Assign nothing image view for the selection image view
                             animalOptions.get(index).getAnimalSelectionImageView()
                                     .setImageResource(0);
                         }
