@@ -154,7 +154,7 @@ public class FeedingFragment extends Fragment {
                     @Override
                     public void onAnimationStart(Animator animator) {
                         feedAnimalTextView.setEnabled(false);
-                        feedAnimalTextView.setText("FEED ANIMAL ⌛");
+                        feedAnimalTextView.setText("FEEDING ANIMAL... ⌛");
                     }
                     @Override
                     public void onAnimationEnd(Animator animator) {
