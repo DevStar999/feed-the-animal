@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -21,9 +20,7 @@ import com.android.billingclient.api.AcknowledgePurchaseParams;
 import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
-import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.ConsumeParams;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
@@ -38,6 +35,7 @@ import com.android.volley.toolbox.Volley;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.GameExitDialog;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.FarmerFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.FeedingFragment;
+import com.nerdcoredevelopment.inappbillingdemo.fragment.InfoFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.NavigationFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.SettingsFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.ShopFragment;
@@ -48,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
+        InfoFragment.OnInfoFragmentInteractionListener,
         NavigationFragment.OnNavigationFragmentInteractionListener,
         FarmerFragment.OnFarmerFragmentInteractionListener,
         FeedingFragment.OnFeedingFragmentInteractionListener,
@@ -199,25 +198,6 @@ public class MainActivity extends AppCompatActivity implements
                                              @Nullable List<SkuDetails> list) {
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK &&
                         list != null) {
-                    SkuDetails itemInfo = list.get(0);
-                    String itemInfoString = itemInfo.toString();
-                    String showItemDetails = "itemInfo.getDescription() = " + itemInfo.getDescription()
-                            + "itemInfo.getSku() = " + itemInfo.getSku()
-                            + "itemInfo.getFreeTrialPeriod() = " + itemInfo.getFreeTrialPeriod()
-                            + "itemInfo.getDescription() = " + itemInfo.getDescription()
-                            + "itemInfo.getOriginalJson() = " + itemInfo.getOriginalJson()
-                            + "itemInfo.getPrice() = " + itemInfo.getPrice()
-                            + "itemInfo.getPriceCurrencyCode() = " + itemInfo.getPriceCurrencyCode()
-                            + "itemInfo.getSubscriptionPeriod() = " + itemInfo.getSubscriptionPeriod()
-                            + "itemInfo.getIntroductoryPrice() = " + itemInfo.getIntroductoryPrice()
-                            + "itemInfo.getTitle() = " + itemInfo.getTitle()
-                            + "itemInfo.getType(); = " + itemInfo.getType();
-                    Toast.makeText(activity, "showItemDetails = " + showItemDetails,
-                            Toast.LENGTH_SHORT).show();
-                    Log.i("Custom Debugging", "showItemDetails = " + showItemDetails);
-                    Toast.makeText(activity, "itemInfoString = " + itemInfoString,
-                            Toast.LENGTH_SHORT).show();
-                    Log.i("Custom Debugging", "itemInfoString = " + itemInfoString);
                 }
             }
         };
@@ -352,6 +332,23 @@ public class MainActivity extends AppCompatActivity implements
             // Back button was pressed from fragment
             getSupportFragmentManager().popBackStack();
         }
+    }
+
+    public void infoButtonClicked(View view) {
+        InfoFragment fragment =
+                InfoFragment.newInstance("<Add any text you would like to print here>");
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right,
+                R.anim.enter_from_right, R.anim.exit_to_right);
+        transaction.addToBackStack(null);
+        transaction.add(R.id.full_screen_fragment_container_main_activity,
+                fragment, "INFO_FRAGMENT").commit();
+    }
+
+    @Override
+    public void onInfoFragmentInteractionBackClicked() {
+        onBackPressed();
     }
 
     @Override
