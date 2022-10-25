@@ -1,6 +1,8 @@
 package com.nerdcoredevelopment.inappbillingdemo;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements
     private NavigationFragment navigationFragment;
     private FeedingFragment feedingFragment;
     private ShopFragment shopFragment;
+    private SharedPreferences sharedPreferences;
     private Map<String, Integer> hayUnitsReward;
     private BillingClient recurringConsumablesBillingClient;
     private BillingClient nonRecurringConsumablesBillingClient;
@@ -67,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void initialise() {
         navigationFragment = new NavigationFragment();
+        sharedPreferences = getSharedPreferences("com.nerdcoredevelopment.inappbillingdemo", Context.MODE_PRIVATE);
         hayUnitsReward = new HashMap<>() {{
             put("hay_level1", 50); put("hay_level2", 100);
             put("hay_level3", 250); put("hay_level4", 500);
@@ -276,10 +280,10 @@ public class MainActivity extends AppCompatActivity implements
                                     for (int level = 1; level <= 4; level++) {
                                         String hayLevel = "hay_level" + level;
                                         if (productId.equals(hayLevel)) {
-                                            feedingFragment.updateHayStockFeedingFragment(
-                                                    hayUnitsReward.get(hayLevel) * purchase.getQuantity());
-                                            shopFragment.updateHayStockShopFragment(
-                                                    hayUnitsReward.get(hayLevel) * purchase.getQuantity());
+                                            int stockLeft = sharedPreferences.getInt("stockLeft", 20);
+                                            stockLeft += hayUnitsReward.get(hayLevel) * purchase.getQuantity();
+                                            feedingFragment.updateHayStockFeedingFragment(stockLeft);
+                                            shopFragment.updateHayStockShopFragment(stockLeft);
                                             break;
                                         }
                                     }

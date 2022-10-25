@@ -128,10 +128,12 @@ public class ShopFragment extends Fragment {
         return view;
     }
 
-    public void updateHayStockShopFragment(int hayUnitsPurchase) {
-        stockLeft += hayUnitsPurchase;
-        stockLeftTextView.setText(String.valueOf(stockLeft));
-        sharedPreferences.edit().putInt("stockLeft", stockLeft).apply();
+    public void updateHayStockShopFragment(int updatedStock) {
+        sharedPreferences.edit().putInt("stockLeft", updatedStock).apply();
+        if (mListener != null) {
+            stockLeft = updatedStock;
+            stockLeftTextView.setText(String.valueOf(stockLeft));
+        }
     }
 
     public interface OnShopFragmentInteractionListener {
