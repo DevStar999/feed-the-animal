@@ -117,8 +117,10 @@ public class ShopFragment extends Fragment {
 
         stockLeft = sharedPreferences.getInt("stockLeft", 20);
         stockLeftTextView.setText(String.valueOf(stockLeft));
-        for (int index = 0; index < shopFeedPurchaseButtons.size(); index++) {
-            shopFeedPurchaseButtons.get(index).setText(itemPrices.get(index));
+        if (itemPrices.size() == 4) {
+            for (int index = 0; index < shopFeedPurchaseButtons.size(); index++) {
+                shopFeedPurchaseButtons.get(index).setText(itemPrices.get(index));
+            }
         }
 
         settingOnClickListeners();
