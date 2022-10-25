@@ -2,6 +2,8 @@ package com.nerdcoredevelopment.inappbillingdemo;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +22,7 @@ import com.android.billingclient.api.AcknowledgePurchaseParams;
 import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesResponseListener;
@@ -43,7 +46,10 @@ import com.nerdcoredevelopment.inappbillingdemo.fragment.ShopFragment;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements
         InfoFragment.OnInfoFragmentInteractionListener,
@@ -53,11 +59,17 @@ public class MainActivity extends AppCompatActivity implements
         SettingsFragment.OnSettingsFragmentInteractionListener,
         ShopFragment.OnShopFragmentInteractionListener {
     private NavigationFragment navigationFragment;
+    private FeedingFragment feedingFragment;
     //private BillingClient recurringConsumablesBillingClient;
     private BillingClient nonRecurringConsumablesBillingClient;
+    private SharedPreferences sharedPreferences;
+    private Map<String, SkuDetails> animalsSkuDetails;
 
     private void initialise() {
         navigationFragment = new NavigationFragment();
+        feedingFragment = new FeedingFragment();
+        sharedPreferences = getSharedPreferences("com.nerdcoredevelopment.inappbillingdemo", Context.MODE_PRIVATE);
+        animalsSkuDetails = new HashMap<>();
     }
 
     private void setupBillingClients() {
@@ -183,27 +195,33 @@ public class MainActivity extends AppCompatActivity implements
     */
 
     private void getProductDetailsOfNonRecurringConsumables() {
+        // If we have the SkuDetails for the 3 locked animals then return
+        if (animalsSkuDetails.containsKey("animal_horse")
+                && animalsSkuDetails.containsKey("animal_reindeer")
+                && animalsSkuDetails.containsKey("animal_zebra")) {
+            return;
+        }
+
         List<String> productIds = new ArrayList<>();
         productIds.add("animal_horse");
         productIds.add("animal_reindeer");
         productIds.add("animal_zebra");
 
-        SkuDetailsParams getProductDetailsQuery = SkuDetailsParams
-                .newBuilder().setSkusList(productIds)
+        SkuDetailsParams getProductDetailsQuery = SkuDetailsParams.newBuilder().setSkusList(productIds)
                 .setType(BillingClient.SkuType.INAPP).build();
-        Activity activity = this;
         SkuDetailsResponseListener skuDetailsResponseListener = new SkuDetailsResponseListener() {
             @Override
-            public void onSkuDetailsResponse(@NonNull BillingResult billingResult,
-                                             @Nullable List<SkuDetails> list) {
+            public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> list) {
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK &&
                         list != null) {
+                    for (int index = 0; index < list.size(); index++) {
+                        animalsSkuDetails.put(list.get(index).getSku(), list.get(index));
+                    }
                 }
             }
         };
 
-        nonRecurringConsumablesBillingClient.querySkuDetailsAsync(getProductDetailsQuery,
-                skuDetailsResponseListener);
+        nonRecurringConsumablesBillingClient.querySkuDetailsAsync(getProductDetailsQuery, skuDetailsResponseListener);
     }
 
     private void verifyPurchase(Purchase purchase, boolean isPurchaseRecurring) {
@@ -211,7 +229,6 @@ public class MainActivity extends AppCompatActivity implements
                 "purchaseToken=" + purchase.getPurchaseToken() + "&" +
                 "purchaseTime=" + purchase.getPurchaseTime() + "&" +
                 "orderId=" + purchase.getOrderId();
-        Activity activity = this;
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -220,23 +237,26 @@ public class MainActivity extends AppCompatActivity implements
                     JSONObject purchaseInfoFromServer = new JSONObject(response);
                     if (purchaseInfoFromServer.getBoolean("isValid")) {
                         // Code for Non-Recurring Consumables
-                        if (!isPurchaseRecurring && purchase.getPurchaseState() ==
-                                Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged()) {
-                            AcknowledgePurchaseParams acknowledgePurchaseParams =
-                                    AcknowledgePurchaseParams.newBuilder()
+                        if (!isPurchaseRecurring && purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED
+                                && !purchase.isAcknowledged()) {
+                            AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
                                     .setPurchaseToken(purchase.getPurchaseToken()).build();
                             AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener
                                 = billingResult -> {
-                                if(billingResult.getResponseCode()
-                                        == BillingClient.BillingResponseCode.OK) {
-                                    Toast.makeText(activity, "Consumed!",
-                                            Toast.LENGTH_LONG).show();
+                                if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                                    String productId = purchase.getSkus().get(0);
+                                    if (productId.equals("animal_horse")) {
+                                        feedingFragment.unlockAccessToAnimalHorse();
+                                    } else if (productId.equals("animal_reindeer")) {
+                                        feedingFragment.unlockAccessToAnimalReindeer();
+                                    } else if (productId.equals("animal_zebra")) {
+                                        feedingFragment.unlockAccessToAnimalZebra();
+                                    }
                                 }
                             };
 
-                            nonRecurringConsumablesBillingClient.acknowledgePurchase(
-                                acknowledgePurchaseParams, acknowledgePurchaseResponseListener
-                            );
+                            nonRecurringConsumablesBillingClient.acknowledgePurchase(acknowledgePurchaseParams,
+                                    acknowledgePurchaseResponseListener);
                         }
                     }
                 } catch (Exception ignored) {}
@@ -247,8 +267,7 @@ public class MainActivity extends AppCompatActivity implements
             public void onErrorResponse(VolleyError error) {}
         };
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, requestUrl,
-                responseListener, errorListener);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, requestUrl, responseListener, errorListener);
 
         Volley.newRequestQueue(this).add(stringRequest);
     }
@@ -365,14 +384,13 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onNavigationFragmentFeedAnimalsClicked() {
-        FeedingFragment fragment = new FeedingFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right,
                 R.anim.enter_from_right, R.anim.exit_to_right);
         transaction.addToBackStack(null);
         transaction.add(R.id.full_screen_fragment_container_main_activity,
-                fragment, "FEEDING_FRAGMENT").commit();
+                feedingFragment, "FEEDING_FRAGMENT").commit();
     }
 
     @Override
@@ -427,8 +445,27 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onFeedingFragmentInteractionAccessLockedAnimal() {
-        Toast.makeText(this, "Locked animal clicked", Toast.LENGTH_SHORT).show();
+    public void onFeedingFragmentInteractionAccessLockedAnimalHorse() {
+        if (animalsSkuDetails.containsKey("animal_horse")) {
+            nonRecurringConsumablesBillingClient.launchBillingFlow(this, BillingFlowParams.newBuilder()
+                            .setSkuDetails(Objects.requireNonNull(animalsSkuDetails.get("animal_horse"))).build());
+        }
+    }
+
+    @Override
+    public void onFeedingFragmentInteractionAccessLockedAnimalReindeer() {
+        if (animalsSkuDetails.containsKey("animal_reindeer")) {
+            nonRecurringConsumablesBillingClient.launchBillingFlow(this, BillingFlowParams.newBuilder()
+                    .setSkuDetails(Objects.requireNonNull(animalsSkuDetails.get("animal_reindeer"))).build());
+        }
+    }
+
+    @Override
+    public void onFeedingFragmentInteractionAccessLockedAnimalZebra() {
+        if (animalsSkuDetails.containsKey("animal_zebra")) {
+            nonRecurringConsumablesBillingClient.launchBillingFlow(this, BillingFlowParams.newBuilder()
+                    .setSkuDetails(Objects.requireNonNull(animalsSkuDetails.get("animal_zebra"))).build());
+        }
     }
 
     @Override

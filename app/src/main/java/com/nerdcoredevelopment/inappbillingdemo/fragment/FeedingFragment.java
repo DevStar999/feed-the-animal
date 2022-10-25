@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,6 @@ public class FeedingFragment extends Fragment {
     private AppCompatImageView backButton;
     private AppCompatTextView feedAnimalTextView;
     private AppCompatImageView animalImageView;
-    private AppCompatTextView consumptionRateTextView;
     private AppCompatTextView stockLeftTextView;
     private ConstraintLayout postFeedingMessageLeft;
     private ConstraintLayout postFeedingMessageRight;
@@ -111,7 +109,13 @@ public class FeedingFragment extends Fragment {
                 }
             } else { // Animal is locked
                 if (mListener != null) {
-                    mListener.onFeedingFragmentInteractionAccessLockedAnimal();
+                    if (indexOfSelectedAnimalInAnimalOptions == 3) {
+                        mListener.onFeedingFragmentInteractionAccessLockedAnimalHorse();
+                    } else if (indexOfSelectedAnimalInAnimalOptions == 4) {
+                        mListener.onFeedingFragmentInteractionAccessLockedAnimalReindeer();
+                    } else if (indexOfSelectedAnimalInAnimalOptions == 5) {
+                        mListener.onFeedingFragmentInteractionAccessLockedAnimalZebra();
+                    }
                 }
             }
         }
@@ -195,7 +199,7 @@ public class FeedingFragment extends Fragment {
         backButton = view.findViewById(R.id.title_back_feeding_fragment_button);
         feedAnimalTextView = view.findViewById(R.id.feed_animal_text_view_feeding_fragment);
         animalImageView = view.findViewById(R.id.animal_imageview_feeding_fragment);
-        consumptionRateTextView = view.findViewById(R.id.consumption_rate_text_view);
+        AppCompatTextView consumptionRateTextView = view.findViewById(R.id.consumption_rate_text_view);
         stockLeftTextView = view.findViewById(R.id.stock_left_text_view_feeding_fragment);
         postFeedingMessageLeft = view.findViewById(R.id.post_feeding_message_left);
         postFeedingMessageRight = view.findViewById(R.id.post_feeding_message_right);
@@ -249,10 +253,33 @@ public class FeedingFragment extends Fragment {
         return view;
     }
 
+    public void unlockAccessToAnimalHorse() {
+        int indexOfAnimalHorse = 3;
+        animalOptions.get(indexOfAnimalHorse).setAnimalUnlocked(true);
+        sharedPreferences.edit().putBoolean("animalHorseIsUnlocked", true).apply();
+        animalOptions.get(indexOfAnimalHorse).getAnimalSelectionImageView().setImageResource(0);
+    }
+
+    public void unlockAccessToAnimalReindeer() {
+        int indexOfAnimalReindeer = 4;
+        animalOptions.get(indexOfAnimalReindeer).setAnimalUnlocked(true);
+        sharedPreferences.edit().putBoolean("animalReindeerIsUnlocked", true).apply();
+        animalOptions.get(indexOfAnimalReindeer).getAnimalSelectionImageView().setImageResource(0);
+    }
+
+    public void unlockAccessToAnimalZebra() {
+        int indexOfAnimalZebra = 5;
+        animalOptions.get(indexOfAnimalZebra).setAnimalUnlocked(true);
+        sharedPreferences.edit().putBoolean("animalZebraIsUnlocked", true).apply();
+        animalOptions.get(indexOfAnimalZebra).getAnimalSelectionImageView().setImageResource(0);
+    }
+
     public interface OnFeedingFragmentInteractionListener {
         void onFeedingFragmentInteractionBackClicked();
         void onFeedingFragmentInteractionOutOfStock();
-        void onFeedingFragmentInteractionAccessLockedAnimal();
+        void onFeedingFragmentInteractionAccessLockedAnimalHorse();
+        void onFeedingFragmentInteractionAccessLockedAnimalReindeer();
+        void onFeedingFragmentInteractionAccessLockedAnimalZebra();
     }
 
     @Override
