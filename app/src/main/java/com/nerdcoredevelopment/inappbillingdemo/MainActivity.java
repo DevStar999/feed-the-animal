@@ -1,9 +1,6 @@
 package com.nerdcoredevelopment.inappbillingdemo;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
@@ -62,13 +59,11 @@ public class MainActivity extends AppCompatActivity implements
     private FeedingFragment feedingFragment;
     //private BillingClient recurringConsumablesBillingClient;
     private BillingClient nonRecurringConsumablesBillingClient;
-    private SharedPreferences sharedPreferences;
     private Map<String, SkuDetails> animalsSkuDetails;
 
     private void initialise() {
         navigationFragment = new NavigationFragment();
         feedingFragment = new FeedingFragment();
-        sharedPreferences = getSharedPreferences("com.nerdcoredevelopment.inappbillingdemo", Context.MODE_PRIVATE);
         animalsSkuDetails = new HashMap<>();
     }
 
