@@ -69,22 +69,21 @@ public class MainActivity extends AppCompatActivity implements
         navigationFragment = new NavigationFragment();
         shopFragment = new ShopFragment();
         hayUnitsReward = new HashMap<>() {{
-            put("hay_level1", 50);
-            put("hay_level2", 100);
-            put("hay_level3", 250);
-            put("hay_level4", 500);
+            put("hay_level1", 50); put("hay_level2", 100);
+            put("hay_level3", 250); put("hay_level4", 500);
         }};
         animalsSkuDetails = new HashMap<>();
         hayLevelsSkuDetails = new HashMap<>();
     }
 
     private void setupBillingClients() {
-        PurchasesUpdatedListener purchasesUpdatedListenerForRecurringConsumables = (billingResult,
-                                                                                    list) -> {
+        PurchasesUpdatedListener purchasesUpdatedListenerForRecurringConsumables = (billingResult, list) -> {
             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK
                     && list != null) {
                 for (Purchase purchase : list) {
-                    verifyPurchase(purchase, true);
+                    if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged()) {
+                        verifyPurchase(purchase, true);
+                    }
                 }
             }
         };
@@ -93,12 +92,13 @@ public class MainActivity extends AppCompatActivity implements
                 .enablePendingPurchases().build();
         connectToGooglePlayBillingForRecurringConsumables();
 
-        PurchasesUpdatedListener purchasesUpdatedListenerForNonRecurringConsumables = (billingResult,
-                                                                                    list) -> {
+        PurchasesUpdatedListener purchasesUpdatedListenerForNonRecurringConsumables = (billingResult, list) -> {
             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK
                     && list != null) {
                 for (Purchase purchase : list) {
-                    verifyPurchase(purchase, false);
+                    if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged()) {
+                        verifyPurchase(purchase, false);
+                    }
                 }
             }
         };
@@ -116,7 +116,9 @@ public class MainActivity extends AppCompatActivity implements
                                                      @NonNull List<Purchase> list) {
                     if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                         for (Purchase purchase : list) {
-                            verifyPurchase(purchase, true);
+                            if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged()) {
+                                verifyPurchase(purchase, true);
+                            }
                         }
                     }
                 }
@@ -130,7 +132,9 @@ public class MainActivity extends AppCompatActivity implements
                                                      @NonNull List<Purchase> list) {
                     if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                         for (Purchase purchase : list) {
-                            verifyPurchase(purchase, false);
+                            if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged()) {
+                                verifyPurchase(purchase, false);
+                            }
                         }
                     }
                 }
@@ -246,9 +250,7 @@ public class MainActivity extends AppCompatActivity implements
                 try {
                     JSONObject purchaseInfoFromServer = new JSONObject(response);
                     if (purchaseInfoFromServer.getBoolean("isValid")) {
-                        // Code for Non-Recurring Consumables
-                        if (!isPurchaseRecurring && purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED
-                                && !purchase.isAcknowledged()) {
+                        if (!isPurchaseRecurring) { // Code for Non-Recurring Consumables
                             AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
                                     .setPurchaseToken(purchase.getPurchaseToken()).build();
                             AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener
@@ -266,27 +268,26 @@ public class MainActivity extends AppCompatActivity implements
                             };
                             nonRecurringConsumablesBillingClient.acknowledgePurchase(acknowledgePurchaseParams,
                                     acknowledgePurchaseResponseListener);
-                        }
-
-                        // Code for Recurring Consumables
-                        ConsumeParams consumeParams = ConsumeParams.newBuilder().
-                                setPurchaseToken(purchase.getPurchaseToken()).build();
-                        ConsumeResponseListener consumeResponseListener = (billingResult, s) -> {
-                            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                                String productId = purchase.getSkus().get(0);
-                                for (int level = 1; level <= 4; level++) {
-                                    String hayLevel = "hay_level" + level;
-                                    if (productId.equals(hayLevel)) {
-                                        feedingFragment.updateHayStockFeedingFragment(
-                                                hayUnitsReward.get(hayLevel) * purchase.getQuantity());
-                                        shopFragment.updateHayStockShopFragment(
-                                                hayUnitsReward.get(hayLevel) * purchase.getQuantity());
-                                        break;
+                        } else { // Code for Recurring Consumables
+                            ConsumeParams consumeParams = ConsumeParams.newBuilder().
+                                    setPurchaseToken(purchase.getPurchaseToken()).build();
+                            ConsumeResponseListener consumeResponseListener = (billingResult, s) -> {
+                                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                                    String productId = purchase.getSkus().get(0);
+                                    for (int level = 1; level <= 4; level++) {
+                                        String hayLevel = "hay_level" + level;
+                                        if (productId.equals(hayLevel)) {
+                                            feedingFragment.updateHayStockFeedingFragment(
+                                                    hayUnitsReward.get(hayLevel) * purchase.getQuantity());
+                                            shopFragment.updateHayStockShopFragment(
+                                                    hayUnitsReward.get(hayLevel) * purchase.getQuantity());
+                                            break;
+                                        }
                                     }
                                 }
-                            }
-                        };
-                        recurringConsumablesBillingClient.consumeAsync(consumeParams, consumeResponseListener);
+                            };
+                            recurringConsumablesBillingClient.consumeAsync(consumeParams, consumeResponseListener);
+                        }
                     }
                 } catch (Exception ignored) {}
             }
