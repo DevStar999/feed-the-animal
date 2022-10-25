@@ -50,7 +50,7 @@ public class ShopFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            this.itemPrices = getArguments().getStringArrayList(ITEM_PRICES);
+            this.itemPrices = new ArrayList<>(getArguments().getStringArrayList(ITEM_PRICES));
         }
     }
 
