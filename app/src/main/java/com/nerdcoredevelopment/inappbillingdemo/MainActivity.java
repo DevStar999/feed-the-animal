@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private void initialise() {
         navigationFragment = new NavigationFragment();
-        shopFragment = new ShopFragment();
         hayUnitsReward = new HashMap<>() {{
             put("hay_level1", 50); put("hay_level2", 100);
             put("hay_level3", 250); put("hay_level4", 500);
