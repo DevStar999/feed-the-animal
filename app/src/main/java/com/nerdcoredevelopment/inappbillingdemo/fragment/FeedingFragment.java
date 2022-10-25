@@ -171,8 +171,8 @@ public class FeedingFragment extends Fragment {
                 if (stockLeft >= consumptionRate) {
                     postFeedingMessagesAnimator.start();
                     stockLeft -= consumptionRate;
-                    stockLeftTextView.setText(String.valueOf(stockLeft));
                     sharedPreferences.edit().putInt("stockLeft", stockLeft).apply();
+                    stockLeftTextView.setText(String.valueOf(stockLeft));
                 } else {
                     if (mListener != null) {
                         mListener.onFeedingFragmentInteractionOutOfStock();
@@ -253,24 +253,30 @@ public class FeedingFragment extends Fragment {
         return view;
     }
 
+    public void updateHayStockFeedingFragment(int hayUnitsPurchase) {
+        stockLeft += hayUnitsPurchase;
+        sharedPreferences.edit().putInt("stockLeft", stockLeft).apply();
+        stockLeftTextView.setText(String.valueOf(stockLeft));
+    }
+
     public void unlockAccessToAnimalHorse() {
+        sharedPreferences.edit().putBoolean("animalHorseIsUnlocked", true).apply();
         int indexOfAnimalHorse = 3;
         animalOptions.get(indexOfAnimalHorse).setAnimalUnlocked(true);
-        sharedPreferences.edit().putBoolean("animalHorseIsUnlocked", true).apply();
         animalOptions.get(indexOfAnimalHorse).getAnimalSelectionImageView().setImageResource(0);
     }
 
     public void unlockAccessToAnimalReindeer() {
+        sharedPreferences.edit().putBoolean("animalReindeerIsUnlocked", true).apply();
         int indexOfAnimalReindeer = 4;
         animalOptions.get(indexOfAnimalReindeer).setAnimalUnlocked(true);
-        sharedPreferences.edit().putBoolean("animalReindeerIsUnlocked", true).apply();
         animalOptions.get(indexOfAnimalReindeer).getAnimalSelectionImageView().setImageResource(0);
     }
 
     public void unlockAccessToAnimalZebra() {
+        sharedPreferences.edit().putBoolean("animalZebraIsUnlocked", true).apply();
         int indexOfAnimalZebra = 5;
         animalOptions.get(indexOfAnimalZebra).setAnimalUnlocked(true);
-        sharedPreferences.edit().putBoolean("animalZebraIsUnlocked", true).apply();
         animalOptions.get(indexOfAnimalZebra).getAnimalSelectionImageView().setImageResource(0);
     }
 

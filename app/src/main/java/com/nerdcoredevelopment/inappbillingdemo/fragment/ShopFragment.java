@@ -15,7 +15,11 @@ import androidx.fragment.app.Fragment;
 
 import com.nerdcoredevelopment.inappbillingdemo.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ShopFragment extends Fragment {
+    public static final String ITEM_PRICES = "itemPrices";
     private Context context;
     private OnShopFragmentInteractionListener mListener;
     private SharedPreferences sharedPreferences;
@@ -23,25 +27,31 @@ public class ShopFragment extends Fragment {
     /* Views related to this fragment */
     private AppCompatImageView backButton;
     private AppCompatTextView stockLeftTextView;
-    private ConstraintLayout shopFeedLevel1ConstraintLayout;
-    private ConstraintLayout shopFeedLevel2ConstraintLayout;
-    private ConstraintLayout shopFeedLevel3ConstraintLayout;
-    private ConstraintLayout shopFeedLevel4ConstraintLayout;
-    private AppCompatButton shopFeedLevel1PurchaseButton;
-    private AppCompatButton shopFeedLevel2PurchaseButton;
-    private AppCompatButton shopFeedLevel3PurchaseButton;
-    private AppCompatButton shopFeedLevel4PurchaseButton;
+    private List<ConstraintLayout> shopFeedConstraintLayouts;
+    private List<AppCompatButton> shopFeedPurchaseButtons;
 
     /* Variables related to this fragment */
     private int stockLeft;
+    private List<String> itemPrices;
 
     public ShopFragment() {
         // Required empty public constructor
     }
 
+    public static ShopFragment newInstance(ArrayList<String> itemPrices) {
+        ShopFragment fragment = new ShopFragment();
+        Bundle args = new Bundle();
+        args.putStringArrayList(ITEM_PRICES, itemPrices);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            this.itemPrices = getArguments().getStringArrayList(ITEM_PRICES);
+        }
     }
 
     private void settingOnClickListeners() {
@@ -54,47 +64,26 @@ public class ShopFragment extends Fragment {
             }
         });
 
-        shopFeedLevel1ConstraintLayout.setOnClickListener(view -> {
-            if (mListener != null) {
-                mListener.onShopFragmentInteractionPurchaseOptionClicked(view.getId());
-            }
-        });
-        shopFeedLevel2ConstraintLayout.setOnClickListener(view -> {
-            if (mListener != null) {
-                mListener.onShopFragmentInteractionPurchaseOptionClicked(view.getId());
-            }
-        });
-        shopFeedLevel3ConstraintLayout.setOnClickListener(view -> {
-            if (mListener != null) {
-                mListener.onShopFragmentInteractionPurchaseOptionClicked(view.getId());
-            }
-        });
-        shopFeedLevel4ConstraintLayout.setOnClickListener(view -> {
-            if (mListener != null) {
-                mListener.onShopFragmentInteractionPurchaseOptionClicked(view.getId());
-            }
-        });
-
-        shopFeedLevel1PurchaseButton.setOnClickListener(view -> {
-            if (mListener != null) {
-                mListener.onShopFragmentInteractionPurchaseOptionClicked(view.getId());
-            }
-        });
-        shopFeedLevel2PurchaseButton.setOnClickListener(view -> {
-            if (mListener != null) {
-                mListener.onShopFragmentInteractionPurchaseOptionClicked(view.getId());
-            }
-        });
-        shopFeedLevel3PurchaseButton.setOnClickListener(view -> {
-            if (mListener != null) {
-                mListener.onShopFragmentInteractionPurchaseOptionClicked(view.getId());
-            }
-        });
-        shopFeedLevel4PurchaseButton.setOnClickListener(view -> {
-            if (mListener != null) {
-                mListener.onShopFragmentInteractionPurchaseOptionClicked(view.getId());
-            }
-        });
+        for (int index = 0; index < shopFeedConstraintLayouts.size(); index++) {
+            shopFeedConstraintLayouts.get(index).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null) {
+                        mListener.onShopFragmentInteractionPurchaseOptionClicked(view.getId());
+                    }
+                }
+            });
+        }
+        for (int index = 0; index < shopFeedPurchaseButtons.size(); index++) {
+            shopFeedPurchaseButtons.get(index).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null) {
+                        mListener.onShopFragmentInteractionPurchaseOptionClicked(view.getId());
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -112,24 +101,35 @@ public class ShopFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_shop, container, false);
 
         backButton = view.findViewById(R.id.title_back_shop_fragment_button);
-
         stockLeftTextView = view.findViewById(R.id.stock_left_text_view_shop_fragment);
-        shopFeedLevel1ConstraintLayout = view.findViewById(R.id.shop_feed_level1_constraint_layout);
-        shopFeedLevel2ConstraintLayout = view.findViewById(R.id.shop_feed_level2_constraint_layout);
-        shopFeedLevel3ConstraintLayout = view.findViewById(R.id.shop_feed_level3_constraint_layout);
-        shopFeedLevel4ConstraintLayout = view.findViewById(R.id.shop_feed_level4_constraint_layout);
-
-        shopFeedLevel1PurchaseButton = view.findViewById(R.id.shop_feed_level1_purchase_button);
-        shopFeedLevel2PurchaseButton = view.findViewById(R.id.shop_feed_level2_purchase_button);
-        shopFeedLevel3PurchaseButton = view.findViewById(R.id.shop_feed_level3_purchase_button);
-        shopFeedLevel4PurchaseButton = view.findViewById(R.id.shop_feed_level4_purchase_button);
+        shopFeedConstraintLayouts = new ArrayList<>();
+        for (int level = 1; level <= 4; level++) {
+            int layoutResId = context.getResources().getIdentifier("shop_feed_level" + level +
+                            "_constraint_layout", "id", context.getPackageName());
+            shopFeedConstraintLayouts.add(view.findViewById(layoutResId));
+        }
+        shopFeedPurchaseButtons = new ArrayList<>();
+        for (int level = 1; level <= 4; level++) {
+            int layoutResId = context.getResources().getIdentifier("shop_feed_level" + level +
+                    "_purchase_button", "id", context.getPackageName());
+            shopFeedPurchaseButtons.add(view.findViewById(layoutResId));
+        }
 
         stockLeft = sharedPreferences.getInt("stockLeft", 50);
         stockLeftTextView.setText(String.valueOf(stockLeft));
+        for (int index = 0; index < shopFeedPurchaseButtons.size(); index++) {
+            shopFeedPurchaseButtons.get(index).setText(itemPrices.get(index));
+        }
 
         settingOnClickListeners();
 
         return view;
+    }
+
+    public void updateHayStockShopFragment(int hayUnitsPurchase) {
+        stockLeft += hayUnitsPurchase;
+        stockLeftTextView.setText(String.valueOf(stockLeft));
+        sharedPreferences.edit().putInt("stockLeft", stockLeft).apply();
     }
 
     public interface OnShopFragmentInteractionListener {
