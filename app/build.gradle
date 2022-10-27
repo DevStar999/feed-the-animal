@@ -57,6 +57,7 @@ dependencies {
     // For In-App Purchases, Subscriptions etc. (noinspection GradleDependency)
     implementation 'com.android.billingclient:billing:4.0.0'
 
+    // For Volley
     def volley_version = "1.2.1"
     implementation "com.android.volley:volley:$volley_version"
 
