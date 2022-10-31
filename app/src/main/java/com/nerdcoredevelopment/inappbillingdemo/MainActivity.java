@@ -53,9 +53,6 @@ import java.util.Map;
 
 // TODO -> Complete the In-App Billing related tasks from the photo taken from mobile phone camera
 // TODO -> Among the error code block of In-App Billing handle internet connectivity related issues
-/* TODO -> Try accessing the fragments using getSupportFragmentManager().getFragments() instead of having to make them as
-           attributes of MainActivity so as to have access of them at all times
-*/
 public class MainActivity extends AppCompatActivity implements
         InfoFragment.OnInfoFragmentInteractionListener,
         NavigationFragment.OnNavigationFragmentInteractionListener,
