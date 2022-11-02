@@ -36,6 +36,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.GameExitDialog;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.FarmerFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.FeedingFragment;
@@ -46,6 +48,7 @@ import com.nerdcoredevelopment.inappbillingdemo.fragment.ShopFragment;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,21 +67,19 @@ public class MainActivity extends AppCompatActivity implements
     private FeedingFragment feedingFragment;
     private ShopFragment shopFragment;
     private SharedPreferences sharedPreferences;
+    private Gson gson;
     private Map<String, Integer> hayUnitsReward;
     private BillingClient recurringConsumablesBillingClient;
     private BillingClient nonRecurringConsumablesBillingClient;
-    private Map<String, SkuDetails> animalsSkuDetails;
-    private Map<String, SkuDetails> hayLevelsSkuDetails;
 
     private void initialise() {
         navigationFragment = new NavigationFragment();
         sharedPreferences = getSharedPreferences("com.nerdcoredevelopment.inappbillingdemo", Context.MODE_PRIVATE);
+        gson = new Gson();
         hayUnitsReward = new HashMap<>() {{
             put("hay_level1", 50); put("hay_level2", 100);
             put("hay_level3", 250); put("hay_level4", 500);
         }};
-        animalsSkuDetails = new HashMap<>();
-        hayLevelsSkuDetails = new HashMap<>();
     }
 
     private void setupBillingClients() {
@@ -179,14 +180,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void getProductDetailsOfRecurringConsumables() {
         // If we have the SkuDetails for all the hay levels then return
-        boolean doesContainAllHayLevels = true;
-        for (int level = 1; level <= 4; level++) {
-            if (!hayLevelsSkuDetails.containsKey("hay_level" + level)) {
-                doesContainAllHayLevels = false;
-                break;
-            }
-        }
-        if (doesContainAllHayLevels) {
+        if (sharedPreferences.getBoolean("areHaySkuDetailsSaved", false)) {
             return;
         }
 
@@ -202,9 +196,27 @@ public class MainActivity extends AppCompatActivity implements
             public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> list) {
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK &&
                         list != null) {
-                    for (int index = 0; index < list.size(); index++) {
-                        SkuDetails currentItem = list.get(index);
-                        hayLevelsSkuDetails.put(currentItem.getSku(), currentItem);
+                    if (!sharedPreferences.getBoolean("areHaySkuDetailsSaved", false)) {
+                        Map<String, SkuDetails> hayLevelsSkuDetails = new HashMap<>();
+                        for (int index = 0; index < list.size(); index++) {
+                            SkuDetails currentItem = list.get(index);
+                            hayLevelsSkuDetails.put(currentItem.getSku(), currentItem);
+                        }
+                        List<String> hayItemPrices = new ArrayList<>();
+                        for (int level = 1; level <= 4; level++) {
+                            String skuString = "hay_level" + level;
+                            if (hayLevelsSkuDetails.containsKey(skuString)) {
+                                if (!hayLevelsSkuDetails.get(skuString).getPrice().isEmpty()) {
+                                    hayItemPrices.add(hayLevelsSkuDetails.get(skuString).getPrice());
+                                }
+                            }
+                        }
+                        if (hayItemPrices.size() == 4) {
+                            sharedPreferences.edit().putString("hayItemPrices", gson.toJson(hayItemPrices)).apply();
+                            sharedPreferences.edit().putString("hayLevelsSkuDetails", gson.toJson(hayLevelsSkuDetails)).apply();
+                            sharedPreferences.edit().putBoolean("areHaySkuDetailsSaved", true).apply();
+                            // TODO -> call fragment method from here if fragment has been opened when this happened
+                        }
                     }
                 }
             }
@@ -215,9 +227,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void getProductDetailsOfNonRecurringConsumables() {
         // If we have the SkuDetails for the 3 locked animals then return
-        if (animalsSkuDetails.containsKey("animal_horse")
-                && animalsSkuDetails.containsKey("animal_reindeer")
-                && animalsSkuDetails.containsKey("animal_zebra")) {
+        if (sharedPreferences.getBoolean("areAnimalSkuDetailsSaved", false)) {
             return;
         }
 
@@ -233,8 +243,16 @@ public class MainActivity extends AppCompatActivity implements
             public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> list) {
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK &&
                         list != null) {
-                    for (int index = 0; index < list.size(); index++) {
-                        animalsSkuDetails.put(list.get(index).getSku(), list.get(index));
+                    if (!sharedPreferences.getBoolean("areAnimalSkuDetailsSaved", false)) {
+                        Map<String, SkuDetails> animalSkuDetails = new HashMap<>();
+                        for (int index = 0; index < list.size(); index++) {
+                            SkuDetails currentItem = list.get(index);
+                            animalSkuDetails.put(currentItem.getSku(), currentItem);
+                        }
+                        if (animalSkuDetails.size() == 3) {
+                            sharedPreferences.edit().putString("animalSkuDetails", gson.toJson(animalSkuDetails)).apply();
+                            sharedPreferences.edit().putBoolean("areAnimalSkuDetailsSaved", true).apply();
+                        }
                     }
                 }
             }
@@ -443,19 +461,11 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onNavigationFragmentShopFeedClicked() {
-        boolean doesContainAllHayLevels = true;
-        for (int level = 1; level <= 4; level++) {
-            if (!hayLevelsSkuDetails.containsKey("hay_level" + level)) {
-                doesContainAllHayLevels = false;
-                break;
-            }
-        }
-        if (doesContainAllHayLevels) {
-            ArrayList<String> itemPrices = new ArrayList<>();
-            for (int level = 1; level <= 4; level++) {
-                itemPrices.add(hayLevelsSkuDetails.get("hay_level" + level).getPrice());
-            }
-            shopFragment = ShopFragment.newInstance(itemPrices);
+        if (sharedPreferences.getBoolean("areHaySkuDetailsSaved", false)) {
+            String jsonRetrieveHayItemPrices = sharedPreferences.getString("hayItemPrices",
+                    gson.toJson(new ArrayList<>()));
+            Type typeHayItemPrices = new TypeToken<List<String>>(){}.getType();
+            shopFragment = ShopFragment.newInstance(gson.fromJson(jsonRetrieveHayItemPrices, typeHayItemPrices));
         } else {
             shopFragment = new ShopFragment();
         }
@@ -485,19 +495,11 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onFeedingFragmentInteractionOutOfStock() {
-        boolean doesContainAllHayLevels = true;
-        for (int level = 1; level <= 4; level++) {
-            if (!hayLevelsSkuDetails.containsKey("hay_level" + level)) {
-                doesContainAllHayLevels = false;
-                break;
-            }
-        }
-        if (doesContainAllHayLevels) {
-            ArrayList<String> itemPrices = new ArrayList<>();
-            for (int level = 1; level <= 4; level++) {
-                itemPrices.add(hayLevelsSkuDetails.get("hay_level" + level).getPrice());
-            }
-            shopFragment = ShopFragment.newInstance(itemPrices);
+        if (sharedPreferences.getBoolean("areHaySkuDetailsSaved", false)) {
+            String jsonRetrieveHayItemPrices = sharedPreferences.getString("hayItemPrices",
+                    gson.toJson(new ArrayList<>()));
+            Type typeHayItemPrices = new TypeToken<List<String>>(){}.getType();
+            shopFragment = ShopFragment.newInstance(gson.fromJson(jsonRetrieveHayItemPrices, typeHayItemPrices));
         } else {
             shopFragment = new ShopFragment();
         }
@@ -511,26 +513,20 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onFeedingFragmentInteractionAccessLockedAnimalHorse() {
-        if (animalsSkuDetails.containsKey("animal_horse")) {
-            nonRecurringConsumablesBillingClient.launchBillingFlow(this, BillingFlowParams.newBuilder()
-                            .setSkuDetails(animalsSkuDetails.get("animal_horse")).build());
+    public void onFeedingFragmentInteractionAccessLockedAnimal(String animalKey) {
+        if (!sharedPreferences.getBoolean("areAnimalSkuDetailsSaved", false)) {
+            return;
         }
-    }
 
-    @Override
-    public void onFeedingFragmentInteractionAccessLockedAnimalReindeer() {
-        if (animalsSkuDetails.containsKey("animal_reindeer")) {
-            nonRecurringConsumablesBillingClient.launchBillingFlow(this, BillingFlowParams.newBuilder()
-                    .setSkuDetails(animalsSkuDetails.get("animal_reindeer")).build());
-        }
-    }
+        String jsonRetrieveAnimalSkuDetails = sharedPreferences.getString("animalSkuDetails",
+                gson.toJson(new HashMap<>()));
+        Type typeAnimalSkuDetails = new TypeToken<Map<String, SkuDetails>>(){}.getType();
+        Map<String, SkuDetails> animalSkuDetails = new HashMap<>(gson.fromJson(jsonRetrieveAnimalSkuDetails,
+                typeAnimalSkuDetails));
 
-    @Override
-    public void onFeedingFragmentInteractionAccessLockedAnimalZebra() {
-        if (animalsSkuDetails.containsKey("animal_zebra")) {
+        if (animalSkuDetails.containsKey(animalKey)) {
             nonRecurringConsumablesBillingClient.launchBillingFlow(this, BillingFlowParams.newBuilder()
-                    .setSkuDetails(animalsSkuDetails.get("animal_zebra")).build());
+                            .setSkuDetails(animalSkuDetails.get(animalKey)).build());
         }
     }
 
@@ -546,6 +542,16 @@ public class MainActivity extends AppCompatActivity implements
     
     @Override
     public void onShopFragmentInteractionPurchaseOptionClicked(int purchaseOptionViewId) {
+        if (!sharedPreferences.getBoolean("areHaySkuDetailsSaved", false)) {
+            return;
+        }
+
+        String jsonRetrieveHayLevelsSkuDetails = sharedPreferences.getString("hayLevelsSkuDetails",
+                gson.toJson(new HashMap<>()));
+        Type typeHayLevelsSkuDetails = new TypeToken<Map<String, SkuDetails>>(){}.getType();
+        Map<String, SkuDetails> hayLevelsSkuDetails = new HashMap<>(gson.fromJson(jsonRetrieveHayLevelsSkuDetails,
+                typeHayLevelsSkuDetails));
+
         if (purchaseOptionViewId == R.id.shop_feed_level1_constraint_layout
                 || purchaseOptionViewId == R.id.shop_feed_level1_purchase_button) {
             if (hayLevelsSkuDetails.containsKey("hay_level1")) {

@@ -110,11 +110,11 @@ public class FeedingFragment extends Fragment {
             } else { // Animal is locked
                 if (mListener != null) {
                     if (indexOfSelectedAnimalInAnimalOptions == 3) {
-                        mListener.onFeedingFragmentInteractionAccessLockedAnimalHorse();
+                        mListener.onFeedingFragmentInteractionAccessLockedAnimal("animal_horse");
                     } else if (indexOfSelectedAnimalInAnimalOptions == 4) {
-                        mListener.onFeedingFragmentInteractionAccessLockedAnimalReindeer();
+                        mListener.onFeedingFragmentInteractionAccessLockedAnimal("animal_reindeer");
                     } else if (indexOfSelectedAnimalInAnimalOptions == 5) {
-                        mListener.onFeedingFragmentInteractionAccessLockedAnimalZebra();
+                        mListener.onFeedingFragmentInteractionAccessLockedAnimal("animal_zebra");
                     }
                 }
             }
@@ -291,9 +291,7 @@ public class FeedingFragment extends Fragment {
     public interface OnFeedingFragmentInteractionListener {
         void onFeedingFragmentInteractionBackClicked();
         void onFeedingFragmentInteractionOutOfStock();
-        void onFeedingFragmentInteractionAccessLockedAnimalHorse();
-        void onFeedingFragmentInteractionAccessLockedAnimalReindeer();
-        void onFeedingFragmentInteractionAccessLockedAnimalZebra();
+        void onFeedingFragmentInteractionAccessLockedAnimal(String animalKey);
     }
 
     @Override
