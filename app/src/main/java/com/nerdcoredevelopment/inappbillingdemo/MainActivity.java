@@ -215,7 +215,8 @@ public class MainActivity extends AppCompatActivity implements
                             List<Fragment> fragments = new ArrayList<>(getSupportFragmentManager().getFragments());
                             for (int index = 0; index < fragments.size(); index++) {
                                 Fragment currentFragment = fragments.get(index);
-                                if (currentFragment != null) {
+                                if (currentFragment != null && currentFragment.getTag() != null
+                                        && !currentFragment.getTag().isEmpty()) {
                                     if (currentFragment.getTag().equals("SHOP_FRAGMENT")) {
                                         ((ShopFragment) currentFragment).updateHayItemPrices(hayItemPrices);
                                     }
@@ -288,8 +289,9 @@ public class MainActivity extends AppCompatActivity implements
                                     List<Fragment> fragments = new ArrayList<>(getSupportFragmentManager().getFragments());
                                     for (int index = 0; index < fragments.size(); index++) {
                                         Fragment currentFragment = fragments.get(index);
-                                        if (currentFragment != null) {
-                                            if (currentFragment.getTag().equals("FEEDING_FRAGMENT")) {
+                                        if (currentFragment != null && currentFragment.getTag() != null
+                                                && !currentFragment.getTag().isEmpty()) {
+                                            if (currentFragment.getTag().equals("FEEDING_FRAGMENT") ) {
                                                 if (productId.equals("animal_horse")) {
                                                     sharedPreferences.edit()
                                                             .putBoolean("animalHorseIsUnlocked", true).apply();
@@ -326,7 +328,8 @@ public class MainActivity extends AppCompatActivity implements
                                                     new ArrayList<>(getSupportFragmentManager().getFragments());
                                             for (int index = 0; index < fragments.size(); index++) {
                                                 Fragment currentFragment = fragments.get(index);
-                                                if (currentFragment != null) {
+                                                if (currentFragment != null && currentFragment.getTag() != null
+                                                        && !currentFragment.getTag().isEmpty()) {
                                                     if (currentFragment.getTag().equals("FEEDING_FRAGMENT")) {
                                                         ((FeedingFragment) currentFragment)
                                                                 .updateHayStockFeedingFragment(stockLeft);
