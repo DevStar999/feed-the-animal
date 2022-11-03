@@ -440,6 +440,16 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void infoButtonClicked(View view) {
+        // If InfoFragment was opened and is currently on top, then return
+        int countOfFragments = getSupportFragmentManager().getFragments().size();
+        if (countOfFragments > 0) {
+            Fragment topMostFragment = getSupportFragmentManager().getFragments().get(countOfFragments-1);
+            if (topMostFragment != null && topMostFragment.getTag() != null && !topMostFragment.getTag().isEmpty()
+                    && topMostFragment.getTag().equals("INFO_FRAGMENT")) {
+                return;
+            }
+        }
+
         InfoFragment fragment =
                 InfoFragment.newInstance("<Add any text you would like to print here>");
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -458,6 +468,16 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onNavigationFragmentMeetTheFarmerClicked() {
+        // If FarmerFragment was opened and is currently on top, then return
+        int countOfFragments = getSupportFragmentManager().getFragments().size();
+        if (countOfFragments > 0) {
+            Fragment topMostFragment = getSupportFragmentManager().getFragments().get(countOfFragments-1);
+            if (topMostFragment != null && topMostFragment.getTag() != null && !topMostFragment.getTag().isEmpty()
+                    && topMostFragment.getTag().equals("FARMER_FRAGMENT")) {
+                return;
+            }
+        }
+
         FarmerFragment fragment = new FarmerFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -470,6 +490,16 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onNavigationFragmentFeedAnimalsClicked() {
+        // If FeedingFragment was opened and is currently on top, then return
+        int countOfFragments = getSupportFragmentManager().getFragments().size();
+        if (countOfFragments > 0) {
+            Fragment topMostFragment = getSupportFragmentManager().getFragments().get(countOfFragments-1);
+            if (topMostFragment != null && topMostFragment.getTag() != null && !topMostFragment.getTag().isEmpty()
+                    && topMostFragment.getTag().equals("FEEDING_FRAGMENT")) {
+                return;
+            }
+        }
+
         FeedingFragment feedingFragment = new FeedingFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -482,6 +512,16 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onNavigationFragmentSettingsClicked() {
+        // If SettingsFragment was opened and is currently on top, then return
+        int countOfFragments = getSupportFragmentManager().getFragments().size();
+        if (countOfFragments > 0) {
+            Fragment topMostFragment = getSupportFragmentManager().getFragments().get(countOfFragments-1);
+            if (topMostFragment != null && topMostFragment.getTag() != null && !topMostFragment.getTag().isEmpty()
+                    && topMostFragment.getTag().equals("SETTINGS_FRAGMENT")) {
+                return;
+            }
+        }
+
         SettingsFragment fragment = new SettingsFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -494,6 +534,16 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onNavigationFragmentShopFeedClicked() {
+        // If ShopFragment was opened and is currently on top, then return
+        int countOfFragments = getSupportFragmentManager().getFragments().size();
+        if (countOfFragments > 0) {
+            Fragment topMostFragment = getSupportFragmentManager().getFragments().get(countOfFragments-1);
+            if (topMostFragment != null && topMostFragment.getTag() != null && !topMostFragment.getTag().isEmpty()
+                    && topMostFragment.getTag().equals("SHOP_FRAGMENT")) {
+                return;
+            }
+        }
+
         ShopFragment shopFragment;
         if (sharedPreferences.getBoolean("areHaySkuDetailsSaved", false)) {
             String jsonRetrieveHayItemPrices = sharedPreferences.getString("hayItemPrices",
@@ -529,6 +579,16 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onFeedingFragmentInteractionOutOfStock() {
+        // If ShopFragment was opened and is currently on top, then return
+        int countOfFragments = getSupportFragmentManager().getFragments().size();
+        if (countOfFragments > 0) {
+            Fragment topMostFragment = getSupportFragmentManager().getFragments().get(countOfFragments-1);
+            if (topMostFragment != null && topMostFragment.getTag() != null && !topMostFragment.getTag().isEmpty()
+                    && topMostFragment.getTag().equals("SHOP_FRAGMENT")) {
+                return;
+            }
+        }
+
         ShopFragment shopFragment;
         if (sharedPreferences.getBoolean("areHaySkuDetailsSaved", false)) {
             String jsonRetrieveHayItemPrices = sharedPreferences.getString("hayItemPrices",
