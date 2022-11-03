@@ -117,7 +117,7 @@ public class ShopFragment extends Fragment {
 
         stockLeft = sharedPreferences.getInt("stockLeft", 20);
         stockLeftTextView.setText(String.valueOf(stockLeft));
-        if (itemPrices != null && itemPrices.size() == 4) {
+        if (sharedPreferences.getBoolean("areHaySkuDetailsSaved", false)) {
             for (int index = 0; index < shopFeedPurchaseButtons.size(); index++) {
                 shopFeedPurchaseButtons.get(index).setText(itemPrices.get(index));
             }
@@ -128,8 +128,14 @@ public class ShopFragment extends Fragment {
         return view;
     }
 
+    public void updateHayItemPrices(List<String> itemPrices) {
+        this.itemPrices = new ArrayList<>(itemPrices);
+        for (int index = 0; index < shopFeedPurchaseButtons.size(); index++) {
+            shopFeedPurchaseButtons.get(index).setText(itemPrices.get(index));
+        }
+    }
+
     public void updateHayStockShopFragment(int updatedStock) {
-        sharedPreferences.edit().putInt("stockLeft", updatedStock).apply();
         if (mListener != null) {
             stockLeft = updatedStock;
             stockLeftTextView.setText(String.valueOf(stockLeft));

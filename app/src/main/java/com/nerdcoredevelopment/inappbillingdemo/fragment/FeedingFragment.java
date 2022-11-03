@@ -254,7 +254,6 @@ public class FeedingFragment extends Fragment {
     }
 
     public void updateHayStockFeedingFragment(int updatedStock) {
-        sharedPreferences.edit().putInt("stockLeft", updatedStock).apply();
         if (mListener != null) {
             stockLeft = updatedStock;
             stockLeftTextView.setText(String.valueOf(stockLeft));
@@ -262,7 +261,6 @@ public class FeedingFragment extends Fragment {
     }
 
     public void unlockAccessToAnimalHorse() {
-        sharedPreferences.edit().putBoolean("animalHorseIsUnlocked", true).apply();
         if (mListener != null) {
             int indexOfAnimalHorse = 3;
             animalOptions.get(indexOfAnimalHorse).setAnimalUnlocked(true);
@@ -271,7 +269,6 @@ public class FeedingFragment extends Fragment {
     }
 
     public void unlockAccessToAnimalReindeer() {
-        sharedPreferences.edit().putBoolean("animalReindeerIsUnlocked", true).apply();
         if (mListener != null) {
             int indexOfAnimalReindeer = 4;
             animalOptions.get(indexOfAnimalReindeer).setAnimalUnlocked(true);
@@ -280,7 +277,6 @@ public class FeedingFragment extends Fragment {
     }
 
     public void unlockAccessToAnimalZebra() {
-        sharedPreferences.edit().putBoolean("animalZebraIsUnlocked", true).apply();
         if (mListener != null) {
             int indexOfAnimalZebra = 5;
             animalOptions.get(indexOfAnimalZebra).setAnimalUnlocked(true);

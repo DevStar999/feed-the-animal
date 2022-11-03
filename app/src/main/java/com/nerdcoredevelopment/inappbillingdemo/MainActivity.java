@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -63,9 +64,6 @@ public class MainActivity extends AppCompatActivity implements
         FeedingFragment.OnFeedingFragmentInteractionListener,
         SettingsFragment.OnSettingsFragmentInteractionListener,
         ShopFragment.OnShopFragmentInteractionListener {
-    private NavigationFragment navigationFragment;
-    private FeedingFragment feedingFragment;
-    private ShopFragment shopFragment;
     private SharedPreferences sharedPreferences;
     private Gson gson;
     private Map<String, Integer> hayUnitsReward;
@@ -73,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements
     private BillingClient nonRecurringConsumablesBillingClient;
 
     private void initialise() {
-        navigationFragment = new NavigationFragment();
         sharedPreferences = getSharedPreferences("com.nerdcoredevelopment.inappbillingdemo", Context.MODE_PRIVATE);
         gson = new Gson();
         hayUnitsReward = new HashMap<>() {{
@@ -215,7 +212,15 @@ public class MainActivity extends AppCompatActivity implements
                             sharedPreferences.edit().putString("hayItemPrices", gson.toJson(hayItemPrices)).apply();
                             sharedPreferences.edit().putString("hayLevelsSkuDetails", gson.toJson(hayLevelsSkuDetails)).apply();
                             sharedPreferences.edit().putBoolean("areHaySkuDetailsSaved", true).apply();
-                            // TODO -> call fragment method from here if fragment has been opened when this happened
+                            List<Fragment> fragments = new ArrayList<>(getSupportFragmentManager().getFragments());
+                            for (int index = 0; index < fragments.size(); index++) {
+                                Fragment currentFragment = fragments.get(index);
+                                if (currentFragment != null) {
+                                    if (currentFragment.getTag().equals("SHOP_FRAGMENT")) {
+                                        ((ShopFragment) currentFragment).updateHayItemPrices(hayItemPrices);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -280,12 +285,26 @@ public class MainActivity extends AppCompatActivity implements
                                 = billingResult -> {
                                 if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                                     String productId = purchase.getSkus().get(0);
-                                    if (productId.equals("animal_horse")) {
-                                        feedingFragment.unlockAccessToAnimalHorse();
-                                    } else if (productId.equals("animal_reindeer")) {
-                                        feedingFragment.unlockAccessToAnimalReindeer();
-                                    } else if (productId.equals("animal_zebra")) {
-                                        feedingFragment.unlockAccessToAnimalZebra();
+                                    List<Fragment> fragments = new ArrayList<>(getSupportFragmentManager().getFragments());
+                                    for (int index = 0; index < fragments.size(); index++) {
+                                        Fragment currentFragment = fragments.get(index);
+                                        if (currentFragment != null) {
+                                            if (currentFragment.getTag().equals("FEEDING_FRAGMENT")) {
+                                                if (productId.equals("animal_horse")) {
+                                                    sharedPreferences.edit()
+                                                            .putBoolean("animalHorseIsUnlocked", true).apply();
+                                                    ((FeedingFragment) currentFragment).unlockAccessToAnimalHorse();
+                                                } else if (productId.equals("animal_reindeer")) {
+                                                    sharedPreferences.edit()
+                                                            .putBoolean("animalReindeerIsUnlocked", true).apply();
+                                                    ((FeedingFragment) currentFragment).unlockAccessToAnimalReindeer();
+                                                } else if (productId.equals("animal_zebra")) {
+                                                    sharedPreferences.edit()
+                                                            .putBoolean("animalZebraIsUnlocked", true).apply();
+                                                    ((FeedingFragment) currentFragment).unlockAccessToAnimalZebra();
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             };
@@ -302,8 +321,21 @@ public class MainActivity extends AppCompatActivity implements
                                         if (productId.equals(hayLevel)) {
                                             int stockLeft = sharedPreferences.getInt("stockLeft", 20);
                                             stockLeft += hayUnitsReward.get(hayLevel) * purchase.getQuantity();
-                                            feedingFragment.updateHayStockFeedingFragment(stockLeft);
-                                            shopFragment.updateHayStockShopFragment(stockLeft);
+                                            sharedPreferences.edit().putInt("stockLeft", stockLeft).apply();
+                                            List<Fragment> fragments =
+                                                    new ArrayList<>(getSupportFragmentManager().getFragments());
+                                            for (int index = 0; index < fragments.size(); index++) {
+                                                Fragment currentFragment = fragments.get(index);
+                                                if (currentFragment != null) {
+                                                    if (currentFragment.getTag().equals("FEEDING_FRAGMENT")) {
+                                                        ((FeedingFragment) currentFragment)
+                                                                .updateHayStockFeedingFragment(stockLeft);
+                                                    } else if (currentFragment.getTag().equals("SHOP_FRAGMENT")) {
+                                                        ((ShopFragment) currentFragment)
+                                                                .updateHayStockShopFragment(stockLeft);
+                                                    }
+                                                }
+                                            }
                                             break;
                                         }
                                     }
@@ -359,6 +391,7 @@ public class MainActivity extends AppCompatActivity implements
 
         initialise();
 
+        NavigationFragment navigationFragment = new NavigationFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.navigation_fragment_container_main_activity, navigationFragment)
                 .commit();
@@ -437,7 +470,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onNavigationFragmentFeedAnimalsClicked() {
-        feedingFragment = new FeedingFragment();
+        FeedingFragment feedingFragment = new FeedingFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right,
@@ -461,6 +494,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onNavigationFragmentShopFeedClicked() {
+        ShopFragment shopFragment;
         if (sharedPreferences.getBoolean("areHaySkuDetailsSaved", false)) {
             String jsonRetrieveHayItemPrices = sharedPreferences.getString("hayItemPrices",
                     gson.toJson(new ArrayList<>()));
@@ -495,6 +529,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onFeedingFragmentInteractionOutOfStock() {
+        ShopFragment shopFragment;
         if (sharedPreferences.getBoolean("areHaySkuDetailsSaved", false)) {
             String jsonRetrieveHayItemPrices = sharedPreferences.getString("hayItemPrices",
                     gson.toJson(new ArrayList<>()));
