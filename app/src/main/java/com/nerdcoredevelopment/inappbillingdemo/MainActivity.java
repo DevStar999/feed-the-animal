@@ -393,7 +393,7 @@ public class MainActivity extends AppCompatActivity implements
 
         NavigationFragment navigationFragment = new NavigationFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.navigation_fragment_container_main_activity, navigationFragment)
+                .replace(R.id.navigation_fragment_container_main_activity, navigationFragment, "NAVIGATION_FRAGMENT")
                 .commit();
 
         setupBillingClients();
