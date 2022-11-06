@@ -55,7 +55,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// TODO -> Complete the In-App Billing related tasks from the photo taken from mobile phone camera
 // TODO -> Among the error code block of In-App Billing handle internet connectivity related issues
 public class MainActivity extends AppCompatActivity implements
         InfoFragment.OnInfoFragmentInteractionListener,
