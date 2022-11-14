@@ -357,9 +357,6 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void loadBannerAd() {
-    }
-
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -394,8 +391,6 @@ public class MainActivity extends AppCompatActivity implements
         initialise();
 
         showAppOpenAd();
-
-        loadBannerAd();
 
         NavigationFragment navigationFragment = new NavigationFragment();
         getSupportFragmentManager().beginTransaction()
