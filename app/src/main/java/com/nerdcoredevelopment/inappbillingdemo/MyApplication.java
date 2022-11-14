@@ -119,7 +119,7 @@ public class MyApplication extends Application implements Application.ActivityLi
      * Inner class that loads and shows app open ads.
      */
     private class AppOpenAdManager {
-        private static final String AD_UNIT_ID = "ca-app-pub-3940256099942544/3419835294";
+        private static final String AD_UNIT_ID = "ca-app-pub-4247468904518611/4943486363";
         private AppOpenAd appOpenAd = null;
         private boolean isLoadingAd = false;
         private boolean isShowingAd = false;
