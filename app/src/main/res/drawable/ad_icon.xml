@@ -4,7 +4,7 @@
     android:height="200dp"
     android:viewportWidth="512"
     android:viewportHeight="512">
-    <!-- Source Link = https://www.svgrepo.com/svg/63857/clapboard -->
+    <!-- Source Link = https://www.svgrepo.com/svg/79500/clapboard -->
     
     <path
         android:fillColor="@color/white"
