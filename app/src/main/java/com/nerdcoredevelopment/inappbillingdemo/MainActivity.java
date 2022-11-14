@@ -242,7 +242,11 @@ public class MainActivity extends AppCompatActivity implements
      */
     private boolean verifyValidSignature(String signedData, String signature) {
         try {
-            String base64Key = "<Add your key here>";
+            String base64Key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApP7w1ImuyC6/SIsnw/W1g5EphPagMYKCHuhhYk29" +
+                    "qfTy7pg33AxhbZordUvbWbENADLK703X5y2+WEkSII7Ego9O5RSSfdERzTJAt5eydiYMQo+kDJAZUwj8sETpnbABR7WK6Om" +
+                    "hkv8PbgaPK52NgYVnLhEtewH7rOo5Emn0kVcFz5QgtJ0IdgxDVtnJgfyssBdxa8R6MUFoZkVO0wC6ZYjxKukK8oYBIdUURS" +
+                    "SdPWRq9AVTfn2MrTE7f+JbiFFRR2wmHwme1rpD8fiF3ucK/ZilZj4wYWXs7L3wwYHasSYGLfhaFmY83z65MAk9aFDP0O4Yg" +
+                    "QUrD8N/V6miSdCnswIDAQAB";
             return Security.verifyPurchase(base64Key, signedData, signature);
         } catch (IOException e) {
             return false;
