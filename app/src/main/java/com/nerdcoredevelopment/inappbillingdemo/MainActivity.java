@@ -33,6 +33,10 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.GameExitDialog;
@@ -70,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements
     private Gson gson;
     private Map<String, Integer> hayUnitsReward;
     private BillingClient billingClient;
+    private AdRequest adRequest;
 
     private void initialise() {
         sharedPreferences = getSharedPreferences("com.nerdcoredevelopment.inappbillingdemo", Context.MODE_PRIVATE);
@@ -78,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements
             put("hay_level1_v2", 50); put("hay_level2_v2", 100);
             put("hay_level3_v2", 250); put("hay_level4_v2", 500);
         }};
+        adRequest = new AdRequest.Builder().build();
     }
 
     private void setupBillingClient() {
@@ -351,6 +357,9 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    private void loadBannerAd() {
+    }
+
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -385,6 +394,8 @@ public class MainActivity extends AppCompatActivity implements
         initialise();
 
         showAppOpenAd();
+
+        loadBannerAd();
 
         NavigationFragment navigationFragment = new NavigationFragment();
         getSupportFragmentManager().beginTransaction()
@@ -425,7 +436,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) { // Back button was pressed from MainActivity
             GameExitDialog gameExitDialog = new GameExitDialog(this);
             gameExitDialog.show();
             gameExitDialog.setGameExitDialogListener(new GameExitDialog.GameExitDialogListener() {
@@ -436,8 +447,7 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 }
             });
-        } else {
-            // Back button was pressed from fragment
+        } else { // Back button was pressed from fragment
             getSupportFragmentManager().popBackStack();
         }
     }
@@ -563,6 +573,28 @@ public class MainActivity extends AppCompatActivity implements
         transaction.addToBackStack(null);
         transaction.add(R.id.full_screen_fragment_container_main_activity,
                 shopFragment, "SHOP_FRAGMENT").commit();
+    }
+
+    @Override
+    public void onFarmerFragmentInteractionLoadBannerAd(AdView bannerAdView) {
+        bannerAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdClicked() { // Code to be executed when the user clicks on an ad.
+                super.onAdClicked();
+                // TODO -> Implement logic to prevent users from clicking the ad too many times in a short period of time
+                /* Note: If the user clicks on ad too many times in a short period of time, Google may suspect this as fishy
+                         behaviour and this could lead to serious consequences like AdMob account suspension or termination
+                         OR suspension or termination of App from Play Store. However, we need not worry too much about this
+                         as well, since at first we will be warned by Google about this.
+                */
+            }
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) { // Code to be executed when an ad request fails.
+                super.onAdFailedToLoad(loadAdError);
+                bannerAdView.loadAd(adRequest);
+            }
+        });
+        bannerAdView.loadAd(adRequest);
     }
 
     @Override

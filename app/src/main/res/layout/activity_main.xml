@@ -44,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.85" />
+        app:layout_constraintGuide_percent="0.80" />
 
     <FrameLayout
         android:id="@+id/navigation_fragment_container_main_activity"
@@ -55,14 +55,6 @@
         app:layout_constraintStart_toStartOf="@id/vertical_guide_left_1_main_activity"
         app:layout_constraintTop_toTopOf="@id/horizontal_guide_top_1_main_activity" />
 
-    <FrameLayout
-        android:id="@+id/full_screen_fragment_container_main_activity"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- We can use the following button to open up a fragment
          where we can use it to print whatever useful information
@@ -79,5 +71,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/info_icon" />
+
+    <FrameLayout
+        android:id="@+id/full_screen_fragment_container_main_activity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

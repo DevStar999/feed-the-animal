@@ -10,12 +10,14 @@ import android.widget.LinearLayout;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.ads.AdView;
 import com.nerdcoredevelopment.inappbillingdemo.R;
 
 public class FarmerFragment extends Fragment {
     private OnFarmerFragmentInteractionListener mListener;
     private AppCompatImageView backButton;
     private LinearLayout aboutFarmerLinearLayout;
+    private AdView bannerAdView;
 
     public FarmerFragment() {
         // Required empty public constructor
@@ -59,6 +61,11 @@ public class FarmerFragment extends Fragment {
 
         backButton = view.findViewById(R.id.title_back_farmer_fragment_button);
         aboutFarmerLinearLayout = view.findViewById(R.id.about_farmer_linear_layout);
+        bannerAdView = view.findViewById(R.id.banner_ad_adview_farmer_fragment);
+
+        if (mListener != null) {
+            mListener.onFarmerFragmentInteractionLoadBannerAd(bannerAdView);
+        }
 
         settingOnClickListeners();
 
@@ -66,6 +73,7 @@ public class FarmerFragment extends Fragment {
     }
 
     public interface OnFarmerFragmentInteractionListener {
+        void onFarmerFragmentInteractionLoadBannerAd(AdView bannerAdView);
         void onFarmerFragmentInteractionBackClicked();
         void onFarmerFragmentInteractionAboutFarmerClicked();
     }
