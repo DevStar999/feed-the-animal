@@ -1,12 +1,10 @@
 package com.nerdcoredevelopment.inappbillingdemo;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -14,8 +12,6 @@ import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatImageView;
-
-import com.nerdcoredevelopment.inappbillingdemo.MyApplication.OnShowAdCompleteListener;
 
 /* TODO -> !! Caution !! - Always make sure to use a testing id for debugging and
            testing purposes. Also ensure to use the Actual id just before creating a
@@ -50,29 +46,14 @@ public class IntroActivity extends AppCompatActivity {
             public void onTick(long millisUntilFinished) {}
             @Override
             public void onFinish() {
-                Application application = getApplication();
-
-                // If the application is not an instance of MyApplication, log an error message and
-                // start the MainActivity without showing the app open ad.
-                if (!(application instanceof MyApplication)) {
-                    startMainActivity();
-                    return;
-                }
-
-                // Show the app open ad.
-                ((MyApplication) application).showAdIfAvailable(IntroActivity.this, new OnShowAdCompleteListener() {
-                    @Override
-                    public void onShowAdComplete() {
-                        startMainActivity();
-                    }
-                });
+                startMainActivity();
             }
         }.start();
     }
 
     private void startMainActivity() {
         Intent intent = new Intent(IntroActivity.this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }

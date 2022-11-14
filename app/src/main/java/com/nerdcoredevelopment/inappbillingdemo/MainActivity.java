@@ -1,6 +1,7 @@
 package com.nerdcoredevelopment.inappbillingdemo;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -41,6 +42,7 @@ import com.nerdcoredevelopment.inappbillingdemo.fragment.InfoFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.NavigationFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.SettingsFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.ShopFragment;
+import com.nerdcoredevelopment.inappbillingdemo.MyApplication.OnShowAdCompleteListener;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -339,11 +341,20 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    private void showAppOpenAd() {
+        Application application = getApplication();
+        if ((application instanceof MyApplication)) {
+            ((MyApplication) application).showAdIfAvailable(this, new OnShowAdCompleteListener() {
+                @Override
+                public void onShowAdComplete() {}
+            });
+        }
+    }
+
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.Theme_FeedTheAnimal);
 
         /*
         Following lines of code hide the status bar at the very top of the screen which battery
@@ -372,6 +383,8 @@ public class MainActivity extends AppCompatActivity implements
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
         initialise();
+
+        showAppOpenAd();
 
         NavigationFragment navigationFragment = new NavigationFragment();
         getSupportFragmentManager().beginTransaction()
