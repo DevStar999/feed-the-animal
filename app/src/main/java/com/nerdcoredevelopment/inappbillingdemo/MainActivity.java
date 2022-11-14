@@ -33,10 +33,16 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.GameExitDialog;
@@ -75,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements
     private Map<String, Integer> hayUnitsReward;
     private BillingClient billingClient;
     private AdRequest adRequest;
+    private RewardedAd rewardedAd;
+    private int rewardedAdHayUnitsReward;
 
     private void initialise() {
         sharedPreferences = getSharedPreferences("com.nerdcoredevelopment.inappbillingdemo", Context.MODE_PRIVATE);
@@ -84,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements
             put("hay_level3_v2", 250); put("hay_level4_v2", 500);
         }};
         adRequest = new AdRequest.Builder().build();
+        rewardedAdHayUnitsReward = 10;
     }
 
     private void setupBillingClient() {
@@ -237,9 +246,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void giveHayUnitsReward(String productId, int purchaseQuantity) {
-        int stockLeft = sharedPreferences.getInt("stockLeft", 20);
-        stockLeft += hayUnitsReward.get(productId) * purchaseQuantity;
+    private void updateHayUnits(int stockLeft) {
         sharedPreferences.edit().putInt("stockLeft", stockLeft).apply();
         List<Fragment> fragments = new ArrayList<>(getSupportFragmentManager().getFragments());
         for (int index = 0; index < fragments.size(); index++) {
@@ -253,6 +260,12 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         }
+    }
+
+    private void giveHayUnitsReward(String productId, int purchaseQuantity) {
+        int stockLeft = sharedPreferences.getInt("stockLeft", 20);
+        stockLeft += hayUnitsReward.get(productId) * purchaseQuantity;
+        updateHayUnits(stockLeft);
     }
 
     private void giveAnimalAccessReward(String productId) {
@@ -357,6 +370,58 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    private void loadRewardedAd() {
+        if (rewardedAd == null) {
+            RewardedAd.load(this, "ca-app-pub-3940256099942544/5224354917",
+                adRequest, new RewardedAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+                        MainActivity.this.rewardedAd = rewardedAd;
+                        MainActivity.this.rewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                            @Override
+                            public void onAdDismissedFullScreenContent() { // Called when ad is dismissed. Set the ad
+                                // reference to null so you don't show the ad a 2nd time.
+                                MainActivity.this.rewardedAd = null;
+                                loadRewardedAd(); // Pre-load the reward ad for the next time
+                            }
+                            @Override
+                            public void onAdFailedToShowFullScreenContent(AdError adError) { // Called when ad fails to show.
+                                MainActivity.this.rewardedAd = null;
+                            }
+                        });
+                        FeedingFragment feedingFragment = (FeedingFragment) getSupportFragmentManager()
+                                .findFragmentByTag("FEEDING_FRAGMENT");
+                        if (feedingFragment != null) {
+                            feedingFragment.showRewardedAdOption();
+                        }
+                    }
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) { // Handle the error.
+                        rewardedAd = null;
+                        loadRewardedAd();
+                    }
+                }
+            );
+        }
+    }
+
+    private void showRewardedAd() {
+        if (rewardedAd != null) {
+            rewardedAd.show(this, new OnUserEarnedRewardListener() {
+                @Override
+                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                    int stockLeft = sharedPreferences.getInt("stockLeft", 20);
+                    stockLeft += rewardedAdHayUnitsReward;
+                    updateHayUnits(stockLeft);
+                }
+            });
+        } else {
+            // The toast message string contains an acceptable message for the user if reward ad hasn't loaded yet.
+            Toast.makeText(this, "This ad is currently unavailable in your area", Toast.LENGTH_SHORT).show();
+            loadRewardedAd();
+        }
+    }
+
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -391,6 +456,8 @@ public class MainActivity extends AppCompatActivity implements
         initialise();
 
         showAppOpenAd();
+
+        loadRewardedAd();
 
         NavigationFragment navigationFragment = new NavigationFragment();
         getSupportFragmentManager().beginTransaction()
@@ -603,8 +670,24 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onFeedingFragmentInteractionHasRewardedAdLoaded() {
+        if (rewardedAd != null) {
+            FeedingFragment feedingFragment = (FeedingFragment) getSupportFragmentManager()
+                    .findFragmentByTag("FEEDING_FRAGMENT");
+            if (feedingFragment != null) {
+                feedingFragment.showRewardedAdOption();
+            }
+        }
+    }
+
+    @Override
     public void onFeedingFragmentInteractionBackClicked() {
         onBackPressed();
+    }
+
+    @Override
+    public void onFeedingFragmentShowRewardedAd() {
+        showRewardedAd();
     }
 
     @Override

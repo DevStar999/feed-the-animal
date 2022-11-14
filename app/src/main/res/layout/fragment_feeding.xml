@@ -59,21 +59,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.425" />
+        app:layout_constraintGuide_percent="0.375" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/horizontal_guide_bottom_2_feeding_fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.525" />
+        app:layout_constraintGuide_percent="0.475" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/horizontal_guide_bottom_1_feeding_fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.775" />
+        app:layout_constraintGuide_percent="0.7" />
 
     <FrameLayout
         android:id="@+id/feeding_fragment_title_frame_layout"
@@ -98,8 +98,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/title_back_feeding_fragment_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="start|center_vertical"
             android:layout_marginVertical="8dp"
             android:layout_marginStart="16dp"
@@ -455,43 +455,101 @@
         app:layout_constraintTop_toTopOf="@id/horizontal_guide_bottom_2_feeding_fragment" />
 
     <LinearLayout
-        android:id="@+id/stock_left_linear_layout_feeding_fragment"
+        android:id="@+id/hay_units_linear_layout_feeding_fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_corner_display"
-        android:orientation="horizontal"
-        android:padding="12dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@id/feed_animal_text_view_feeding_fragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/horizontal_guide_bottom_1_feeding_fragment">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/stock_left_text_view_start_feeding_fragment"
+        <LinearLayout
+            android:id="@+id/stock_left_linear_layout_feeding_fragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="Stock of hay left =  "
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="normal" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/rounded_corner_display"
+            android:orientation="horizontal"
+            android:padding="12dp">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/stock_left_text_view_feeding_fragment"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/stock_left_text_view_start_feeding_fragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Stock of hay left =  "
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/stock_left_text_view_feeding_fragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/stock_left_icon_image_view_feeding_fragment"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginStart="8dp"
+                app:srcCompat="@drawable/hay" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rewarded_ad_linear_layout_feeding_fragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="normal" />
+            android:layout_gravity="center_horizontal"
+            android:visibility="invisible"
+            android:background="@drawable/click_display"
+            android:orientation="horizontal"
+            android:padding="12dp">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/stock_left_icon_image_view_feeding_fragment"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="end|center_vertical"
-            android:layout_marginStart="8dp"
-            app:srcCompat="@drawable/hay" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/rewarded_ad_text_view_start_feeding_fragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Watch Ad "
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/rewarded_ad_icon_image_view_feeding_fragment"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="4dp"
+                app:srcCompat="@drawable/ad_icon" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/rewarded_ad_text_view_mid_feeding_fragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text=" for +10 "
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/hay_reward_icon_image_view_feeding_fragment"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="4dp"
+                app:srcCompat="@drawable/hay" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -510,6 +568,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stock_left_linear_layout_feeding_fragment" />
+        app:layout_constraintTop_toBottomOf="@id/hay_units_linear_layout_feeding_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

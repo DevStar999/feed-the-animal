@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -39,6 +40,7 @@ public class FeedingFragment extends Fragment {
     private ConstraintLayout animalHorseConstraintLayout;
     private ConstraintLayout animalReindeerConstraintLayout;
     private ConstraintLayout animalZebraConstraintLayout;
+    private LinearLayout rewardedAdLinearLayout;
 
     /* Variables related to this fragment */
     private int consumptionRate;
@@ -133,6 +135,11 @@ public class FeedingFragment extends Fragment {
         animalHorseConstraintLayout.setOnClickListener(view -> selectClickedAnimalIfUnlocked(3));
         animalReindeerConstraintLayout.setOnClickListener(view -> selectClickedAnimalIfUnlocked(4));
         animalZebraConstraintLayout.setOnClickListener(view -> selectClickedAnimalIfUnlocked(5));
+        rewardedAdLinearLayout.setOnClickListener(view -> {
+            if (mListener != null) {
+                mListener.onFeedingFragmentShowRewardedAd();
+            }
+        });
         feedAnimalTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -211,6 +218,8 @@ public class FeedingFragment extends Fragment {
         animalReindeerConstraintLayout = view.findViewById(R.id.animal_reindeer_constraint_layout);
         animalZebraConstraintLayout = view.findViewById(R.id.animal_zebra_constraint_layout);
 
+        rewardedAdLinearLayout = view.findViewById(R.id.rewarded_ad_linear_layout_feeding_fragment);
+
         consumptionRate = sharedPreferences.getInt("consumptionRate", 2);
         consumptionRateTextView.setText(String.valueOf(consumptionRate));
         stockLeft = sharedPreferences.getInt("stockLeft", 20);
@@ -246,11 +255,21 @@ public class FeedingFragment extends Fragment {
                     "zebraIsSelected"));
         }};
 
+        if (mListener != null) {
+            mListener.onFeedingFragmentInteractionHasRewardedAdLoaded();
+        }
+
         settingsAnimalOptions();
 
         settingOnClickListeners();
 
         return view;
+    }
+
+    public void showRewardedAdOption() {
+        if (mListener != null) {
+            rewardedAdLinearLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     public void updateHayStockFeedingFragment(int updatedStock) {
@@ -285,7 +304,9 @@ public class FeedingFragment extends Fragment {
     }
 
     public interface OnFeedingFragmentInteractionListener {
+        void onFeedingFragmentInteractionHasRewardedAdLoaded();
         void onFeedingFragmentInteractionBackClicked();
+        void onFeedingFragmentShowRewardedAd();
         void onFeedingFragmentInteractionOutOfStock();
         void onFeedingFragmentInteractionAccessLockedAnimal(String animalKey);
     }
