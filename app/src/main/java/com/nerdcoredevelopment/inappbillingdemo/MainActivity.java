@@ -506,7 +506,9 @@ public class MainActivity extends AppCompatActivity implements
 
         initialise();
 
-        showAppOpenAd();
+        if (getIntent().getBooleanExtra("comingFromIntroActivity", false)) {
+            showAppOpenAd();
+        }
 
         loadRewardedAd();
 

@@ -39,9 +39,9 @@ public class IntroActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
         AppCompatImageView developerLogoImageView = findViewById(R.id.developer_logo_image_view);
-        developerLogoImageView.animate().alpha(1).setDuration(2000).start();
+        developerLogoImageView.animate().alpha(1).setDuration(3000).start();
 
-        new CountDownTimer(3000, 10000) {
+        new CountDownTimer(4000, 10000) {
             @Override
             public void onTick(long millisUntilFinished) {}
             @Override
@@ -53,6 +53,7 @@ public class IntroActivity extends AppCompatActivity {
 
     private void startMainActivity() {
         Intent intent = new Intent(IntroActivity.this, MainActivity.class);
+        intent.putExtra("comingFromIntroActivity", true);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();

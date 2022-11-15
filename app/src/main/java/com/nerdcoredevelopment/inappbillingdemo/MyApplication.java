@@ -148,27 +148,27 @@ public class MyApplication extends Application implements Application.ActivityLi
             isLoadingAd = true;
             AdRequest request = new AdRequest.Builder().build();
             AppOpenAd.load(context, AD_UNIT_ID, request, AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
-                    new AppOpenAd.AppOpenAdLoadCallback() {
-                        /**
-                         * Called when an app open ad has loaded.
-                         * @param ad the loaded app open ad.
-                         */
-                        @Override
-                        public void onAdLoaded(AppOpenAd ad) {
-                            appOpenAd = ad;
-                            isLoadingAd = false;
-                            loadTime = (new Date()).getTime();
-                        }
-
-                        /**
-                         * Called when an app open ad has failed to load.
-                         * @param loadAdError the error.
-                         */
-                        @Override
-                        public void onAdFailedToLoad(LoadAdError loadAdError) {
-                            isLoadingAd = false;
-                        }
+                new AppOpenAd.AppOpenAdLoadCallback() {
+                    /**
+                     * Called when an app open ad has loaded.
+                     * @param ad the loaded app open ad.
+                     */
+                    @Override
+                    public void onAdLoaded(AppOpenAd ad) {
+                        appOpenAd = ad;
+                        isLoadingAd = false;
+                        loadTime = (new Date()).getTime();
                     }
+
+                    /**
+                     * Called when an app open ad has failed to load.
+                     * @param loadAdError the error.
+                     */
+                    @Override
+                    public void onAdFailedToLoad(LoadAdError loadAdError) {
+                        isLoadingAd = false;
+                    }
+                }
             );
         }
 
