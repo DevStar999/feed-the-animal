@@ -1,5 +1,6 @@
 package com.nerdcoredevelopment.inappbillingdemo.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,12 +15,23 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.nerdcoredevelopment.inappbillingdemo.R;
+import com.qonversion.android.sdk.Qonversion;
+import com.qonversion.android.sdk.QonversionError;
+import com.qonversion.android.sdk.QonversionOfferingsCallback;
+import com.qonversion.android.sdk.QonversionPermissionsCallback;
+import com.qonversion.android.sdk.dto.QPermission;
+import com.qonversion.android.sdk.dto.offerings.QOffering;
+import com.qonversion.android.sdk.dto.offerings.QOfferings;
+import com.qonversion.android.sdk.dto.products.QProduct;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ShopFragment extends Fragment {
-    public static final String ITEM_PRICES = "itemPrices";
     private Context context;
     private OnShopFragmentInteractionListener mListener;
     private SharedPreferences sharedPreferences;
@@ -32,26 +44,15 @@ public class ShopFragment extends Fragment {
 
     /* Variables related to this fragment */
     private int stockLeft;
-    private List<String> itemPrices;
+    private Map<String, Integer> hayUnitsReward;
 
     public ShopFragment() {
         // Required empty public constructor
     }
 
-    public static ShopFragment newInstance(ArrayList<String> itemPrices) {
-        ShopFragment fragment = new ShopFragment();
-        Bundle args = new Bundle();
-        args.putStringArrayList(ITEM_PRICES, itemPrices);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            this.itemPrices = new ArrayList<>(getArguments().getStringArrayList(ITEM_PRICES));
-        }
     }
 
     private void settingOnClickListeners() {
@@ -63,27 +64,50 @@ public class ShopFragment extends Fragment {
                 }
             }
         });
+    }
 
-        for (int index = 0; index < shopFeedConstraintLayouts.size(); index++) {
-            shopFeedConstraintLayouts.get(index).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mListener != null) {
-                        mListener.onShopFragmentInteractionPurchaseOptionClicked(view.getId());
+    private void handlePurchaseOfHay(QProduct qProduct, String productId) {
+        Qonversion.purchase((Activity) context, qProduct, new QonversionPermissionsCallback() {
+            @Override
+            public void onSuccess(@NotNull Map<String, QPermission> permissions) {
+                stockLeft += hayUnitsReward.get(productId);
+                if (mListener != null) {
+                    mListener.onShopFragmentUpdateHayUnits(stockLeft);
+                }
+            }
+            @Override
+            public void onError(@NotNull QonversionError error) {}
+        });
+    }
+
+    private void loadItemPrices() {
+        Qonversion.offerings(new QonversionOfferingsCallback() {
+            @Override
+            public void onSuccess(@NotNull QOfferings offerings) {
+                if (!offerings.getAvailableOfferings().isEmpty()) {
+                    for (QOffering currentOffering: offerings.getAvailableOfferings()) {
+                        QProduct qProduct = currentOffering.getProducts().get(0);
+                        String storeId = qProduct.getStoreID();
+                        String prefix = "hay_level";
+                        if (storeId != null && storeId.startsWith(prefix)) {
+                            int level = Integer.parseInt(String.valueOf(storeId.charAt(prefix.length())));
+                            level--;
+                            if (qProduct.getSkuDetail() != null && !qProduct.getSkuDetail().getPrice().isEmpty()) {
+                                shopFeedPurchaseButtons.get(level).setText(qProduct.getSkuDetail().getPrice());
+                            }
+                            shopFeedConstraintLayouts.get(level)
+                                    .setOnClickListener(view -> handlePurchaseOfHay(qProduct, storeId));
+                            shopFeedPurchaseButtons.get(level)
+                                    .setOnClickListener(view -> handlePurchaseOfHay(qProduct, storeId));
+                        }
                     }
                 }
-            });
-        }
-        for (int index = 0; index < shopFeedPurchaseButtons.size(); index++) {
-            shopFeedPurchaseButtons.get(index).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mListener != null) {
-                        mListener.onShopFragmentInteractionPurchaseOptionClicked(view.getId());
-                    }
-                }
-            });
-        }
+            }
+            @Override
+            public void onError(@NotNull QonversionError error) {
+                loadItemPrices();
+            }
+        });
     }
 
     @Override
@@ -117,22 +141,16 @@ public class ShopFragment extends Fragment {
 
         stockLeft = sharedPreferences.getInt("stockLeft", 20);
         stockLeftTextView.setText(String.valueOf(stockLeft));
-        if (sharedPreferences.getBoolean("areHaySkuDetailsSaved", false)) {
-            for (int index = 0; index < shopFeedPurchaseButtons.size(); index++) {
-                shopFeedPurchaseButtons.get(index).setText(itemPrices.get(index));
-            }
-        }
+        hayUnitsReward = new HashMap<>() {{
+            put("hay_level1_v3", 50); put("hay_level2_v3", 100);
+            put("hay_level3_v3", 250); put("hay_level4_v3", 500);
+        }};
 
         settingOnClickListeners();
 
-        return view;
-    }
+        loadItemPrices();
 
-    public void updateHayItemPrices(List<String> itemPrices) {
-        this.itemPrices = new ArrayList<>(itemPrices);
-        for (int index = 0; index < shopFeedPurchaseButtons.size(); index++) {
-            shopFeedPurchaseButtons.get(index).setText(itemPrices.get(index));
-        }
+        return view;
     }
 
     public void updateHayStockShopFragment(int updatedStock) {
@@ -144,7 +162,7 @@ public class ShopFragment extends Fragment {
 
     public interface OnShopFragmentInteractionListener {
         void onShopFragmentInteractionBackClicked();
-        void onShopFragmentInteractionPurchaseOptionClicked(int purchaseOptionViewId);
+        void onShopFragmentUpdateHayUnits(int stockLeft);
     }
 
     @Override

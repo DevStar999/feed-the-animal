@@ -20,6 +20,10 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.appopen.AppOpenAd;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.qonversion.android.sdk.Qonversion;
+import com.qonversion.android.sdk.QonversionError;
+import com.qonversion.android.sdk.QonversionLaunchCallback;
+import com.qonversion.android.sdk.dto.QLaunchResult;
 
 import java.util.Date;
 
@@ -28,11 +32,26 @@ public class MyApplication extends Application implements Application.ActivityLi
     private AppOpenAdManager appOpenAdManager;
     private Activity currentActivity;
 
+    private void initialiseQonversion() {
+        // Qonversion.setDebugMode(); /* Always have this line commented out, un-comment only while testing */
+        Qonversion.launch(this, "eEQe63QkAlB2XQZVUKLkUoHAFdudfVQ5",
+            false, new QonversionLaunchCallback() {
+                @Override
+                public void onSuccess(@NonNull QLaunchResult qLaunchResult) {}
+                @Override
+                public void onError(@NonNull QonversionError qonversionError) {
+                    initialiseQonversion();
+                }
+            }
+        );
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         this.registerActivityLifecycleCallbacks(this);
 
+        initialiseQonversion();
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {

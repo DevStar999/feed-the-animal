@@ -62,8 +62,8 @@ dependencies {
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation 'com.google.firebase:firebase-analytics'
 
-    // For In-App Purchases, Subscriptions etc.
-    implementation 'com.android.billingclient:billing:5.1.0'
+    // For Qonversion
+    implementation 'io.qonversion.android.sdk:sdk:3.4.1'
 
     // For AdMob
     implementation 'com.google.android.gms:play-services-ads:21.3.0'

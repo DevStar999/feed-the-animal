@@ -12,27 +12,13 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.android.billingclient.api.AcknowledgePurchaseParams;
-import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
-import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingClientStateListener;
-import com.android.billingclient.api.BillingFlowParams;
-import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.ConsumeParams;
-import com.android.billingclient.api.ConsumeResponseListener;
-import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchasesResponseListener;
-import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
-import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -47,6 +33,7 @@ import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.nerdcoredevelopment.inappbillingdemo.MyApplication.OnShowAdCompleteListener;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.GameExitDialog;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.FarmerFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.FeedingFragment;
@@ -54,9 +41,7 @@ import com.nerdcoredevelopment.inappbillingdemo.fragment.InfoFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.NavigationFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.SettingsFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.ShopFragment;
-import com.nerdcoredevelopment.inappbillingdemo.MyApplication.OnShowAdCompleteListener;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,6 +56,19 @@ import java.util.Map;
            user updates the app to the latest version, we need to ensure that the In-App Billing code is still working fine
            without running into any problems
 */
+/* TODO -> Revisit the Qonversion Sample code, when we will implement for subscriptions the following:
+           (a) [Will probably come in handy when we want a multi-platform (Android, iOS etc.) app ] User auth using Firebase
+           (b) [<Same comment as above>] Subscription tracking using the Qonversion mechanism for user id tracking
+           (https://documentation.qonversion.io/docs/subscription-management-mode: Step 4 - Set User Id)
+           (c) Send notifications to users using Qonversion Firebase integration to send automated notifications to users
+           regarding their subscriptions using Qonversion [Here, most likely we will have to do Qonversion integrations to
+           integrate Firebase with Qonversion, remember any Qonversion integrations will cost us money, so be mindful of it]
+*/
+/* TODO -> [Implement this TODO later on, when we reach the point where we want to implement subscriptions in the
+           '2048 Champs' app]
+           We make do some create our own push-notifications regarding subscriptions using Qonversion data which we get in
+           code.
+*/
 public class MainActivity extends AppCompatActivity implements
         InfoFragment.OnInfoFragmentInteractionListener,
         NavigationFragment.OnNavigationFragmentInteractionListener,
@@ -80,8 +78,6 @@ public class MainActivity extends AppCompatActivity implements
         ShopFragment.OnShopFragmentInteractionListener {
     private SharedPreferences sharedPreferences;
     private Gson gson;
-    private Map<String, Integer> hayUnitsReward;
-    private BillingClient billingClient;
     private AdRequest adRequest;
     private InterstitialAd interstitialAd;
     private RewardedAd rewardedAd;
@@ -90,167 +86,8 @@ public class MainActivity extends AppCompatActivity implements
     private void initialise() {
         sharedPreferences = getSharedPreferences("com.nerdcoredevelopment.inappbillingdemo", Context.MODE_PRIVATE);
         gson = new Gson();
-        hayUnitsReward = new HashMap<>() {{
-            put("hay_level1_v2", 50); put("hay_level2_v2", 100);
-            put("hay_level3_v2", 250); put("hay_level4_v2", 500);
-        }};
         adRequest = new AdRequest.Builder().build();
         rewardedAdHayUnitsReward = 10;
-    }
-
-    private void setupBillingClient() {
-        PurchasesUpdatedListener purchasesUpdatedListener = new PurchasesUpdatedListener() {
-            @Override
-            public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
-                if ((billingResult.getResponseCode() == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED
-                        || billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) && list != null) {
-                    for (Purchase purchase : list) {
-                        verifyPurchase(purchase, purchase.getSkus().get(0));
-                    }
-                } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
-                    // TODO -> Show purchase failed message
-                }
-            }
-        };
-        billingClient = BillingClient.newBuilder(this).setListener(purchasesUpdatedListener)
-                .enablePendingPurchases().build();
-        connectToGooglePlayBilling();
-    }
-
-    private void setupBillingClientOnResume() {
-        billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP,
-            new PurchasesResponseListener() {
-                @Override
-                public void onQueryPurchasesResponse(@NonNull BillingResult billingResult, @NonNull List<Purchase> list) {
-                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED
-                            || billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                        for (Purchase purchase : list) {
-                            verifyPurchase(purchase, purchase.getSkus().get(0));
-                        }
-                    } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
-                        // TODO -> Show purchase failed message
-                    }
-                }
-            }
-        );
-    }
-
-    private void connectToGooglePlayBilling() {
-        billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingServiceDisconnected() {
-                connectToGooglePlayBilling();
-            }
-            @Override
-            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    getProductDetails();
-                }
-            }
-        });
-    }
-
-    private void getProductDetails() {
-        // If we have the SkuDetails for all the hay levels and the 3 locked animals then return
-        if (sharedPreferences.getBoolean("areHaySkuDetailsSaved", false)
-                && sharedPreferences.getBoolean("areAnimalSkuDetailsSaved", false)) {
-            return;
-        }
-
-        List<String> productIds = new ArrayList<>();
-        for (int level = 1; level <= 4; level++) {
-            productIds.add("hay_level" + level + "_v2");
-        }
-        productIds.add("animal_horse_v2");
-        productIds.add("animal_reindeer_v2");
-        productIds.add("animal_zebra_v2");
-
-        SkuDetailsParams getProductDetailsQuery = SkuDetailsParams.newBuilder().setSkusList(productIds)
-                .setType(BillingClient.SkuType.INAPP).build();
-        SkuDetailsResponseListener skuDetailsResponseListener = new SkuDetailsResponseListener() {
-            @Override
-            public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> list) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    if (list != null && list.size() > 0) {
-                        if (!sharedPreferences.getBoolean("areHaySkuDetailsSaved", false)) {
-                            Map<String, SkuDetails> hayLevelsSkuDetails = new HashMap<>();
-                            for (int index = 0; index < list.size(); index++) {
-                                SkuDetails currentItem = list.get(index); String productId = currentItem.getSku();
-                                for (int level = 1; level <= 4; level++) {
-                                    String skuString = "hay_level" + level + "_v2";
-                                    if (productId.equals(skuString)) {
-                                        hayLevelsSkuDetails.put(productId, currentItem); break;
-                                    }
-                                }
-                            }
-                            List<String> hayItemPrices = new ArrayList<>();
-                            for (int level = 1; level <= 4; level++) {
-                                String skuString = "hay_level" + level + "_v2";
-                                if (hayLevelsSkuDetails.containsKey(skuString)) {
-                                    if (!hayLevelsSkuDetails.get(skuString).getPrice().isEmpty()) {
-                                        hayItemPrices.add(hayLevelsSkuDetails.get(skuString).getPrice());
-                                    }
-                                }
-                            }
-                            if (hayItemPrices.size() == 4) {
-                                sharedPreferences.edit().putString("hayItemPrices", gson.toJson(hayItemPrices)).apply();
-                                sharedPreferences.edit().putString("hayLevelsSkuDetails", gson.toJson(hayLevelsSkuDetails)).apply();
-                                sharedPreferences.edit().putBoolean("areHaySkuDetailsSaved", true).apply();
-                                List<Fragment> fragments = new ArrayList<>(getSupportFragmentManager().getFragments());
-                                for (int index = 0; index < fragments.size(); index++) {
-                                    Fragment currentFragment = fragments.get(index);
-                                    if (currentFragment != null && currentFragment.getTag() != null
-                                            && !currentFragment.getTag().isEmpty()) {
-                                        if (currentFragment.getTag().equals("SHOP_FRAGMENT")) {
-                                            ((ShopFragment) currentFragment).updateHayItemPrices(hayItemPrices);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (!sharedPreferences.getBoolean("areAnimalSkuDetailsSaved", false)) {
-                            Map<String, SkuDetails> animalSkuDetails = new HashMap<>();
-                            for (int index = 0; index < list.size(); index++) {
-                                SkuDetails currentItem = list.get(index); String productId = currentItem.getSku();
-                                if (productId.equals("animal_horse_v2")
-                                        || productId.equals("animal_reindeer_v2")
-                                        || productId.equals("animal_zebra_v2")) {
-                                    animalSkuDetails.put(currentItem.getSku(), currentItem);
-                                }
-                            }
-                            if (animalSkuDetails.size() == 3) {
-                                sharedPreferences.edit().putString("animalSkuDetails", gson.toJson(animalSkuDetails)).apply();
-                                sharedPreferences.edit().putBoolean("areAnimalSkuDetailsSaved", true).apply();
-                            }
-                        }
-                    } else {
-                        // TODO -> Purchase items were not found
-                    }
-                } else {
-                    // TODO -> This code block means, BillingResponse is not OK
-                }
-            }
-        };
-
-        billingClient.querySkuDetailsAsync(getProductDetailsQuery, skuDetailsResponseListener);
-    }
-
-    /**
-     * Verifies that the purchase was signed correctly for this developer's public key.
-     * Note: It's strongly recommended to perform such check on your backend since hackers can
-     * replace this method with "constant true" if they decompile/rebuild your app.
-     */
-    private boolean verifyValidSignature(String signedData, String signature) {
-        try {
-            String base64Key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApP7w1ImuyC6/SIsnw/W1g5EphPagMYKCHuhhYk29" +
-                    "qfTy7pg33AxhbZordUvbWbENADLK703X5y2+WEkSII7Ego9O5RSSfdERzTJAt5eydiYMQo+kDJAZUwj8sETpnbABR7WK6Om" +
-                    "hkv8PbgaPK52NgYVnLhEtewH7rOo5Emn0kVcFz5QgtJ0IdgxDVtnJgfyssBdxa8R6MUFoZkVO0wC6ZYjxKukK8oYBIdUURS" +
-                    "SdPWRq9AVTfn2MrTE7f+JbiFFRR2wmHwme1rpD8fiF3ucK/ZilZj4wYWXs7L3wwYHasSYGLfhaFmY83z65MAk9aFDP0O4Yg" +
-                    "QUrD8N/V6miSdCnswIDAQAB";
-            return Security.verifyPurchase(base64Key, signedData, signature);
-        } catch (IOException e) {
-            return false;
-        }
     }
 
     private void updateHayUnits(int stockLeft) {
@@ -267,12 +104,6 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         }
-    }
-
-    private void giveHayUnitsReward(String productId, int purchaseQuantity) {
-        int stockLeft = sharedPreferences.getInt("stockLeft", 20);
-        stockLeft += hayUnitsReward.get(productId) * purchaseQuantity;
-        updateHayUnits(stockLeft);
     }
 
     private void giveAnimalAccessReward(String productId) {
@@ -296,72 +127,6 @@ public class MainActivity extends AppCompatActivity implements
                     } else if (productId.equals("animal_zebra_v2")) {
                         ((FeedingFragment) currentFragment).unlockAccessToAnimalZebra();
                     }
-                }
-            }
-        }
-    }
-
-    private void verifyPurchase(Purchase purchase, String productId) {
-        if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
-            if (!verifyValidSignature(purchase.getOriginalJson(), purchase.getSignature())) {
-                // Invalid purchase, show error to the user
-                // TODO -> Show an error message to the user in some way or the other
-                return;
-            }
-
-            boolean isConsumableRecurring = false;
-            for (int level = 1; level <= 4; level++) {
-                String skuString = "hay_level" + level + "_v2";
-                if (productId.equals(skuString)) {
-                   isConsumableRecurring = true; break;
-                }
-            }
-
-            if (isConsumableRecurring) { // Handling recurring consumables in this 'if' block
-                if (!purchase.isAcknowledged()) { // Purchase is not acknowledged yet
-                    ConsumeParams consumeParams = ConsumeParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
-                    ConsumeResponseListener consumeResponseListener = new ConsumeResponseListener() {
-                        @Override
-                        public void onConsumeResponse(@NonNull BillingResult billingResult, @NonNull String s) {
-                            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                                for (int level = 1; level <= 4; level++) {
-                                    String hayLevel = "hay_level" + level + "_v2";
-                                    if (productId.equals(hayLevel)) {
-                                        giveHayUnitsReward(productId, purchase.getQuantity());
-                                    }
-                                }
-                            } else {
-                                // TODO -> This code block means, BillingResponse is not OK
-                            }
-                        }
-                    };
-                    billingClient.consumeAsync(consumeParams, consumeResponseListener);
-                }
-            } else { // Handling non-recurring consumables in this 'else' block
-                if (!purchase.isAcknowledged()) {
-                    AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
-                            .setPurchaseToken(purchase.getPurchaseToken()).build();
-                    AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener = new AcknowledgePurchaseResponseListener() {
-                        @Override
-                        public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
-                            if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                                giveAnimalAccessReward(productId);
-                            } else {
-                                // TODO -> This code block means, BillingResponse is not OK
-                            }
-                        }
-                    };
-                    billingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
-                } else { // Means consumable is valid and also acknowledged
-                    if ((productId.equals("animal_horse_v2")
-                            && sharedPreferences.getBoolean("animalHorseIsUnlocked", false))
-                            || (productId.equals("animal_reindeer_v2")
-                            && sharedPreferences.getBoolean("animalReindeerIsUnlocked", false))
-                            || (productId.equals("animal_zebra_v2")
-                            && sharedPreferences.getBoolean("animalZebraIsUnlocked", false))) {
-                        return;
-                    }
-                    giveAnimalAccessReward(productId);
                 }
             }
         }
@@ -516,8 +281,6 @@ public class MainActivity extends AppCompatActivity implements
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.navigation_fragment_container_main_activity, navigationFragment, "NAVIGATION_FRAGMENT")
                 .commit();
-
-        setupBillingClient();
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -537,16 +300,11 @@ public class MainActivity extends AppCompatActivity implements
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-
-        setupBillingClientOnResume();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(billingClient!=null){
-            billingClient.endConnection();
-        }
     }
 
     @Override
@@ -683,15 +441,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
 
-        ShopFragment shopFragment;
-        if (sharedPreferences.getBoolean("areHaySkuDetailsSaved", false)) {
-            String jsonRetrieveHayItemPrices = sharedPreferences.getString("hayItemPrices",
-                    gson.toJson(new ArrayList<>()));
-            Type typeHayItemPrices = new TypeToken<List<String>>(){}.getType();
-            shopFragment = ShopFragment.newInstance(gson.fromJson(jsonRetrieveHayItemPrices, typeHayItemPrices));
-        } else {
-            shopFragment = new ShopFragment();
-        }
+        ShopFragment shopFragment = new ShopFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right,
@@ -766,15 +516,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
 
-        ShopFragment shopFragment;
-        if (sharedPreferences.getBoolean("areHaySkuDetailsSaved", false)) {
-            String jsonRetrieveHayItemPrices = sharedPreferences.getString("hayItemPrices",
-                    gson.toJson(new ArrayList<>()));
-            Type typeHayItemPrices = new TypeToken<List<String>>(){}.getType();
-            shopFragment = ShopFragment.newInstance(gson.fromJson(jsonRetrieveHayItemPrices, typeHayItemPrices));
-        } else {
-            shopFragment = new ShopFragment();
-        }
+        ShopFragment shopFragment = new ShopFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right,
@@ -797,8 +539,7 @@ public class MainActivity extends AppCompatActivity implements
                 typeAnimalSkuDetails));
 
         if (animalSkuDetails.containsKey(animalKey)) {
-            billingClient.launchBillingFlow(this, BillingFlowParams.newBuilder()
-                            .setSkuDetails(animalSkuDetails.get(animalKey)).build());
+            // TODO -> Some Qonversion Trigger to start the purchase flow
         }
     }
 
@@ -813,41 +554,7 @@ public class MainActivity extends AppCompatActivity implements
     }
     
     @Override
-    public void onShopFragmentInteractionPurchaseOptionClicked(int purchaseOptionViewId) {
-        if (!sharedPreferences.getBoolean("areHaySkuDetailsSaved", false)) {
-            return;
-        }
-
-        String jsonRetrieveHayLevelsSkuDetails = sharedPreferences.getString("hayLevelsSkuDetails",
-                gson.toJson(new HashMap<>()));
-        Type typeHayLevelsSkuDetails = new TypeToken<Map<String, SkuDetails>>(){}.getType();
-        Map<String, SkuDetails> hayLevelsSkuDetails = new HashMap<>(gson.fromJson(jsonRetrieveHayLevelsSkuDetails,
-                typeHayLevelsSkuDetails));
-
-        if (purchaseOptionViewId == R.id.shop_feed_level1_constraint_layout
-                || purchaseOptionViewId == R.id.shop_feed_level1_purchase_button) {
-            if (hayLevelsSkuDetails.containsKey("hay_level1_v2")) {
-                billingClient.launchBillingFlow(this, BillingFlowParams.newBuilder()
-                        .setSkuDetails(hayLevelsSkuDetails.get("hay_level1_v2")).build());
-            }
-        } else if (purchaseOptionViewId == R.id.shop_feed_level2_constraint_layout
-                || purchaseOptionViewId == R.id.shop_feed_level2_purchase_button) {
-            if (hayLevelsSkuDetails.containsKey("hay_level2_v2")) {
-                billingClient.launchBillingFlow(this, BillingFlowParams.newBuilder()
-                        .setSkuDetails(hayLevelsSkuDetails.get("hay_level2_v2")).build());
-            }
-        } else if (purchaseOptionViewId == R.id.shop_feed_level3_constraint_layout
-                || purchaseOptionViewId == R.id.shop_feed_level3_purchase_button) {
-            if (hayLevelsSkuDetails.containsKey("hay_level3_v2")) {
-                billingClient.launchBillingFlow(this, BillingFlowParams.newBuilder()
-                        .setSkuDetails(hayLevelsSkuDetails.get("hay_level3_v2")).build());
-            }
-        } else if (purchaseOptionViewId == R.id.shop_feed_level4_constraint_layout
-                || purchaseOptionViewId == R.id.shop_feed_level4_purchase_button) {
-            if (hayLevelsSkuDetails.containsKey("hay_level4_v2")) {
-                billingClient.launchBillingFlow(this, BillingFlowParams.newBuilder()
-                        .setSkuDetails(hayLevelsSkuDetails.get("hay_level4_v2")).build());
-            }
-        }
+    public void onShopFragmentUpdateHayUnits(int stockLeft) {
+        updateHayUnits(stockLeft);
     }
 }
