@@ -138,7 +138,8 @@ public class MyApplication extends Application implements Application.ActivityLi
      * Inner class that loads and shows app open ads.
      */
     private class AppOpenAdManager {
-        private static final String AD_UNIT_ID = "ca-app-pub-4247468904518611/4943486363";
+        public static final String TEST_APP_OPEN_AD_UNIT_ID = "ca-app-pub-3940256099942544/3419835294";
+        private static final String REAL_APP_OPEN_AD_UNIT_ID = "ca-app-pub-4247468904518611/4943486363";
         private AppOpenAd appOpenAd = null;
         private boolean isLoadingAd = false;
         private boolean isShowingAd = false;
@@ -166,7 +167,7 @@ public class MyApplication extends Application implements Application.ActivityLi
 
             isLoadingAd = true;
             AdRequest request = new AdRequest.Builder().build();
-            AppOpenAd.load(context, AD_UNIT_ID, request, AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
+            AppOpenAd.load(context, REAL_APP_OPEN_AD_UNIT_ID, request, AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
                 new AppOpenAd.AppOpenAdLoadCallback() {
                     /**
                      * Called when an app open ad has loaded.

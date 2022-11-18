@@ -174,7 +174,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         ads:adSize="FULL_BANNER"
-        ads:adUnitId="ca-app-pub-4247468904518611/1582825859"
         app:layout_constraintTop_toTopOf="@id/horizontal_guide_bottom_banner_ad_farmer_fragment"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

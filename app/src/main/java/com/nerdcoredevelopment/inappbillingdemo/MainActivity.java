@@ -144,7 +144,9 @@ public class MainActivity extends AppCompatActivity implements
 
     private void loadInterstitialAd() {
         if (interstitialAd == null) {
-            InterstitialAd.load(this,"ca-app-pub-4247468904518611/7765090821", adRequest,
+            String testInterstitialAdUnitId = "ca-app-pub-3940256099942544/1033173712";
+            String realInterstitialAdUnitId = "ca-app-pub-4247468904518611/7765090821";
+            InterstitialAd.load(this, realInterstitialAdUnitId, adRequest,
                 new InterstitialAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
@@ -188,7 +190,9 @@ public class MainActivity extends AppCompatActivity implements
 
     private void loadRewardedAd() {
         if (rewardedAd == null) {
-            RewardedAd.load(this, "ca-app-pub-4247468904518611/5685722397",
+            String testRewardedAdUnitId = "ca-app-pub-3940256099942544/5224354917";
+            String realRewardedAdUnitId = "ca-app-pub-4247468904518611/5685722397";
+            RewardedAd.load(this, realRewardedAdUnitId,
                 adRequest, new RewardedAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
@@ -453,6 +457,9 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onFarmerFragmentInteractionLoadBannerAd(AdView bannerAdView) {
+        String testBannerAdUnitId = "ca-app-pub-3940256099942544/6300978111";
+        String realBannerAdUnitId = "ca-app-pub-4247468904518611/1582825859";
+        bannerAdView.setAdUnitId(realBannerAdUnitId);
         bannerAdView.setAdListener(new AdListener() {
             @Override
             public void onAdClicked() { // Code to be executed when the user clicks on an ad.
