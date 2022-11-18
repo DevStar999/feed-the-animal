@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import com.nerdcoredevelopment.inappbillingdemo.R;
 import com.qonversion.android.sdk.Qonversion;
 import com.qonversion.android.sdk.QonversionError;
-import com.qonversion.android.sdk.QonversionErrorCode;
 import com.qonversion.android.sdk.QonversionOfferingsCallback;
 import com.qonversion.android.sdk.QonversionPermissionsCallback;
 import com.qonversion.android.sdk.dto.QPermission;
