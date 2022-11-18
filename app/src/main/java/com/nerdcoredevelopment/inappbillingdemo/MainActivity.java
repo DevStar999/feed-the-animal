@@ -71,6 +71,9 @@ import java.util.List;
            products. We may need to think about this if we later decided that we don't want to load fresh prices and IAP
            related details from Qonversion and want to use some effective implementation of local storage.
 */
+/* TODO -> Implement Qonversion Subscriptions for Farmer Fragment. Also follow up on the next of Qonversion, we have which
+           we had written on board and have a clicked a photo of.
+*/
 public class MainActivity extends AppCompatActivity implements
         InfoFragment.OnInfoFragmentInteractionListener,
         NavigationFragment.OnNavigationFragmentInteractionListener,
@@ -122,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements
         if (interstitialAd == null) {
             String testInterstitialAdUnitId = "ca-app-pub-3940256099942544/1033173712";
             String realInterstitialAdUnitId = "ca-app-pub-4247468904518611/7765090821";
-            InterstitialAd.load(this, testInterstitialAdUnitId, adRequest,
+            InterstitialAd.load(this, realInterstitialAdUnitId, adRequest,
                 new InterstitialAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
@@ -168,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements
         if (rewardedAd == null) {
             String testRewardedAdUnitId = "ca-app-pub-3940256099942544/5224354917";
             String realRewardedAdUnitId = "ca-app-pub-4247468904518611/5685722397";
-            RewardedAd.load(this, testRewardedAdUnitId,
+            RewardedAd.load(this, realRewardedAdUnitId,
                 adRequest, new RewardedAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
