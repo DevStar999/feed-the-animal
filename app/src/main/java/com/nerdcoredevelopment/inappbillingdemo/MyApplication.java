@@ -33,7 +33,7 @@ public class MyApplication extends Application implements Application.ActivityLi
     private Activity currentActivity;
 
     private void initialiseQonversion() {
-        // Qonversion.setDebugMode(); /* Always have this line commented out, un-comment only while testing */
+        Qonversion.setDebugMode(); /* Always have this line commented out, un-comment only while testing */
         Qonversion.launch(this, "eEQe63QkAlB2XQZVUKLkUoHAFdudfVQ5",
             false, new QonversionLaunchCallback() {
                 @Override
@@ -167,7 +167,7 @@ public class MyApplication extends Application implements Application.ActivityLi
 
             isLoadingAd = true;
             AdRequest request = new AdRequest.Builder().build();
-            AppOpenAd.load(context, REAL_APP_OPEN_AD_UNIT_ID, request, AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
+            AppOpenAd.load(context, TEST_APP_OPEN_AD_UNIT_ID, request, AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
                 new AppOpenAd.AppOpenAdLoadCallback() {
                     /**
                      * Called when an app open ad has loaded.

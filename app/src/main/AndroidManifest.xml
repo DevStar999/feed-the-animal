@@ -19,6 +19,7 @@
         android:theme="@style/Theme.FeedTheAnimal"
         tools:targetApi="32">
         <!-- Actual Admob App Id: ca-app-pub-4247468904518611~4146100008 -->
+        <!-- Ad units currently in use (Test OR Real): Test ad units -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-4247468904518611~4146100008" />
