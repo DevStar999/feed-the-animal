@@ -67,11 +67,11 @@ public class ShopFragment extends Fragment {
         });
     }
 
-    private void handlePurchaseOfHay(QProduct qProduct, String productId) {
+    private void handlePurchaseOfHay(QProduct qProduct, String productIdPrefix) {
         Qonversion.purchase((Activity) context, qProduct, new QonversionPermissionsCallback() {
             @Override
             public void onSuccess(@NotNull Map<String, QPermission> permissions) {
-                stockLeft += hayUnitsReward.get(productId);
+                stockLeft += hayUnitsReward.get(productIdPrefix);
                 if (mListener != null) {
                     mListener.onShopFragmentUpdateHayUnits(stockLeft);
                 }
@@ -98,10 +98,11 @@ public class ShopFragment extends Fragment {
                             if (qProduct.getSkuDetail() != null && !qProduct.getSkuDetail().getPrice().isEmpty()) {
                                 shopFeedPurchaseButtons.get(level).setText(qProduct.getSkuDetail().getPrice());
                             }
+                            String finalPrefix = prefix + (level+1);
                             shopFeedConstraintLayouts.get(level)
-                                    .setOnClickListener(view -> handlePurchaseOfHay(qProduct, storeId));
+                                    .setOnClickListener(view -> handlePurchaseOfHay(qProduct, finalPrefix));
                             shopFeedPurchaseButtons.get(level)
-                                    .setOnClickListener(view -> handlePurchaseOfHay(qProduct, storeId));
+                                    .setOnClickListener(view -> handlePurchaseOfHay(qProduct, finalPrefix));
                         }
                     }
                 }
@@ -145,8 +146,8 @@ public class ShopFragment extends Fragment {
         stockLeft = sharedPreferences.getInt("stockLeft", 20);
         stockLeftTextView.setText(String.valueOf(stockLeft));
         hayUnitsReward = new HashMap<>() {{
-            put("hay_level1_v3", 50); put("hay_level2_v3", 100);
-            put("hay_level3_v3", 250); put("hay_level4_v3", 500);
+            put("hay_level1", 50); put("hay_level2", 100);
+            put("hay_level3", 250); put("hay_level4", 500);
         }};
 
         settingOnClickListeners();
