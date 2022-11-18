@@ -169,11 +169,14 @@
         app:layout_constraintTop_toTopOf="@id/horizontal_guide_top_1_farmer_fragment"
         app:srcCompat="@drawable/farmer" />
 
+    <!-- Test Banner Ad Unit Id = "ca-app-pub-3940256099942544/6300978111",
+         Real Banner Ad Unit Id = "ca-app-pub-4247468904518611/1582825859" -->
     <com.google.android.gms.ads.AdView
         android:id="@+id/banner_ad_adview_farmer_fragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         ads:adSize="FULL_BANNER"
+        ads:adUnitId="ca-app-pub-3940256099942544/6300978111"
         app:layout_constraintTop_toTopOf="@id/horizontal_guide_bottom_banner_ad_farmer_fragment"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

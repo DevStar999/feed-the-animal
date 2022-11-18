@@ -3,6 +3,7 @@ package com.nerdcoredevelopment.inappbillingdemo.fragment;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,9 +19,16 @@ import androidx.fragment.app.Fragment;
 
 import com.nerdcoredevelopment.inappbillingdemo.AnimalImageSpecs;
 import com.nerdcoredevelopment.inappbillingdemo.R;
+import com.qonversion.android.sdk.Qonversion;
+import com.qonversion.android.sdk.QonversionError;
+import com.qonversion.android.sdk.QonversionPermissionsCallback;
+import com.qonversion.android.sdk.dto.QPermission;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class FeedingFragment extends Fragment {
     private Context context;
@@ -56,6 +64,76 @@ public class FeedingFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    private void setAnimalAccessPermissions(Map<String, QPermission> permissions) {
+        QPermission horseAccessPermission = permissions.get("AccessToHorse");
+        if (horseAccessPermission != null) {
+            animalOptions.get(3).setAnimalUnlocked(horseAccessPermission.isActive());
+            sharedPreferences.edit().putBoolean("animalHorseIsUnlocked",
+                    horseAccessPermission.isActive()).apply();
+        }
+
+        QPermission reindeerAccessPermission = permissions.get("AccessToReindeer");
+        if (reindeerAccessPermission != null) {
+            animalOptions.get(4).setAnimalUnlocked(reindeerAccessPermission.isActive());
+            sharedPreferences.edit().putBoolean("animalReindeerIsUnlocked",
+                    reindeerAccessPermission.isActive()).apply();
+        }
+
+        QPermission zebraAccessPermission = permissions.get("AccessToZebra");
+        if (zebraAccessPermission != null) {
+            animalOptions.get(5).setAnimalUnlocked(zebraAccessPermission.isActive());
+            sharedPreferences.edit().putBoolean("animalZebraIsUnlocked",
+                    zebraAccessPermission.isActive()).apply();
+        }
+    }
+
+    private void checkAnimalAccessPermissions() {
+        Qonversion.checkPermissions(new QonversionPermissionsCallback() {
+            @Override
+            public void onSuccess(@NotNull Map<String, QPermission> permissions) {
+                setAnimalAccessPermissions(permissions);
+            }
+            @Override
+            public void onError(@NotNull QonversionError error) {
+                checkAnimalAccessPermissions();
+            }
+        });
+    }
+
+    private void initialiseAnimalOptions(View layoutView) {
+        animalOptions = new ArrayList<>() {{
+            add(new AnimalImageSpecs(R.drawable.animal_cow, layoutView.findViewById(R.id.cow_selection_image_view),
+                    1.5f, 1.5f, true,
+                    sharedPreferences.getBoolean("cowIsSelected", true),
+                    "cowIsSelected"));
+            add(new AnimalImageSpecs(R.drawable.animal_rabbit, layoutView.findViewById(R.id.rabbit_selection_image_view),
+                    1.0f, 1.0f, true,
+                    sharedPreferences.getBoolean("rabbitIsSelected", false),
+                    "rabbitIsSelected"));
+            add(new AnimalImageSpecs(R.drawable.animal_goat, layoutView.findViewById(R.id.goat_selection_image_view),
+                    1.8f, 1.8f, true,
+                    sharedPreferences.getBoolean("goatIsSelected", false),
+                    "goatIsSelected"));
+            add(new AnimalImageSpecs(R.drawable.animal_horse, layoutView.findViewById(R.id.horse_selection_image_view),
+                    1.5f, 1.6f,
+                    sharedPreferences.getBoolean("animalHorseIsUnlocked", false),
+                    sharedPreferences.getBoolean("horseIsSelected", false),
+                    "horseIsSelected"));
+            add(new AnimalImageSpecs(R.drawable.animal_reindeer, layoutView.findViewById(R.id.reindeer_selection_image_view),
+                    1.6f, 1.4f,
+                    sharedPreferences.getBoolean("animalReindeerIsUnlocked", false),
+                    sharedPreferences.getBoolean("reindeerIsSelected", false),
+                    "reindeerIsSelected"));
+            add(new AnimalImageSpecs(R.drawable.animal_zebra, layoutView.findViewById(R.id.zebra_selection_image_view),
+                    1.4f, 1.35f,
+                    sharedPreferences.getBoolean("animalZebraIsUnlocked", false),
+                    sharedPreferences.getBoolean("zebraIsSelected", false),
+                    "zebraIsSelected"));
+        }};
+
+        checkAnimalAccessPermissions();
+    }
+
     private void settingsAnimalOptions() {
         // Setting the selected animal image view
         for (int index = 0; index < animalOptions.size(); index++) {
@@ -80,6 +158,24 @@ public class FeedingFragment extends Fragment {
                 }
             }
         }
+    }
+
+    private void accessLockedAnimal(String qonversionId) {
+        Qonversion.purchase((Activity) context, qonversionId, new QonversionPermissionsCallback() {
+            @Override
+            public void onSuccess(@NotNull Map<String, QPermission> permissions) {
+                setAnimalAccessPermissions(permissions);
+
+                if (mListener != null) {
+                    mListener.onFeedingFragmentInteractionGiveAccessToAnimal(qonversionId);
+                }
+            }
+
+            @Override
+            public void onError(@NotNull QonversionError error) {
+                // TODO -> Create a purchase failed dialog
+            }
+        });
     }
 
     private void selectClickedAnimalIfUnlocked(int indexOfSelectedAnimalInAnimalOptions) {
@@ -110,14 +206,12 @@ public class FeedingFragment extends Fragment {
                     }
                 }
             } else { // Animal is locked
-                if (mListener != null) {
-                    if (indexOfSelectedAnimalInAnimalOptions == 3) {
-                        mListener.onFeedingFragmentInteractionAccessLockedAnimal("animal_horse_v2");
-                    } else if (indexOfSelectedAnimalInAnimalOptions == 4) {
-                        mListener.onFeedingFragmentInteractionAccessLockedAnimal("animal_reindeer_v2");
-                    } else if (indexOfSelectedAnimalInAnimalOptions == 5) {
-                        mListener.onFeedingFragmentInteractionAccessLockedAnimal("animal_zebra_v2");
-                    }
+                if (indexOfSelectedAnimalInAnimalOptions == 3) {
+                    accessLockedAnimal("Horse");
+                } else if (indexOfSelectedAnimalInAnimalOptions == 4) {
+                    accessLockedAnimal("Reindeer");
+                } else if (indexOfSelectedAnimalInAnimalOptions == 5) {
+                    accessLockedAnimal("Zebra");
                 }
             }
         }
@@ -225,35 +319,8 @@ public class FeedingFragment extends Fragment {
         stockLeft = sharedPreferences.getInt("stockLeft", 20);
         //stockLeft = 10; /* Comment this line when not testing */
         stockLeftTextView.setText(String.valueOf(stockLeft));
-        animalOptions = new ArrayList<>() {{
-            add(new AnimalImageSpecs(R.drawable.animal_cow, view.findViewById(R.id.cow_selection_image_view),
-                    1.5f, 1.5f, true,
-                    sharedPreferences.getBoolean("cowIsSelected", true),
-                    "cowIsSelected"));
-            add(new AnimalImageSpecs(R.drawable.animal_rabbit, view.findViewById(R.id.rabbit_selection_image_view),
-                    1.0f, 1.0f, true,
-                    sharedPreferences.getBoolean("rabbitIsSelected", false),
-                    "rabbitIsSelected"));
-            add(new AnimalImageSpecs(R.drawable.animal_goat, view.findViewById(R.id.goat_selection_image_view),
-                    1.8f, 1.8f, true,
-                    sharedPreferences.getBoolean("goatIsSelected", false),
-                    "goatIsSelected"));
-            add(new AnimalImageSpecs(R.drawable.animal_horse, view.findViewById(R.id.horse_selection_image_view),
-                    1.5f, 1.6f,
-                    sharedPreferences.getBoolean("animalHorseIsUnlocked", false),
-                    sharedPreferences.getBoolean("horseIsSelected", false),
-                    "horseIsSelected"));
-            add(new AnimalImageSpecs(R.drawable.animal_reindeer, view.findViewById(R.id.reindeer_selection_image_view),
-                    1.6f, 1.4f,
-                    sharedPreferences.getBoolean("animalReindeerIsUnlocked", false),
-                    sharedPreferences.getBoolean("reindeerIsSelected", false),
-                    "reindeerIsSelected"));
-            add(new AnimalImageSpecs(R.drawable.animal_zebra, view.findViewById(R.id.zebra_selection_image_view),
-                    1.4f, 1.35f,
-                    sharedPreferences.getBoolean("animalZebraIsUnlocked", false),
-                    sharedPreferences.getBoolean("zebraIsSelected", false),
-                    "zebraIsSelected"));
-        }};
+
+        initialiseAnimalOptions(view);
 
         if (mListener != null) {
             mListener.onFeedingFragmentInteractionHasRewardedAdLoaded();
@@ -308,7 +375,7 @@ public class FeedingFragment extends Fragment {
         void onFeedingFragmentInteractionBackClicked();
         void onFeedingFragmentShowRewardedAd();
         void onFeedingFragmentInteractionOutOfStock();
-        void onFeedingFragmentInteractionAccessLockedAnimal(String animalKey);
+        void onFeedingFragmentInteractionGiveAccessToAnimal(String qonversionId);
     }
 
     @Override

@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.nerdcoredevelopment.inappbillingdemo.R;
 import com.qonversion.android.sdk.Qonversion;
 import com.qonversion.android.sdk.QonversionError;
+import com.qonversion.android.sdk.QonversionErrorCode;
 import com.qonversion.android.sdk.QonversionOfferingsCallback;
 import com.qonversion.android.sdk.QonversionPermissionsCallback;
 import com.qonversion.android.sdk.dto.QPermission;
@@ -76,7 +77,9 @@ public class ShopFragment extends Fragment {
                 }
             }
             @Override
-            public void onError(@NotNull QonversionError error) {}
+            public void onError(@NotNull QonversionError error) {
+                // TODO -> Create a purchase failed dialog
+            }
         });
     }
 

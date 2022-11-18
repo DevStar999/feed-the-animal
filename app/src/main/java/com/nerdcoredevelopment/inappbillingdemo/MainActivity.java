@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.android.billingclient.api.SkuDetails;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -32,7 +31,6 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.nerdcoredevelopment.inappbillingdemo.MyApplication.OnShowAdCompleteListener;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.GameExitDialog;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.FarmerFragment;
@@ -42,11 +40,8 @@ import com.nerdcoredevelopment.inappbillingdemo.fragment.NavigationFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.SettingsFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.ShopFragment;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 // TODO -> Among the error code block of In-App Billing handle internet connectivity related issues
 /* TODO -> After giving entitlement to the rewards after purchase, the changes don't reflect by themselves. They have to be
@@ -68,6 +63,9 @@ import java.util.Map;
            '2048 Champs' app]
            We make do some create our own push-notifications regarding subscriptions using Qonversion data which we get in
            code.
+*/
+/* TODO -> Set a max retry count & mechanism for the loading of things like any type of Ads; Qonversion offerings,
+           permissions etc.
 */
 public class MainActivity extends AppCompatActivity implements
         InfoFragment.OnInfoFragmentInteractionListener,
@@ -101,32 +99,6 @@ public class MainActivity extends AppCompatActivity implements
                     ((FeedingFragment) currentFragment).updateHayStockFeedingFragment(stockLeft);
                 } else if (currentFragment.getTag().equals("SHOP_FRAGMENT")) {
                     ((ShopFragment) currentFragment).updateHayStockShopFragment(stockLeft);
-                }
-            }
-        }
-    }
-
-    private void giveAnimalAccessReward(String productId) {
-        if (productId.equals("animal_horse_v2")) {
-            sharedPreferences.edit().putBoolean("animalHorseIsUnlocked", true).apply();
-        } else if (productId.equals("animal_reindeer_v2")) {
-            sharedPreferences.edit().putBoolean("animalReindeerIsUnlocked", true).apply();
-        } else if (productId.equals("animal_zebra_v2")) {
-            sharedPreferences.edit().putBoolean("animalZebraIsUnlocked", true).apply();
-        }
-        List<Fragment> fragments = new ArrayList<>(getSupportFragmentManager().getFragments());
-        for (int index = 0; index < fragments.size(); index++) {
-            Fragment currentFragment = fragments.get(index);
-            if (currentFragment != null && currentFragment.getTag() != null
-                    && !currentFragment.getTag().isEmpty()) {
-                if (currentFragment.getTag().equals("FEEDING_FRAGMENT") ) {
-                    if (productId.equals("animal_horse_v2")) {
-                        ((FeedingFragment) currentFragment).unlockAccessToAnimalHorse();
-                    } else if (productId.equals("animal_reindeer_v2")) {
-                        ((FeedingFragment) currentFragment).unlockAccessToAnimalReindeer();
-                    } else if (productId.equals("animal_zebra_v2")) {
-                        ((FeedingFragment) currentFragment).unlockAccessToAnimalZebra();
-                    }
                 }
             }
         }
@@ -457,9 +429,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onFarmerFragmentInteractionLoadBannerAd(AdView bannerAdView) {
-        String testBannerAdUnitId = "ca-app-pub-3940256099942544/6300978111";
-        String realBannerAdUnitId = "ca-app-pub-4247468904518611/1582825859";
-        bannerAdView.setAdUnitId(testBannerAdUnitId);
         bannerAdView.setAdListener(new AdListener() {
             @Override
             public void onAdClicked() { // Code to be executed when the user clicks on an ad.
@@ -534,19 +503,22 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onFeedingFragmentInteractionAccessLockedAnimal(String animalKey) {
-        if (!sharedPreferences.getBoolean("areAnimalSkuDetailsSaved", false)) {
-            return;
-        }
-
-        String jsonRetrieveAnimalSkuDetails = sharedPreferences.getString("animalSkuDetails",
-                gson.toJson(new HashMap<>()));
-        Type typeAnimalSkuDetails = new TypeToken<Map<String, SkuDetails>>(){}.getType();
-        Map<String, SkuDetails> animalSkuDetails = new HashMap<>(gson.fromJson(jsonRetrieveAnimalSkuDetails,
-                typeAnimalSkuDetails));
-
-        if (animalSkuDetails.containsKey(animalKey)) {
-            // TODO -> Some Qonversion Trigger to start the purchase flow
+    public void onFeedingFragmentInteractionGiveAccessToAnimal(String qonversionId) {
+        List<Fragment> fragments = new ArrayList<>(getSupportFragmentManager().getFragments());
+        for (int index = 0; index < fragments.size(); index++) {
+            Fragment currentFragment = fragments.get(index);
+            if (currentFragment != null && currentFragment.getTag() != null
+                    && !currentFragment.getTag().isEmpty()) {
+                if (currentFragment.getTag().equals("FEEDING_FRAGMENT") ) {
+                    if (qonversionId.equals("Horse")) {
+                        ((FeedingFragment) currentFragment).unlockAccessToAnimalHorse();
+                    } else if (qonversionId.equals("Reindeer")) {
+                        ((FeedingFragment) currentFragment).unlockAccessToAnimalReindeer();
+                    } else if (qonversionId.equals("Zebra")) {
+                        ((FeedingFragment) currentFragment).unlockAccessToAnimalZebra();
+                    }
+                }
+            }
         }
     }
 
