@@ -43,12 +43,12 @@ import com.nerdcoredevelopment.inappbillingdemo.fragment.ShopFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO -> Among the error code block of In-App Billing handle internet connectivity related issues
+// TODO -> Handle the error situations of Qonversion
 /* TODO -> After giving entitlement to the rewards after purchase, the changes don't reflect by themselves. They have to be
            triggered by something like a button click etc.
 */
 /* TODO -> Whenever we would look into in detail how updates work as in what happens to stored data, settings etc. when a
-           user updates the app to the latest version, we need to ensure that the In-App Billing code is still working fine
+           user updates the app to the latest version, we need to ensure that the Qonversion code is still working fine
            without running into any problems
 */
 /* TODO -> Revisit the Qonversion Sample code, when we will implement for subscriptions the following:
