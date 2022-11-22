@@ -13,10 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatImageView;
 
-/* TODO -> !! Caution !! - Always make sure to use a testing id for debugging and
-           testing purposes. Also ensure to use the Actual id just before creating a
-           release AAB or APK as then we want to have an actual Admob App Id
-*/
 public class IntroActivity extends AppCompatActivity {
 
     @SuppressLint("SourceLockedOrientationActivity")
