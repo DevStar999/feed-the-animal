@@ -74,6 +74,7 @@ import java.util.List;
 /* TODO -> Implement Qonversion Subscriptions for Farmer Fragment. Also follow up on the next of Qonversion, we have which
            we had written on board and have a clicked a photo of.
 */
+// TODO -> Solve the Google Play Policy violation regarding the Data Safety Section
 public class MainActivity extends AppCompatActivity implements
         InfoFragment.OnInfoFragmentInteractionListener,
         NavigationFragment.OnNavigationFragmentInteractionListener,
