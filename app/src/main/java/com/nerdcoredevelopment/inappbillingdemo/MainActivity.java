@@ -75,6 +75,27 @@ import java.util.List;
            we had written on board and have a clicked a photo of.
 */
 // TODO -> Solve the Google Play Policy violation regarding the Data Safety Section
+/* TODO -> A purchase for hay units was made from this app for product id - hay_level3_v3 with the order id as follows -
+           Order Id -> GPA.3339-7215-5645-79887
+           # What happened during the purchase -> Clicked on option and went to PhonePe to make the purchase. Entered the UPI
+           pin, then screen went to the processing payment animation. Now, it was stuck on processing for longer than the
+           usual, so in the game we cancelled the Google Play purchase transaction. In the meanwhile, the purchase amount was
+           deducted from the bank account, we received an SMS of account deducted and the transaction also shows up on SBI
+           Yono. However, the successful purchase does not show up on PhonePe.
+           # Summary -> (a) Amount deducted from account (b) Successful transaction does not show on PhonePe
+           (c) Received mail of purchase which gave the above order id
+           (d) On Google Play Console, in 'Order Management', the transaction shows the amount was successfully charged
+               from user
+           (e) In the app, hay units were not rewarded to the user
+           # Further Actions -> (a) Check in 'Order Management' if refund is given to the user on it's own, automatically
+           without you having to do it manually
+           (b) Ask Yurii from Qonversion about the situation where do link a 'Product' to a 'Permission' for a product which
+           we created for a consumable in-app purchase, will it show up in the Deferred purchase method (Refer to the 4th
+           question in the 2nd set of questions in mail thread) i.e. Qonversion.setUpdatedPurchaseListener
+           (c) If a solution from point (b) above does not solve our problem, we can think about maintaining a database of
+           'Order Ids' and/or 'Purchase Tokens' by using methods of queryPurchaseHistoryAsync() or queryPurchaseAsync() from
+           original Google Billing Library
+*/
 public class MainActivity extends AppCompatActivity implements
         InfoFragment.OnInfoFragmentInteractionListener,
         NavigationFragment.OnNavigationFragmentInteractionListener,
