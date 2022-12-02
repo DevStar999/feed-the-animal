@@ -64,8 +64,8 @@ import java.util.List;
            products. We may need to think about this if we later decided that we don't want to load fresh prices and IAP
            related details from Qonversion and want to use some effective implementation of local storage.
 */
-/* TODO -> Implement Qonversion Subscriptions for Farmer Fragment. Also follow up on the 2nd set of questions on Qonversion,
-           which we had written on board and have a clicked a photo of i.e. implement the code related to it
+/* TODO -> Also follow up on the 2nd set of questions on Qonversion, which we had written on board and have a clicked a photo
+           of i.e. implement the code related to it
 */
 // TODO -> Solve the Google Play Policy violation regarding the Data Safety Section
 /* TODO -> A purchase for hay units was made from this app for product id - hay_level3_v3 with the order id as follows -
