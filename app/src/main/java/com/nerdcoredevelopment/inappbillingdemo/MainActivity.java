@@ -44,14 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // TODO -> Handle the error situations of Qonversion
-/* TODO -> After giving entitlement to the rewards after purchase, the changes don't reflect by themselves. They have to be
-           triggered by something like a button click etc.
-*/
-/* TODO -> Whenever we would look into in detail how updates work as in what happens to stored data, settings etc. when a
-           user updates the app to the latest version, we need to ensure that the Qonversion code is still working fine
-           without running into any problems
-*/
-/* TODO -> Revisit the Qonversion Sample code, when we will implement for subscriptions the following:
+/* TODO -> Revisit the Qonversion Sample code, when we will implement subscriptions, for the following:
            (a) [Will probably come in handy when we want a multi-platform (Android, iOS etc.) app ] User auth using Firebase
            (b) [<Same comment as above>] Subscription tracking using the Qonversion mechanism for user id tracking
            (https://documentation.qonversion.io/docs/subscription-management-mode: Step 4 - Set User Id)
@@ -71,8 +64,8 @@ import java.util.List;
            products. We may need to think about this if we later decided that we don't want to load fresh prices and IAP
            related details from Qonversion and want to use some effective implementation of local storage.
 */
-/* TODO -> Implement Qonversion Subscriptions for Farmer Fragment. Also follow up on the next of Qonversion, we have which
-           we had written on board and have a clicked a photo of.
+/* TODO -> Implement Qonversion Subscriptions for Farmer Fragment. Also follow up on the 2nd set of questions on Qonversion,
+           which we had written on board and have a clicked a photo of i.e. implement the code related to it
 */
 // TODO -> Solve the Google Play Policy violation regarding the Data Safety Section
 /* TODO -> A purchase for hay units was made from this app for product id - hay_level3_v3 with the order id as follows -
@@ -462,12 +455,6 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onAdClicked() { // Code to be executed when the user clicks on an ad.
                 super.onAdClicked();
-                // TODO -> Implement logic to prevent users from clicking the ad too many times in a short period of time
-                /* Note: If the user clicks on ad too many times in a short period of time, Google may suspect this as fishy
-                         behaviour and this could lead to serious consequences like AdMob account suspension or termination
-                         OR suspension or termination of App from Play Store. However, we need not worry too much about this
-                         as well, since at first we will be warned by Google about this.
-                */
             }
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) { // Code to be executed when an ad request fails.
