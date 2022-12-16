@@ -67,7 +67,6 @@ import java.util.List;
 /* TODO -> Also follow up on the 2nd set of questions on Qonversion, which we had written on board and have a clicked a photo
            of i.e. implement the code related to it
 */
-// TODO -> Solve the Google Play Policy violation regarding the Data Safety Section
 /* TODO -> A purchase for hay units was made from this app for product id - hay_level3_v3 with the order id as follows -
            Order Id -> GPA.3339-7215-5645-79887
            # What happened during the purchase -> Clicked on option and went to PhonePe to make the purchase. Entered the UPI
