@@ -88,6 +88,7 @@ import java.util.List;
            'Order Ids' and/or 'Purchase Tokens' by using methods of queryPurchaseHistoryAsync() or queryPurchaseAsync() from
            original Google Billing Library
 */
+// TODO -> Make code changes to make ads suitable for children and families and prohibit display of sensitive ads
 public class MainActivity extends AppCompatActivity implements
         InfoFragment.OnInfoFragmentInteractionListener,
         NavigationFragment.OnNavigationFragmentInteractionListener,
