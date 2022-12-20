@@ -89,6 +89,7 @@ import java.util.List;
            original Google Billing Library
 */
 // TODO -> Make code changes to make ads suitable for children and families and prohibit display of sensitive ads
+// TODO -> Implement Google Play Games Services (GPGS) to this project
 public class MainActivity extends AppCompatActivity implements
         InfoFragment.OnInfoFragmentInteractionListener,
         NavigationFragment.OnNavigationFragmentInteractionListener,
