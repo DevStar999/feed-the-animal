@@ -70,4 +70,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime:2.5.1"
         // noinspection LifecycleAnnotationProcessorWithJava8
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:2.5.1"
+
+    // For Google Play Games Services (GPGS)
+    implementation "com.google.android.gms:play-services-games-v2:17.0.0"
 }
