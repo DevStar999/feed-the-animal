@@ -1,5 +1,9 @@
 package com.nerdcoredevelopment.inappbillingdemo;
 
+import static com.google.android.gms.ads.RequestConfiguration.MAX_AD_CONTENT_RATING_G;
+import static com.google.android.gms.ads.RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE;
+import static com.google.android.gms.ads.RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_TRUE;
+
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -17,9 +21,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.appopen.AppOpenAd;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.qonversion.android.sdk.Qonversion;
 import com.qonversion.android.sdk.QonversionError;
 import com.qonversion.android.sdk.QonversionLaunchCallback;
@@ -27,7 +30,9 @@ import com.qonversion.android.sdk.dto.QLaunchResult;
 
 import java.util.Date;
 
-/** Application class that initializes, loads and show ads when activities change states. */
+/**
+ * Application class that initializes, loads and show ads when activities change states.
+ */
 public class MyApplication extends Application implements Application.ActivityLifecycleCallbacks, LifecycleObserver {
     private AppOpenAdManager appOpenAdManager;
     private Activity currentActivity;
@@ -52,11 +57,14 @@ public class MyApplication extends Application implements Application.ActivityLi
         this.registerActivityLifecycleCallbacks(this);
 
         initialiseQonversion();
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
-            }
-        });
+
+        RequestConfiguration requestConfiguration = MobileAds.getRequestConfiguration().toBuilder()
+                .setTagForChildDirectedTreatment(TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE)
+                .setTagForUnderAgeOfConsent(TAG_FOR_UNDER_AGE_OF_CONSENT_TRUE)
+                .setMaxAdContentRating(MAX_AD_CONTENT_RATING_G)
+                .build();
+        MobileAds.setRequestConfiguration(requestConfiguration);
+        MobileAds.initialize(this);
 
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
         appOpenAdManager = new AppOpenAdManager();
