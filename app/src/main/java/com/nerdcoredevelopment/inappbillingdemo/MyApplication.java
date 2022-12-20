@@ -60,7 +60,6 @@ public class MyApplication extends Application implements Application.ActivityLi
 
         RequestConfiguration requestConfiguration = MobileAds.getRequestConfiguration().toBuilder()
                 .setTagForChildDirectedTreatment(TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE)
-                .setTagForUnderAgeOfConsent(TAG_FOR_UNDER_AGE_OF_CONSENT_TRUE)
                 .setMaxAdContentRating(MAX_AD_CONTENT_RATING_G)
                 .build();
         MobileAds.setRequestConfiguration(requestConfiguration);
