@@ -63,7 +63,7 @@ dependencies {
     implementation 'io.qonversion.android.sdk:sdk:3.4.1'
 
     // For AdMob
-    implementation 'com.google.android.gms:play-services-ads:21.3.0'
+    implementation 'com.google.android.gms:play-services-ads:21.4.0'
 
     // For Implementing App Open Ad
     implementation "androidx.lifecycle:lifecycle-process:2.5.1"
