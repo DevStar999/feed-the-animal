@@ -3,7 +3,6 @@ package com.nerdcoredevelopment.inappbillingdemo.fragment;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -25,7 +24,7 @@ public class SettingsFragment extends Fragment {
     private final static String INSTAGRAM_USERNAME = "nerdcoredev";
     private final static String TWITTER_USERNAME = "NerdcoreDev";
     private final static String DEVELOPER_MAIL_ID = "nerdcoredevelopment@gmail.com";
-    private final static String FEEDBACK_MAIL_SUBJECT = "Feedback - 2048 Champs";
+    private final static String FEEDBACK_MAIL_SUBJECT = "Feedback - Feed the Animal";
     private final static String FEEDBACK_MAIL_BODY = "Hi Nerdcore Team,\n\n";
     private Context context;
     private OnSettingsFragmentInteractionListener mListener;
