@@ -30,7 +30,6 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
-import com.google.gson.Gson;
 import com.nerdcoredevelopment.inappbillingdemo.MyApplication.OnShowAdCompleteListener;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.GameExitDialog;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.FarmerFragment;
@@ -97,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements
         SettingsFragment.OnSettingsFragmentInteractionListener,
         ShopFragment.OnShopFragmentInteractionListener {
     private SharedPreferences sharedPreferences;
-    private Gson gson;
     private AdRequest adRequest;
     private InterstitialAd interstitialAd;
     private RewardedAd rewardedAd;
@@ -105,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private void initialise() {
         sharedPreferences = getSharedPreferences("com.nerdcoredevelopment.inappbillingdemo", Context.MODE_PRIVATE);
-        gson = new Gson();
         adRequest = new AdRequest.Builder().build();
         rewardedAdHayUnitsReward = 10;
     }
