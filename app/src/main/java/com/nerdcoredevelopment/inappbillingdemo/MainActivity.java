@@ -3,6 +3,8 @@ package com.nerdcoredevelopment.inappbillingdemo;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
@@ -30,6 +33,15 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.InstallStatus;
+import com.google.android.play.core.install.model.UpdateAvailability;
 import com.nerdcoredevelopment.inappbillingdemo.MyApplication.OnShowAdCompleteListener;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.GameExitDialog;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.FarmerFragment;
@@ -100,6 +112,11 @@ public class MainActivity extends AppCompatActivity implements
     private InterstitialAd interstitialAd;
     private RewardedAd rewardedAd;
     private int rewardedAdHayUnitsReward;
+
+    // Attributes required for In app updates feature
+    public static final int UPDATE_REQUEST_CODE = 100;
+    private AppUpdateManager appUpdateManager;
+    private InstallStateUpdatedListener installStateUpdatedListener;
 
     private void initialise() {
         sharedPreferences = getSharedPreferences("com.nerdcoredevelopment.inappbillingdemo", Context.MODE_PRIVATE);
@@ -266,16 +283,56 @@ public class MainActivity extends AppCompatActivity implements
 
         initialise();
 
-        if (getIntent().getBooleanExtra("comingFromIntroActivity", false)) {
-            showAppOpenAd();
-        }
-
         loadRewardedAd();
 
         NavigationFragment navigationFragment = new NavigationFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.navigation_fragment_container_main_activity, navigationFragment, "NAVIGATION_FRAGMENT")
                 .commit();
+
+        if (getIntent().getBooleanExtra("comingFromIntroActivity", false)) {
+            // TODO -> Remove after testing for In-app updates is done
+            // showAppOpenAd();
+        }
+
+        checkInAppUpdate();
+    }
+
+    private void checkInAppUpdate() {
+        installStateUpdatedListener = installState -> {
+            if (installState.installStatus() == InstallStatus.DOWNLOADED) {
+                popupSnackbarForCompleteUpdate();
+            }
+        };
+        appUpdateManager = AppUpdateManagerFactory.create(this);
+        appUpdateManager.registerListener(installStateUpdatedListener);
+        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<>() {
+            @Override
+            public void onSuccess(AppUpdateInfo appUpdateInfo) {
+                if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                        && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+                    try {
+                        appUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.FLEXIBLE,
+                                MainActivity.this, UPDATE_REQUEST_CODE);
+                    } catch (IntentSender.SendIntentException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    private void popupSnackbarForCompleteUpdate() { // Displays the snackbar notification and call to action.
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.root_layout_main_activity),
+                "An update has been downloaded.", Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("INSTALL", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                appUpdateManager.completeUpdate();
+            }
+        });
+        snackbar.setActionTextColor(getColor(R.color.white));
+        snackbar.show();
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -295,11 +352,30 @@ public class MainActivity extends AppCompatActivity implements
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
+        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(appUpdateInfo -> {
+            if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                popupSnackbarForCompleteUpdate();
+            }
+        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (appUpdateManager != null) {
+            appUpdateManager.unregisterListener(installStateUpdatedListener);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == UPDATE_REQUEST_CODE) {
+            if (resultCode != RESULT_OK) {
+                // If the update is cancelled or fails, we can ignore this if we are implementing a 'Flexible Update'
+            }
+        }
     }
 
     @Override
