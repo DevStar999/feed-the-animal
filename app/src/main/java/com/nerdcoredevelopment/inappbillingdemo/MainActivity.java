@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements
     // Attributes required for In app updates feature
     public static final int UPDATE_REQUEST_CODE = 100;
     private AppUpdateManager appUpdateManager;
+    private InstallStateUpdatedListener installStateUpdatedListener;
 
     private void initialise() {
         sharedPreferences = getSharedPreferences("com.nerdcoredevelopment.inappbillingdemo", Context.MODE_PRIVATE);
@@ -298,14 +299,20 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void checkInAppUpdate() {
+        installStateUpdatedListener = installState -> {
+            if (installState.installStatus() == InstallStatus.DOWNLOADED) {
+                popupSnackbarForCompleteUpdate();
+            }
+        };
         appUpdateManager = AppUpdateManagerFactory.create(this);
+        appUpdateManager.registerListener(installStateUpdatedListener);
         appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<>() {
             @Override
             public void onSuccess(AppUpdateInfo appUpdateInfo) {
                 if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                        && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+                        && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
                     try {
-                        appUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.IMMEDIATE,
+                        appUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.FLEXIBLE,
                                 MainActivity.this, UPDATE_REQUEST_CODE);
                     } catch (IntentSender.SendIntentException e) {
                         e.printStackTrace();
@@ -313,6 +320,19 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         });
+    }
+
+    private void popupSnackbarForCompleteUpdate() { // Displays the snackbar notification and call to action.
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.root_layout_main_activity),
+                "An update has been downloaded.", Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("INSTALL", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                appUpdateManager.completeUpdate();
+            }
+        });
+        snackbar.setActionTextColor(getColor(R.color.white));
+        snackbar.show();
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -333,19 +353,19 @@ public class MainActivity extends AppCompatActivity implements
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
-        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<AppUpdateInfo>() {
-            @Override
-            public void onSuccess(AppUpdateInfo appUpdateInfo) {
-                if (appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
-                    try {
-                        appUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.IMMEDIATE,
-                                MainActivity.this, UPDATE_REQUEST_CODE);
-                    } catch (IntentSender.SendIntentException e) {
-                        e.printStackTrace();
-                    }
-                }
+        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(appUpdateInfo -> {
+            if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                popupSnackbarForCompleteUpdate();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (appUpdateManager != null) {
+            appUpdateManager.unregisterListener(installStateUpdatedListener);
+        }
     }
 
     @Override
@@ -353,7 +373,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == UPDATE_REQUEST_CODE) {
             if (resultCode != RESULT_OK) {
-                finish(); // Do not let the user open the app and continue using it
+                // If the update is cancelled or fails, we can ignore this if we are implementing a 'Flexible Update'
             }
         }
     }
