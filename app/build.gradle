@@ -11,8 +11,8 @@ android {
         applicationId "com.nerdcoredevelopment.inappbillingdemo"
         minSdk 24
         targetSdk 32
-        versionCode 31
-        versionName "1.4.9"
+        versionCode 32
+        versionName "1.5.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
