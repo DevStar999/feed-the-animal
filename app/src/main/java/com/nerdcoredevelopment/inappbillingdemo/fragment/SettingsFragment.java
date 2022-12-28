@@ -3,6 +3,7 @@ package com.nerdcoredevelopment.inappbillingdemo.fragment;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -11,12 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 
 import com.nerdcoredevelopment.inappbillingdemo.BuildConfig;
 import com.nerdcoredevelopment.inappbillingdemo.R;
+import com.nerdcoredevelopment.inappbillingdemo.dialogs.RateUsDialogStages;
+import com.nerdcoredevelopment.inappbillingdemo.dialogs.RateUsPromptDialog;
 
 public class SettingsFragment extends Fragment {
     private final static String FACEBOOK_URL = "http://www.facebook.com/Nerdcore-Development-109351035183956";
@@ -28,6 +32,7 @@ public class SettingsFragment extends Fragment {
     private final static String FEEDBACK_MAIL_BODY = "Hi Nerdcore Team,\n\n";
     private Context context;
     private OnSettingsFragmentInteractionListener mListener;
+    private SharedPreferences sharedPreferences;
     private AppCompatImageView backButton;
     private LinearLayout facebookLinearLayout;
     private LinearLayout instagramLinearLayout;
@@ -112,27 +117,83 @@ public class SettingsFragment extends Fragment {
         rateUsLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
-                String packageName = "com.nerdcoredevelopment.inappbillingdemo";
-                Uri uriForApp = Uri.parse("market://details?id=" + packageName);
-                Uri uriForBrowser = Uri.parse("http://play.google.com/store/apps/details?id="
-                        + packageName);
+                RateUsPromptDialog rateUsPromptDialog = new RateUsPromptDialog(context, RateUsDialogStages.STATIC_DIALOG);
+                rateUsPromptDialog.show();
+                rateUsPromptDialog.setRateUsPromptDialogListener(new RateUsPromptDialog.RateUsPromptDialogListener() {
+                    @Override
+                    public void getResponseOfRateUsDialog(boolean response, RateUsDialogStages rateUsDialogStage,
+                                                          boolean didUserRespond) {
+                        if (response) {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                            String packageName = "com.nerdcoredevelopment.inappbillingdemo";
+                            Uri uriForApp = Uri.parse("market://details?id=" + packageName);
+                            Uri uriForBrowser = Uri.parse("http://play.google.com/store/apps/details?id="
+                                    + packageName);
 
-                try {
-                    browserIntent.setData(uriForApp);
-                    startActivity(browserIntent);
-                } catch (ActivityNotFoundException exception) {
-                    browserIntent.setData(uriForBrowser);
-                    startActivity(browserIntent);
-                }
+                            try {
+                                browserIntent.setData(uriForApp);
+                                startActivity(browserIntent);
+                            } catch (ActivityNotFoundException exception) {
+                                browserIntent.setData(uriForBrowser);
+                                startActivity(browserIntent);
+                            }
+                        }
+                    }
+                });
             }
         });
         rateUsInAppLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mListener != null) {
-                    mListener.onSettingsFragmentInteractionRateUsInAppClicked();
+                RateUsDialogStages rateUsDialogStage;
+                if (sharedPreferences.getInt("rateUsPopUpDialogStage", RateUsDialogStages.POP_UP_DIALOG_STAGE_1.ordinal())
+                        == RateUsDialogStages.POP_UP_DIALOG_STAGE_1.ordinal()) {
+                    rateUsDialogStage = RateUsDialogStages.POP_UP_DIALOG_STAGE_1;
+                } else if (sharedPreferences.getInt("rateUsPopUpDialogStage", RateUsDialogStages.POP_UP_DIALOG_STAGE_1.ordinal())
+                        == RateUsDialogStages.POP_UP_DIALOG_STAGE_2.ordinal()) {
+                    rateUsDialogStage = RateUsDialogStages.POP_UP_DIALOG_STAGE_2;
+                } else { // Means we are at Stage 3
+                    Toast.makeText(context, "You informed us that you already submitted the review", Toast.LENGTH_LONG).show();
+                    return;
                 }
+                RateUsPromptDialog rateUsPromptDialog = new RateUsPromptDialog(context, rateUsDialogStage);
+                rateUsPromptDialog.show();
+                rateUsPromptDialog.setRateUsPromptDialogListener(new RateUsPromptDialog.RateUsPromptDialogListener() {
+                    @Override
+                    public void getResponseOfRateUsDialog(boolean response, RateUsDialogStages rateUsDialogStage,
+                                                          boolean didUserRespond) {
+                        if (response) {
+                            if (rateUsDialogStage == RateUsDialogStages.POP_UP_DIALOG_STAGE_1) {
+                                sharedPreferences.edit().putInt("rateUsPopUpDialogStage",
+                                        RateUsDialogStages.POP_UP_DIALOG_STAGE_2.ordinal()).apply();
+                            } else if (rateUsDialogStage == RateUsDialogStages.POP_UP_DIALOG_STAGE_2) {
+                                // User clicked on 'RATE US' at Stage 2, so we do nothing
+                            }
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                            String packageName = "com.nerdcoredevelopment.inappbillingdemo";
+                            Uri uriForApp = Uri.parse("market://details?id=" + packageName);
+                            Uri uriForBrowser = Uri.parse("http://play.google.com/store/apps/details?id="
+                                    + packageName);
+
+                            try {
+                                browserIntent.setData(uriForApp);
+                                startActivity(browserIntent);
+                            } catch (ActivityNotFoundException exception) {
+                                browserIntent.setData(uriForBrowser);
+                                startActivity(browserIntent);
+                            }
+                        } else {
+                            if (rateUsDialogStage == RateUsDialogStages.POP_UP_DIALOG_STAGE_1) {
+                                // User clicked on 'REMIND LATER', so we do nothing
+                            } else if (rateUsDialogStage == RateUsDialogStages.POP_UP_DIALOG_STAGE_2) {
+                                if (didUserRespond) {
+                                    sharedPreferences.edit().putInt("rateUsPopUpDialogStage",
+                                            RateUsDialogStages.POP_UP_DIALOG_STAGE_3.ordinal()).apply();
+                                }
+                            }
+                        }
+                    }
+                });
             }
         });
         feedbackLinearLayout.setOnClickListener(new View.OnClickListener() {
@@ -168,6 +229,8 @@ public class SettingsFragment extends Fragment {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
+        sharedPreferences = context.getSharedPreferences("com.nerdcoredevelopment.inappbillingdemo", Context.MODE_PRIVATE);
 
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
