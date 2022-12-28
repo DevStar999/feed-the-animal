@@ -124,6 +124,14 @@ public class SettingsFragment extends Fragment {
                     public void getResponseOfRateUsDialog(boolean response, RateUsDialogStages rateUsDialogStage,
                                                           boolean didUserRespond) {
                         if (response) {
+                            if (!sharedPreferences.getBoolean("hasUserClickedRateUsAtleastOnce", false)) {
+                                sharedPreferences.edit().putBoolean("hasUserClickedRateUsAtleastOnce", true).apply();
+                                if (mListener != null) {
+                                    mListener.onSettingsFragmentInteractionRateUsInAppClicked();
+                                    return;
+                                }
+                            }
+
                             Intent browserIntent = new Intent(Intent.ACTION_VIEW);
                             String packageName = "com.nerdcoredevelopment.inappbillingdemo";
                             Uri uriForApp = Uri.parse("market://details?id=" + packageName);
@@ -169,6 +177,17 @@ public class SettingsFragment extends Fragment {
                             } else if (rateUsDialogStage == RateUsDialogStages.POP_UP_DIALOG_STAGE_2) {
                                 // User clicked on 'RATE US' at Stage 2, so we do nothing
                             }
+
+                            if (rateUsDialogStage == RateUsDialogStages.POP_UP_DIALOG_STAGE_1) {
+                                if (!sharedPreferences.getBoolean("hasUserClickedRateUsAtleastOnce", false)) {
+                                    sharedPreferences.edit().putBoolean("hasUserClickedRateUsAtleastOnce", true).apply();
+                                    if (mListener != null) {
+                                        mListener.onSettingsFragmentInteractionRateUsInAppClicked();
+                                        return;
+                                    }
+                                }
+                            }
+
                             Intent browserIntent = new Intent(Intent.ACTION_VIEW);
                             String packageName = "com.nerdcoredevelopment.inappbillingdemo";
                             Uri uriForApp = Uri.parse("market://details?id=" + packageName);
