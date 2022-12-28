@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="512.82"
+    android:viewportHeight="512.82">
+    <!-- Source Link -> https://www.svgrepo.com/svg/254110/stars-star -->
+
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M346.71,70.26l-68.59,0l-21.7,-70.26l-21.7,70.26l-68.61,0l55.5,42.43l-21.51,69.67l56.32,-43.06l56.31,43.07l-21.5,-69.68z" />
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M181.03,201.3l-68.6,0l-21.7,-70.27l-21.71,70.27l-68.61,0l55.51,42.42l-21.51,69.67l56.32,-43.06l56.31,43.06l-21.51,-69.67z" />
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M512.41,201.3l-68.6,0l-21.7,-70.27l-21.71,70.27l-68.61,0l55.51,42.42l-21.51,69.67l56.32,-43.06l56.31,43.06l-21.51,-69.67z" />
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M448.26,400.71l-68.61,0l-21.7,-70.28l-21.71,70.28l-68.61,0l55.5,42.42l-21.5,69.68l56.32,-43.06l56.31,43.06l-21.51,-69.68z" />
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M245.18,400.71l-68.6,0l-21.7,-70.28l-21.7,70.28l-68.62,0l55.51,42.42l-21.51,69.68l56.32,-43.06l56.31,43.06l-21.51,-69.68z" />
+</vector>

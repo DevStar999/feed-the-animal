@@ -2,11 +2,13 @@ package com.nerdcoredevelopment.inappbillingdemo;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -362,6 +364,22 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
+    private void startNormalReviewFlow() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+        String packageName = "com.nerdcoredevelopment.inappbillingdemo";
+        Uri uriForApp = Uri.parse("market://details?id=" + packageName);
+        Uri uriForBrowser = Uri.parse("http://play.google.com/store/apps/details?id="
+                + packageName);
+
+        try {
+            browserIntent.setData(uriForApp);
+            startActivity(browserIntent);
+        } catch (ActivityNotFoundException exception) {
+            browserIntent.setData(uriForBrowser);
+            startActivity(browserIntent);
+        }
+    }
+
     private void startInAppReviewFlow() {
         if (reviewInfo != null) {
             Task<Void> flow = reviewManager.launchReviewFlow(this, reviewInfo);
@@ -373,8 +391,9 @@ public class MainActivity extends AppCompatActivity implements
             });
         } else {
             /* Now, we should trigger the mechanism for a normal review flow i.e. to send the user the PlayStore
-               to give the review.
+               to give the review. [Here, In-App Review flow cannot be launched as reviewInfo is null]
             */
+            startNormalReviewFlow();
         }
     }
 
@@ -657,6 +676,11 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onSettingsFragmentInteractionBackClicked() {
         onBackPressed();
+    }
+
+    @Override
+    public void onSettingsFragmentInteractionRateUsInAppClicked() {
+        startInAppReviewFlow();
     }
 
     @Override

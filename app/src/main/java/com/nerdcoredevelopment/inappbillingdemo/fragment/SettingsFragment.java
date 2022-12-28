@@ -32,6 +32,8 @@ public class SettingsFragment extends Fragment {
     private LinearLayout facebookLinearLayout;
     private LinearLayout instagramLinearLayout;
     private LinearLayout twitterLinearLayout;
+    private LinearLayout rateUsLinearLayout;
+    private LinearLayout rateUsInAppLinearLayout;
     private LinearLayout feedbackLinearLayout;
     private LinearLayout privacyLinearLayout;
 
@@ -107,6 +109,32 @@ public class SettingsFragment extends Fragment {
                 }
             }
         });
+        rateUsLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                String packageName = "com.nerdcoredevelopment.inappbillingdemo";
+                Uri uriForApp = Uri.parse("market://details?id=" + packageName);
+                Uri uriForBrowser = Uri.parse("http://play.google.com/store/apps/details?id="
+                        + packageName);
+
+                try {
+                    browserIntent.setData(uriForApp);
+                    startActivity(browserIntent);
+                } catch (ActivityNotFoundException exception) {
+                    browserIntent.setData(uriForBrowser);
+                    startActivity(browserIntent);
+                }
+            }
+        });
+        rateUsInAppLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null) {
+                    mListener.onSettingsFragmentInteractionRateUsInAppClicked();
+                }
+            }
+        });
         feedbackLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,6 +175,8 @@ public class SettingsFragment extends Fragment {
         facebookLinearLayout = view.findViewById(R.id.facebook_linear_layout);
         instagramLinearLayout = view.findViewById(R.id.instagram_linear_layout);
         twitterLinearLayout = view.findViewById(R.id.twitter_linear_layout);
+        rateUsLinearLayout = view.findViewById(R.id.rate_us_linear_layout);
+        rateUsInAppLinearLayout = view.findViewById(R.id.rate_us_in_app_linear_layout);
         feedbackLinearLayout = view.findViewById(R.id.feedback_linear_layout);
         privacyLinearLayout = view.findViewById(R.id.privacy_policy_linear_layout);
 
@@ -157,6 +187,7 @@ public class SettingsFragment extends Fragment {
 
     public interface OnSettingsFragmentInteractionListener {
         void onSettingsFragmentInteractionBackClicked();
+        void onSettingsFragmentInteractionRateUsInAppClicked();
     }
 
     @Override

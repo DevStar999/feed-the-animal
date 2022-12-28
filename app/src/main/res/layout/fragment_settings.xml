@@ -170,6 +170,64 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/rate_us_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/click_settings_button"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/rate_us_icon_image_view"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="12dp"
+                app:srcCompat="@drawable/settings_rate_us_icon" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/rate_us_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Rate Us"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rate_us_in_app_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/click_settings_button"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/rate_us_in_app_icon_image_view"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="12dp"
+                app:srcCompat="@drawable/settings_rate_us_icon" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/rate_us_in_app_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Rate Us (In-App)"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/feedback_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
