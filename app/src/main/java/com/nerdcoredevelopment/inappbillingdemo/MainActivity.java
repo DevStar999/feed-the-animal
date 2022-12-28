@@ -33,7 +33,9 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
@@ -42,6 +44,11 @@ import com.google.android.play.core.install.InstallStateUpdatedListener;
 import com.google.android.play.core.install.model.AppUpdateType;
 import com.google.android.play.core.install.model.InstallStatus;
 import com.google.android.play.core.install.model.UpdateAvailability;
+import com.google.android.play.core.review.ReviewException;
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.review.model.ReviewErrorCode;
 import com.nerdcoredevelopment.inappbillingdemo.MyApplication.OnShowAdCompleteListener;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.GameExitDialog;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.FarmerFragment;
@@ -53,6 +60,7 @@ import com.nerdcoredevelopment.inappbillingdemo.fragment.ShopFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 // TODO -> Handle the error situations of Qonversion
 /* TODO -> Revisit the Qonversion Sample code, when we will implement subscriptions, for the following:
@@ -117,6 +125,10 @@ public class MainActivity extends AppCompatActivity implements
     public static final int UPDATE_REQUEST_CODE = 100;
     private AppUpdateManager appUpdateManager;
     private InstallStateUpdatedListener installStateUpdatedListener;
+
+    // Attributes required for In app updates feature
+    private ReviewManager reviewManager;
+    private ReviewInfo reviewInfo;
 
     private void initialise() {
         sharedPreferences = getSharedPreferences("com.nerdcoredevelopment.inappbillingdemo", Context.MODE_PRIVATE);
@@ -296,6 +308,7 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         checkInAppUpdate();
+        setupInAppReview();
     }
 
     private void checkInAppUpdate() {
@@ -333,6 +346,36 @@ public class MainActivity extends AppCompatActivity implements
         });
         snackbar.setActionTextColor(getColor(R.color.white));
         snackbar.show();
+    }
+
+    private void setupInAppReview() {
+        reviewManager = ReviewManagerFactory.create(this);
+        Task<ReviewInfo> request = reviewManager.requestReviewFlow();
+        request.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
+            @Override
+            public void onComplete(@NonNull Task<ReviewInfo> task) {
+                if (task.isSuccessful()) {
+                    // We can get the ReviewInfo object
+                    reviewInfo = task.getResult();
+                }
+            }
+        });
+    }
+
+    private void startInAppReviewFlow() {
+        if (reviewInfo != null) {
+            Task<Void> flow = reviewManager.launchReviewFlow(this, reviewInfo);
+            flow.addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    // Carry on with the normal flow of the app
+                }
+            });
+        } else {
+            /* Now, we should trigger the mechanism for a normal review flow i.e. to send the user the PlayStore
+               to give the review.
+            */
+        }
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
