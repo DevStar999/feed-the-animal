@@ -357,8 +357,6 @@ public class MainActivity extends AppCompatActivity implements
 
                 int oldVersion = BuildConfig.VERSION_CODE;
                 int newVersion = appUpdateInfo.availableVersionCode();
-                Toast.makeText(MainActivity.this, "oldVersion = " + oldVersion +
-                        ", newVersion = " + newVersion, Toast.LENGTH_SHORT).show();
                 if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
                     if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
                         UpdateAppStaticAvailableDialog updateAppStaticAvailableDialog = new UpdateAppStaticAvailableDialog(
@@ -381,8 +379,6 @@ public class MainActivity extends AppCompatActivity implements
                     new UpdateAppStaticUnavailableDialog(MainActivity.this).show();
                 } else {
                     // This is the final error code branch
-                    Toast.makeText(MainActivity.this, "UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS or" +
-                            " UpdateAvailability.UNKNOWN are handled here", Toast.LENGTH_SHORT).show();
                     // TODO -> This is the error branch, we should handle this with a dialog or something
                 }
             }
@@ -400,8 +396,6 @@ public class MainActivity extends AppCompatActivity implements
 
                 int oldVersion = BuildConfig.VERSION_CODE;
                 int newVersion = appUpdateInfo.availableVersionCode();
-                Toast.makeText(MainActivity.this, "oldVersion = " + oldVersion +
-                        ", newVersion = " + newVersion, Toast.LENGTH_SHORT).show();
                 if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
                     if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
                         UpdateAppPopUpDialog updateAppPopUpDialog = new UpdateAppPopUpDialog(MainActivity.this,
@@ -425,8 +419,6 @@ public class MainActivity extends AppCompatActivity implements
                     new UpdateAppStaticUnavailableDialog(MainActivity.this).show();
                 } else {
                     // This is the final error code branch
-                    Toast.makeText(MainActivity.this, "UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS or" +
-                            " UpdateAvailability.UNKNOWN are handled here", Toast.LENGTH_SHORT).show();
                     // TODO -> This is the error branch, we should handle this with a dialog or something
                 }
             }
