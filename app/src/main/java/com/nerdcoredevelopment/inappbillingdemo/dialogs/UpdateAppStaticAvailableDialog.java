@@ -48,7 +48,7 @@ public class UpdateAppStaticAvailableDialog extends Dialog {
 
     public UpdateAppStaticAvailableDialog(@NonNull Context context, String oldVersion, String newVersion) {
         super(context, R.style.CustomDialogTheme);
-        setContentView(R.layout.dialog_update_app_static_unavailable);
+        setContentView(R.layout.dialog_update_app_static_available);
 
         initialise();
         updateVersionStartTextView.setText("Update Version: " + oldVersion);
@@ -64,6 +64,7 @@ public class UpdateAppStaticAvailableDialog extends Dialog {
                     public void onTick(long millisUntilFinished) {}
                     @Override
                     public void onFinish() {
+                        updateAppStaticAvailableDialogListener.getResponseOfUpdateAppStaticAvailableDialogDialog(false);
                         dismiss();
                     }
                 }.start();
@@ -79,6 +80,7 @@ public class UpdateAppStaticAvailableDialog extends Dialog {
                     public void onTick(long millisUntilFinished) {}
                     @Override
                     public void onFinish() {
+                        updateAppStaticAvailableDialogListener.getResponseOfUpdateAppStaticAvailableDialogDialog(true);
                         dismiss();
                     }
                 }.start();

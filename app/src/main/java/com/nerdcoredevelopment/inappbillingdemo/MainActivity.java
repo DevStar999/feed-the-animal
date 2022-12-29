@@ -51,6 +51,7 @@ import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.nerdcoredevelopment.inappbillingdemo.MyApplication.OnShowAdCompleteListener;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.GameExitDialog;
+import com.nerdcoredevelopment.inappbillingdemo.dialogs.UpdateAppPopUpDialog;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.UpdateAppStaticAvailableDialog;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.UpdateAppStaticUnavailableDialog;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.FarmerFragment;
@@ -314,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements
         setupInAppReview();
     }
 
-    private void launchInAppUpdateFlow() {
+    private void launchInAppUpdateFlowForStaticButton() {
         appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<>() {
             @Override
             public void onSuccess(AppUpdateInfo appUpdateInfo) {
@@ -337,6 +338,34 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 } else {
                     new UpdateAppStaticUnavailableDialog(MainActivity.this).show();
+                }
+            }
+        });
+    }
+
+    private void launchInAppUpdateFlowForPopUpDialog() {
+        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<>() {
+            @Override
+            public void onSuccess(AppUpdateInfo appUpdateInfo) {
+                if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
+                    if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+                        String oldVersion = BuildConfig.VERSION_NAME, newVersion = appUpdateInfo.packageName();
+                        UpdateAppPopUpDialog updateAppPopUpDialog = new UpdateAppPopUpDialog(MainActivity.this,
+                                oldVersion, newVersion);
+                        updateAppPopUpDialog.setUpdateAppPopUpDialogListener((response) -> {
+                            if (response == UpdateAppPopUpDialogOptions.UPDATE_NOW) {
+                                try {
+                                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.FLEXIBLE,
+                                            MainActivity.this, UPDATE_REQUEST_CODE);
+                                } catch (IntentSender.SendIntentException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        updateAppPopUpDialog.show();
+                    }
+                } else { // TODO -> Remove this else block, as we would only launch this flow only if update is available
+                    Toast.makeText(MainActivity.this, "App already up to date", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -700,7 +729,12 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onSettingsFragmentInteractionCheckUpdatesStaticClicked() {
-        launchInAppUpdateFlow();
+        launchInAppUpdateFlowForStaticButton();
+    }
+
+    @Override
+    public void onSettingsFragmentInteractionCheckUpdatesPopUpClicked() {
+        launchInAppUpdateFlowForPopUpDialog();
     }
 
     @Override

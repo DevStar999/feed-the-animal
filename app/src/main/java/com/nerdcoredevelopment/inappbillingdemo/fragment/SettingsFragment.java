@@ -127,7 +127,9 @@ public class SettingsFragment extends Fragment {
         checkUpdatesPopUpLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "Check Updates Pop-Up Clicked", Toast.LENGTH_SHORT).show();
+                if (mListener != null) {
+                    mListener.onSettingsFragmentInteractionCheckUpdatesPopUpClicked();
+                }
             }
         });
         rateUsLinearLayout.setOnClickListener(new View.OnClickListener() {
@@ -289,6 +291,7 @@ public class SettingsFragment extends Fragment {
         void onSettingsFragmentInteractionBackClicked();
         void onSettingsFragmentInteractionRateUsInAppClicked();
         void onSettingsFragmentInteractionCheckUpdatesStaticClicked();
+        void onSettingsFragmentInteractionCheckUpdatesPopUpClicked();
     }
 
     @Override
