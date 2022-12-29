@@ -1,4 +1,4 @@
-package com.nerdcoredevelopment.inappbillingdemo.dialogs;
+package com.nerdcoredevelopment.inappbillingdemo;
 
 import lombok.Getter;
 

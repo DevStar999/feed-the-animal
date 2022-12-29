@@ -19,7 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.nerdcoredevelopment.inappbillingdemo.BuildConfig;
 import com.nerdcoredevelopment.inappbillingdemo.R;
-import com.nerdcoredevelopment.inappbillingdemo.dialogs.RateUsDialogStages;
+import com.nerdcoredevelopment.inappbillingdemo.RateUsDialogStages;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.RateUsPromptDialog;
 
 public class SettingsFragment extends Fragment {

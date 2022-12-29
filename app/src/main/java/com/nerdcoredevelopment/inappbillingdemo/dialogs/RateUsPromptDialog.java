@@ -13,6 +13,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.nerdcoredevelopment.inappbillingdemo.R;
+import com.nerdcoredevelopment.inappbillingdemo.RateUsDialogStages;
 
 public class RateUsPromptDialog extends Dialog {
     private AppCompatTextView rateUsTitleText;
