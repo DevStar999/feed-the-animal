@@ -351,6 +351,7 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onSuccess(AppUpdateInfo appUpdateInfo) {
                 if (!isInternetConnected()) {
+                    // TODO -> This is the error branch, we should handle this with a dialog or something
                     return;
                 }
 
@@ -393,6 +394,7 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onSuccess(AppUpdateInfo appUpdateInfo) {
                 if (!isInternetConnected()) {
+                    // TODO -> This is the error branch, we should handle this with a dialog or something
                     return;
                 }
 
