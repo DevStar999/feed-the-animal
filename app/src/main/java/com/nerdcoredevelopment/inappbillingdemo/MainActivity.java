@@ -8,7 +8,12 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -312,10 +317,43 @@ public class MainActivity extends AppCompatActivity implements
         setupInAppReview();
     }
 
+    private boolean isInternetConnected() {
+        /* TODO -> We may need a better tested out method to correctly check if device is connected to a network and has
+                   internet. We can use the following reference -> "stackoverflow.com/questions/5474089/" +
+                   + "how-to-check-currently-internet-connection-is-available-or-not-in-android"
+        */
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) {
+            return false;
+        }
+        /* NetworkInfo is deprecated in API 29 so we have to check separately for higher API Levels */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            Network network = cm.getActiveNetwork();
+            if (network == null) {
+                return false;
+            }
+            NetworkCapabilities networkCapabilities = cm.getNetworkCapabilities(network);
+            if (networkCapabilities == null) {
+                return false;
+            }
+            boolean isInternetSuspended = !networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_SUSPENDED);
+            return (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                    && networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+                    && !isInternetSuspended);
+        } else {
+            NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+            return networkInfo != null && networkInfo.isConnected();
+        }
+    }
+
     private void launchInAppUpdateFlowForStaticButton() {
         appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<>() {
             @Override
             public void onSuccess(AppUpdateInfo appUpdateInfo) {
+                if (!isInternetConnected()) {
+                    return;
+                }
+
                 int oldVersion = BuildConfig.VERSION_CODE;
                 int newVersion = appUpdateInfo.availableVersionCode();
                 Toast.makeText(MainActivity.this, "oldVersion = " + oldVersion +
@@ -337,15 +375,11 @@ public class MainActivity extends AppCompatActivity implements
                         updateAppStaticAvailableDialog.show();
                     }
                 } else if (oldVersion == newVersion) {
-                    /* We wanted to use this branch to indicate to the user that the app is up to date, but even in the case
-                       when there was no internet the flow entered this branch. The condition used earlier is as follows -
-                       if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_NOT_AVAILABLE)
-                       This condition did not work properly, thus we are using the current condition.
-                     */
+                    // Note: Even in the case when there was no internet we get UpdateAvailability.UPDATE_NOT_AVAILABLE.
+                    // So we made that check earlier
                     new UpdateAppStaticUnavailableDialog(MainActivity.this).show();
                 } else {
-                    // UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS or UpdateAvailability.UNKNOWN are handled
-                    // as follows in this code block
+                    // This is the final error code branch
                     Toast.makeText(MainActivity.this, "UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS or" +
                             " UpdateAvailability.UNKNOWN are handled here", Toast.LENGTH_SHORT).show();
                     // TODO -> This is the error branch, we should handle this with a dialog or something
@@ -358,6 +392,10 @@ public class MainActivity extends AppCompatActivity implements
         appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<>() {
             @Override
             public void onSuccess(AppUpdateInfo appUpdateInfo) {
+                if (!isInternetConnected()) {
+                    return;
+                }
+
                 int oldVersion = BuildConfig.VERSION_CODE;
                 int newVersion = appUpdateInfo.availableVersionCode();
                 Toast.makeText(MainActivity.this, "oldVersion = " + oldVersion +
@@ -377,19 +415,14 @@ public class MainActivity extends AppCompatActivity implements
                             }
                         });
                         updateAppPopUpDialog.show();
-
                     }
                 } else if (oldVersion == newVersion) {
-                    /* We wanted to use this branch to indicate to the user that the app is up to date, but even in the case
-                       when there was no internet the flow entered this branch. The condition used earlier is as follows -
-                       if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_NOT_AVAILABLE)
-                       This condition did not work properly, thus we are using the current condition.
-                     */
                     // TODO -> Remove this else block, as we would only launch this flow only if update is available
+                    // Note: Even in the case when there was no internet we get UpdateAvailability.UPDATE_NOT_AVAILABLE.
+                    // So we made that check earlier
                     new UpdateAppStaticUnavailableDialog(MainActivity.this).show();
                 } else {
-                    // UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS or UpdateAvailability.UNKNOWN are handled
-                    // as follows in this code block
+                    // This is the final error code branch
                     Toast.makeText(MainActivity.this, "UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS or" +
                             " UpdateAvailability.UNKNOWN are handled here", Toast.LENGTH_SHORT).show();
                     // TODO -> This is the error branch, we should handle this with a dialog or something
