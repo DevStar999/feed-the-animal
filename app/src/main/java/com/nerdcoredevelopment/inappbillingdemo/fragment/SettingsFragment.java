@@ -119,7 +119,9 @@ public class SettingsFragment extends Fragment {
         checkUpdatesLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "Check Updates Normal Clicked", Toast.LENGTH_SHORT).show();
+                if (mListener != null) {
+                    mListener.onSettingsFragmentInteractionCheckUpdatesStaticClicked();
+                }
             }
         });
         checkUpdatesPopUpLayout.setOnClickListener(new View.OnClickListener() {
@@ -286,6 +288,7 @@ public class SettingsFragment extends Fragment {
     public interface OnSettingsFragmentInteractionListener {
         void onSettingsFragmentInteractionBackClicked();
         void onSettingsFragmentInteractionRateUsInAppClicked();
+        void onSettingsFragmentInteractionCheckUpdatesStaticClicked();
     }
 
     @Override

@@ -46,13 +46,12 @@ import com.google.android.play.core.install.InstallStateUpdatedListener;
 import com.google.android.play.core.install.model.AppUpdateType;
 import com.google.android.play.core.install.model.InstallStatus;
 import com.google.android.play.core.install.model.UpdateAvailability;
-import com.google.android.play.core.review.ReviewException;
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
-import com.google.android.play.core.review.model.ReviewErrorCode;
 import com.nerdcoredevelopment.inappbillingdemo.MyApplication.OnShowAdCompleteListener;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.GameExitDialog;
+import com.nerdcoredevelopment.inappbillingdemo.dialogs.UpdateAppStaticUnavailableDialog;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.FarmerFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.FeedingFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.InfoFragment;
@@ -62,7 +61,6 @@ import com.nerdcoredevelopment.inappbillingdemo.fragment.ShopFragment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 // TODO -> Handle the error situations of Qonversion
 /* TODO -> Revisit the Qonversion Sample code, when we will implement subscriptions, for the following:
@@ -127,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements
     public static final int UPDATE_REQUEST_CODE = 100;
     private AppUpdateManager appUpdateManager;
     private InstallStateUpdatedListener installStateUpdatedListener;
+    private boolean isUpdateAvailable;
 
     // Attributes required for In app updates feature
     private ReviewManager reviewManager;
@@ -136,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements
         sharedPreferences = getSharedPreferences("com.nerdcoredevelopment.inappbillingdemo", Context.MODE_PRIVATE);
         adRequest = new AdRequest.Builder().build();
         rewardedAdHayUnitsReward = 10;
+        isUpdateAvailable = false;
     }
 
     private void updateHayUnits(int stockLeft) {
@@ -309,11 +309,31 @@ public class MainActivity extends AppCompatActivity implements
             // showAppOpenAd();
         }
 
-        checkInAppUpdate();
+        setupInAppUpdate();
         setupInAppReview();
     }
 
-    private void checkInAppUpdate() {
+    private void launchInAppUpdateFlow() {
+        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<>() {
+            @Override
+            public void onSuccess(AppUpdateInfo appUpdateInfo) {
+                if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
+                    if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+                        try {
+                            appUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.FLEXIBLE,
+                                    MainActivity.this, UPDATE_REQUEST_CODE);
+                        } catch (IntentSender.SendIntentException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else {
+                    new UpdateAppStaticUnavailableDialog(MainActivity.this).show();
+                }
+            }
+        });
+    }
+
+    private void setupInAppUpdate() {
         installStateUpdatedListener = installState -> {
             if (installState.installStatus() == InstallStatus.DOWNLOADED) {
                 popupSnackbarForCompleteUpdate();
@@ -321,20 +341,6 @@ public class MainActivity extends AppCompatActivity implements
         };
         appUpdateManager = AppUpdateManagerFactory.create(this);
         appUpdateManager.registerListener(installStateUpdatedListener);
-        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<>() {
-            @Override
-            public void onSuccess(AppUpdateInfo appUpdateInfo) {
-                if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                        && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
-                    try {
-                        appUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.FLEXIBLE,
-                                MainActivity.this, UPDATE_REQUEST_CODE);
-                    } catch (IntentSender.SendIntentException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
     }
 
     private void popupSnackbarForCompleteUpdate() { // Displays the snackbar notification and call to action.
@@ -681,6 +687,11 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onSettingsFragmentInteractionRateUsInAppClicked() {
         startInAppReviewFlow();
+    }
+
+    @Override
+    public void onSettingsFragmentInteractionCheckUpdatesStaticClicked() {
+        launchInAppUpdateFlow();
     }
 
     @Override
