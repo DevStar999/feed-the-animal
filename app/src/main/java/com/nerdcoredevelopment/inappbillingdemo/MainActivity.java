@@ -127,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements
     public static final int UPDATE_REQUEST_CODE = 100;
     private AppUpdateManager appUpdateManager;
     private InstallStateUpdatedListener installStateUpdatedListener;
-    private boolean isUpdateAvailable;
 
     // Attributes required for In app updates feature
     private ReviewManager reviewManager;
@@ -137,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements
         sharedPreferences = getSharedPreferences("com.nerdcoredevelopment.inappbillingdemo", Context.MODE_PRIVATE);
         adRequest = new AdRequest.Builder().build();
         rewardedAdHayUnitsReward = 10;
-        isUpdateAvailable = false;
     }
 
     private void updateHayUnits(int stockLeft) {
