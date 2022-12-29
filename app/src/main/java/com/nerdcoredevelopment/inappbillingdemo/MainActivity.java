@@ -316,12 +316,14 @@ public class MainActivity extends AppCompatActivity implements
         appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<>() {
             @Override
             public void onSuccess(AppUpdateInfo appUpdateInfo) {
+                int oldVersion = BuildConfig.VERSION_CODE;
+                int newVersion = appUpdateInfo.availableVersionCode();
+                Toast.makeText(MainActivity.this, "oldVersion = " + oldVersion +
+                        ", newVersion = " + newVersion, Toast.LENGTH_SHORT).show();
                 if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
                     if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
-                        String oldVersion = String.valueOf(BuildConfig.VERSION_CODE);
-                        String newVersion = String.valueOf(appUpdateInfo.availableVersionCode());
-                        UpdateAppStaticAvailableDialog updateAppStaticAvailableDialog =
-                                new UpdateAppStaticAvailableDialog(MainActivity.this, oldVersion, newVersion);
+                        UpdateAppStaticAvailableDialog updateAppStaticAvailableDialog = new UpdateAppStaticAvailableDialog(
+                                MainActivity.this, String.valueOf(oldVersion), String.valueOf(newVersion));
                         updateAppStaticAvailableDialog.setUpdateAppStaticAvailableDialogListener(response -> {
                             if (response) {
                                 try {
@@ -334,7 +336,12 @@ public class MainActivity extends AppCompatActivity implements
                         });
                         updateAppStaticAvailableDialog.show();
                     }
-                } else if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_NOT_AVAILABLE) {
+                } else if (oldVersion == newVersion) {
+                    /* We wanted to use this branch to indicate to the user that the app is up to date, but even in the case
+                       when there was no internet the flow entered this branch. The condition used earlier is as follows -
+                       if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_NOT_AVAILABLE)
+                       This condition did not work properly, thus we are using the current condition.
+                     */
                     new UpdateAppStaticUnavailableDialog(MainActivity.this).show();
                 } else {
                     // UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS or UpdateAvailability.UNKNOWN are handled
@@ -351,12 +358,14 @@ public class MainActivity extends AppCompatActivity implements
         appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<>() {
             @Override
             public void onSuccess(AppUpdateInfo appUpdateInfo) {
+                int oldVersion = BuildConfig.VERSION_CODE;
+                int newVersion = appUpdateInfo.availableVersionCode();
+                Toast.makeText(MainActivity.this, "oldVersion = " + oldVersion +
+                        ", newVersion = " + newVersion, Toast.LENGTH_SHORT).show();
                 if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
                     if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
-                        String oldVersion = String.valueOf(BuildConfig.VERSION_CODE);
-                        String newVersion = String.valueOf(appUpdateInfo.availableVersionCode());
                         UpdateAppPopUpDialog updateAppPopUpDialog = new UpdateAppPopUpDialog(MainActivity.this,
-                                oldVersion, newVersion);
+                                String.valueOf(oldVersion), String.valueOf(newVersion));
                         updateAppPopUpDialog.setUpdateAppPopUpDialogListener((response) -> {
                             if (response == UpdateAppPopUpDialogOptions.UPDATE_NOW) {
                                 try {
@@ -368,10 +377,16 @@ public class MainActivity extends AppCompatActivity implements
                             }
                         });
                         updateAppPopUpDialog.show();
+
                     }
-                } else if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_NOT_AVAILABLE) {
+                } else if (oldVersion == newVersion) {
+                    /* We wanted to use this branch to indicate to the user that the app is up to date, but even in the case
+                       when there was no internet the flow entered this branch. The condition used earlier is as follows -
+                       if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_NOT_AVAILABLE)
+                       This condition did not work properly, thus we are using the current condition.
+                     */
                     // TODO -> Remove this else block, as we would only launch this flow only if update is available
-                    Toast.makeText(MainActivity.this, "App already up to date", Toast.LENGTH_SHORT).show();
+                    new UpdateAppStaticUnavailableDialog(MainActivity.this).show();
                 } else {
                     // UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS or UpdateAvailability.UNKNOWN are handled
                     // as follows in this code block
@@ -395,7 +410,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void popupSnackbarForCompleteUpdate() { // Displays the snackbar notification and call to action.
         Snackbar snackbar = Snackbar.make(findViewById(R.id.root_layout_main_activity),
-                "An update has been downloaded.", Snackbar.LENGTH_INDEFINITE);
+                "An update has been downloaded", Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction("INSTALL", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
