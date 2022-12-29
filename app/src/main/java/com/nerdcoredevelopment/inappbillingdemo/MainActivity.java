@@ -305,8 +305,7 @@ public class MainActivity extends AppCompatActivity implements
                 .commit();
 
         if (getIntent().getBooleanExtra("comingFromIntroActivity", false)) {
-            // TODO -> Remove after testing for In-app updates is done
-            // showAppOpenAd();
+            showAppOpenAd();
         }
 
         setupInAppUpdate();
@@ -319,7 +318,8 @@ public class MainActivity extends AppCompatActivity implements
             public void onSuccess(AppUpdateInfo appUpdateInfo) {
                 if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
                     if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
-                        String oldVersion = BuildConfig.VERSION_NAME, newVersion = appUpdateInfo.packageName();
+                        String oldVersion = String.valueOf(BuildConfig.VERSION_CODE);
+                        String newVersion = String.valueOf(appUpdateInfo.availableVersionCode());
                         UpdateAppStaticAvailableDialog updateAppStaticAvailableDialog =
                                 new UpdateAppStaticAvailableDialog(MainActivity.this, oldVersion, newVersion);
                         updateAppStaticAvailableDialog.setUpdateAppStaticAvailableDialogListener(response -> {
@@ -334,8 +334,14 @@ public class MainActivity extends AppCompatActivity implements
                         });
                         updateAppStaticAvailableDialog.show();
                     }
-                } else {
+                } else if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_NOT_AVAILABLE) {
                     new UpdateAppStaticUnavailableDialog(MainActivity.this).show();
+                } else {
+                    // UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS or UpdateAvailability.UNKNOWN are handled
+                    // as follows in this code block
+                    Toast.makeText(MainActivity.this, "UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS or" +
+                            " UpdateAvailability.UNKNOWN are handled here", Toast.LENGTH_SHORT).show();
+                    // TODO -> This is the error branch, we should handle this with a dialog or something
                 }
             }
         });
@@ -347,7 +353,8 @@ public class MainActivity extends AppCompatActivity implements
             public void onSuccess(AppUpdateInfo appUpdateInfo) {
                 if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
                     if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
-                        String oldVersion = BuildConfig.VERSION_NAME, newVersion = appUpdateInfo.packageName();
+                        String oldVersion = String.valueOf(BuildConfig.VERSION_CODE);
+                        String newVersion = String.valueOf(appUpdateInfo.availableVersionCode());
                         UpdateAppPopUpDialog updateAppPopUpDialog = new UpdateAppPopUpDialog(MainActivity.this,
                                 oldVersion, newVersion);
                         updateAppPopUpDialog.setUpdateAppPopUpDialogListener((response) -> {
@@ -362,8 +369,15 @@ public class MainActivity extends AppCompatActivity implements
                         });
                         updateAppPopUpDialog.show();
                     }
-                } else { // TODO -> Remove this else block, as we would only launch this flow only if update is available
+                } else if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_NOT_AVAILABLE) {
+                    // TODO -> Remove this else block, as we would only launch this flow only if update is available
                     Toast.makeText(MainActivity.this, "App already up to date", Toast.LENGTH_SHORT).show();
+                } else {
+                    // UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS or UpdateAvailability.UNKNOWN are handled
+                    // as follows in this code block
+                    Toast.makeText(MainActivity.this, "UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS or" +
+                            " UpdateAvailability.UNKNOWN are handled here", Toast.LENGTH_SHORT).show();
+                    // TODO -> This is the error branch, we should handle this with a dialog or something
                 }
             }
         });

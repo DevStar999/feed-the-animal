@@ -53,6 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="12dp"
+        android:layout_marginHorizontal="16dp"
         android:orientation="horizontal"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@id/update_app_pop_up_dialog_text"
@@ -65,7 +66,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="Update Version: "
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -127,7 +127,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/update_app_pop_up_dialog_remind_later"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_marginEnd="4dp"
                 android:background="@drawable/click_dialog_buttons"
                 android:letterSpacing="0.04"
@@ -142,7 +142,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/update_app_pop_up_dialog_skip_version"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_marginStart="4dp"
                 android:background="@drawable/click_dialog_buttons"
                 android:letterSpacing="0.04"
@@ -159,7 +159,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/update_app_pop_up_dialog_update_now"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:background="@drawable/click_dialog_buttons"
