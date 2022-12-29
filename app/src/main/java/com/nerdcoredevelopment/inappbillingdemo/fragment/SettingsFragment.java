@@ -37,6 +37,8 @@ public class SettingsFragment extends Fragment {
     private LinearLayout facebookLinearLayout;
     private LinearLayout instagramLinearLayout;
     private LinearLayout twitterLinearLayout;
+    private LinearLayout checkUpdatesLayout;
+    private LinearLayout checkUpdatesPopUpLayout;
     private LinearLayout rateUsLinearLayout;
     private LinearLayout rateUsInAppLinearLayout;
     private LinearLayout feedbackLinearLayout;
@@ -112,6 +114,18 @@ public class SettingsFragment extends Fragment {
                     startActivity(new Intent(Intent.ACTION_VIEW,
                             Uri.parse("http://twitter.com/#!/" + TWITTER_USERNAME)));
                 }
+            }
+        });
+        checkUpdatesLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "Check Updates Normal Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+        checkUpdatesPopUpLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "Check Updates Pop-Up Clicked", Toast.LENGTH_SHORT).show();
             }
         });
         rateUsLinearLayout.setOnClickListener(new View.OnClickListener() {
@@ -257,6 +271,8 @@ public class SettingsFragment extends Fragment {
         facebookLinearLayout = view.findViewById(R.id.facebook_linear_layout);
         instagramLinearLayout = view.findViewById(R.id.instagram_linear_layout);
         twitterLinearLayout = view.findViewById(R.id.twitter_linear_layout);
+        checkUpdatesLayout = view.findViewById(R.id.check_updates_linear_layout);
+        checkUpdatesPopUpLayout = view.findViewById(R.id.check_updates_pop_up_linear_layout);
         rateUsLinearLayout = view.findViewById(R.id.rate_us_linear_layout);
         rateUsInAppLinearLayout = view.findViewById(R.id.rate_us_in_app_linear_layout);
         feedbackLinearLayout = view.findViewById(R.id.feedback_linear_layout);

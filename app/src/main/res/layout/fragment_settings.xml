@@ -170,6 +170,64 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/check_updates_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/click_settings_button"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/check_updates_icon_image_view"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="12dp"
+                app:srcCompat="@drawable/settings_check_updates_icon" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/check_updates_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Check Updates"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/check_updates_pop_up_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/click_settings_button"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/check_updates_pop_up_icon_image_view"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="12dp"
+                app:srcCompat="@drawable/settings_check_updates_icon" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/check_updates_pop_up_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Check Updates (Pop-Up)"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/rate_us_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
