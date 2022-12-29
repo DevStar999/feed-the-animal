@@ -51,6 +51,7 @@ import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.nerdcoredevelopment.inappbillingdemo.MyApplication.OnShowAdCompleteListener;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.GameExitDialog;
+import com.nerdcoredevelopment.inappbillingdemo.dialogs.UpdateAppStaticAvailableDialog;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.UpdateAppStaticUnavailableDialog;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.FarmerFragment;
 import com.nerdcoredevelopment.inappbillingdemo.fragment.FeedingFragment;
@@ -319,12 +320,20 @@ public class MainActivity extends AppCompatActivity implements
             public void onSuccess(AppUpdateInfo appUpdateInfo) {
                 if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
                     if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
-                        try {
-                            appUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.FLEXIBLE,
-                                    MainActivity.this, UPDATE_REQUEST_CODE);
-                        } catch (IntentSender.SendIntentException e) {
-                            e.printStackTrace();
-                        }
+                        String oldVersion = BuildConfig.VERSION_NAME, newVersion = appUpdateInfo.packageName();
+                        UpdateAppStaticAvailableDialog updateAppStaticAvailableDialog =
+                                new UpdateAppStaticAvailableDialog(MainActivity.this, oldVersion, newVersion);
+                        updateAppStaticAvailableDialog.setUpdateAppStaticAvailableDialogListener(response -> {
+                            if (response) {
+                                try {
+                                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.FLEXIBLE,
+                                            MainActivity.this, UPDATE_REQUEST_CODE);
+                                } catch (IntentSender.SendIntentException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        updateAppStaticAvailableDialog.show();
                     }
                 } else {
                     new UpdateAppStaticUnavailableDialog(MainActivity.this).show();

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="489.57"
+    android:viewportHeight="489.57">
+    <!-- Source Link = https://www.svgrepo.com/svg/23663/right-arrow -->
+
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M486.48,239.82l-181.28,-89.59c-2.25,-1.11 -4.96,-0.57 -6.62,1.32c-1.65,1.89 -1.82,4.65 -0.42,6.73l26.86,39.86H46.64c-25.76,0 -46.64,20.88 -46.64,46.64c0,25.76 20.88,46.64 46.64,46.64h278.39l-26.86,39.86c-1.4,2.08 -1.23,4.85 0.42,6.73c1.66,1.9 4.37,2.43 6.62,1.32l181.28,-89.59c1.89,-0.94 3.08,-2.86 3.08,-4.96C489.57,242.68 488.37,240.76 486.48,239.82z" />
+</vector>

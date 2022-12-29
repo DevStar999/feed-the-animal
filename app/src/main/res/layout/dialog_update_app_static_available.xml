@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="325dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/dialog_background_dark"
+    android:paddingHorizontal="8dp"
+    android:paddingVertical="24dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/update_app_static_available_dialog_title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:letterSpacing="0.04"
+        android:text="UPDATE AVAILABLE"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:scrollHorizontally="false"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/update_app_static_available_dialog_lottie"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/update_app_static_available_dialog_versions_linear_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="12dp"
+        android:orientation="horizontal"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/update_app_static_available_dialog_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/update_app_static_available_dialog_lottie">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/update_app_static_available_dialog_versions_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_gravity="center_vertical"
+            app:srcCompat="@drawable/update_version_arrow" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/update_app_static_available_dialog_versions_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- Lottie Animation Link = https://lottiefiles.com/103689-rate-us -->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/update_app_static_available_dialog_lottie"
+        android:layout_width="100dp"
+        android:layout_height="125dp"
+        android:layout_marginVertical="8dp"
+        android:visibility="invisible"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:lottie_clipToCompositionBounds="true"
+        app:layout_constraintBottom_toTopOf="@id/update_app_static_available_dialog_versions_linear_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/update_app_static_available_dialog_title_text"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/update_now"
+        app:lottie_repeatCount="6"
+        app:lottie_speed="2"
+        app:lottie_repeatMode="restart" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/update_app_static_available_dialog_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:paddingHorizontal="24dp"
+        android:letterSpacing="0.04"
+        android:text="[ You can playing the game while the update downloads in the background ]"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:scrollHorizontally="false"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/update_app_static_available_dialog_buttons_linear_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/update_app_static_available_dialog_versions_linear_layout" />
+
+    <LinearLayout
+        android:id="@+id/update_app_static_available_dialog_buttons_linear_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/update_app_static_available_dialog_text">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/update_app_static_available_dialog_no_thanks"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="8dp"
+            android:background="@drawable/click_dialog_buttons"
+            android:letterSpacing="0.04"
+            android:maxEms="10"
+            android:minEms="6"
+            android:padding="10dp"
+            android:text="NO, THANKS"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/update_app_static_available_dialog_update_now"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="8dp"
+            android:background="@drawable/click_dialog_buttons"
+            android:letterSpacing="0.04"
+            android:maxEms="10"
+            android:minEms="6"
+            android:padding="10dp"
+            android:text="UPDATE NOW"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
