@@ -79,9 +79,8 @@ import java.util.List;
            integrate Firebase with Qonversion, remember any Qonversion integrations will cost us money, so be mindful of it]
 */
 /* TODO -> [Implement this TODO later on, when we reach the point where we want to implement subscriptions in the
-           '2048 Champs' app]
-           We make do some create our own push-notifications regarding subscriptions using Qonversion data which we get in
-           code.
+           '2048 Champs' app] We make do some create our own push-notifications regarding subscriptions using Qonversion
+           data which we get in code.
 */
 /* TODO -> Set a max retry count & mechanism for the loading of things like any type of Ads; Qonversion offerings,
            permissions etc.
@@ -89,9 +88,6 @@ import java.util.List;
 /* TODO -> How to handle the situation when we change prices of the IAPs from Google Play Console without creating new
            products. We may need to think about this if we later decided that we don't want to load fresh prices and IAP
            related details from Qonversion and want to use some effective implementation of local storage.
-*/
-/* TODO -> Also follow up on the 2nd set of questions on Qonversion, which we had written on board and have a clicked a photo
-           of i.e. implement the code related to it
 */
 /* TODO -> A purchase for hay units was made from this app for product id - hay_level3_v3 with the order id as follows -
            Order Id -> GPA.3339-7215-5645-79887
@@ -114,7 +110,6 @@ import java.util.List;
            'Order Ids' and/or 'Purchase Tokens' by using methods of queryPurchaseHistoryAsync() or queryPurchaseAsync() from
            original Google Billing Library
 */
-// TODO -> Implement Google Play Games Services (GPGS) to this project
 public class MainActivity extends AppCompatActivity implements
         InfoFragment.OnInfoFragmentInteractionListener,
         NavigationFragment.OnNavigationFragmentInteractionListener,
