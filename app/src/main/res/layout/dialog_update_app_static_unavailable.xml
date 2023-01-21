@@ -27,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Lottie Animation Link = https://lottiefiles.com/103689-rate-us -->
+    <!-- Lottie Animation Link = https://lottiefiles.com/70563-green-tick -->
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/update_app_static_unavailable_dialog_lottie"
         android:layout_width="150dp"

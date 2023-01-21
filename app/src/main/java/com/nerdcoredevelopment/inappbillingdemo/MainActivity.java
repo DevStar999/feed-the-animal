@@ -41,6 +41,7 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -55,6 +56,7 @@ import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.nerdcoredevelopment.inappbillingdemo.MyApplication.OnShowAdCompleteListener;
+import com.nerdcoredevelopment.inappbillingdemo.dialogs.ErrorOccurredDialog;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.GameExitDialog;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.UpdateAppPopUpDialog;
 import com.nerdcoredevelopment.inappbillingdemo.dialogs.UpdateAppStaticAvailableDialog;
@@ -332,20 +334,24 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void launchInAppUpdateFlowForStaticButton() {
+        if (!isInternetConnected()) {
+            /* Using a feel right as of now. Since, the user may repeatedly press this button it isn't wise to show a dialog
+               for prompting the user to check their internet connection
+             */
+            Toast.makeText(MainActivity.this, "Network connection failed. Please check " +
+                    "internet connectivity", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<>() {
             @Override
             public void onSuccess(AppUpdateInfo appUpdateInfo) {
-                if (!isInternetConnected()) {
-                    // TODO -> This is the error branch, we should handle this with a dialog or something
-                    return;
-                }
-
                 int oldVersion = BuildConfig.VERSION_CODE;
                 int newVersion = appUpdateInfo.availableVersionCode();
                 if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
                     if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
-                        UpdateAppStaticAvailableDialog updateAppStaticAvailableDialog = new UpdateAppStaticAvailableDialog(
-                                MainActivity.this, String.valueOf(oldVersion), String.valueOf(newVersion));
+                        UpdateAppStaticAvailableDialog updateAppStaticAvailableDialog =
+                                new UpdateAppStaticAvailableDialog(MainActivity.this);
                         updateAppStaticAvailableDialog.setUpdateAppStaticAvailableDialogListener(response -> {
                             if (response) {
                                 try {
@@ -364,21 +370,30 @@ public class MainActivity extends AppCompatActivity implements
                     new UpdateAppStaticUnavailableDialog(MainActivity.this).show();
                 } else {
                     // This is the final error code branch
-                    // TODO -> This is the error branch, we should handle this with a dialog or something
+                    new ErrorOccurredDialog(MainActivity.this, "Oops! Something went wrong").show();
                 }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                new ErrorOccurredDialog(MainActivity.this, "Oops! Something went wrong").show();
             }
         });
     }
 
     private void launchInAppUpdateFlowForPopUpDialog() {
+        if (!isInternetConnected()) {
+            /* Using a feel right as of now. Since, the user may repeatedly press this button it isn't wise to show a dialog
+               for prompting the user to check their internet connection
+             */
+            Toast.makeText(MainActivity.this, "Network connection failed. Please check " +
+                    "internet connectivity", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<>() {
             @Override
             public void onSuccess(AppUpdateInfo appUpdateInfo) {
-                if (!isInternetConnected()) {
-                    // TODO -> This is the error branch, we should handle this with a dialog or something
-                    return;
-                }
-
                 int oldVersion = BuildConfig.VERSION_CODE;
                 int newVersion = appUpdateInfo.availableVersionCode();
                 if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
@@ -404,8 +419,13 @@ public class MainActivity extends AppCompatActivity implements
                     new UpdateAppStaticUnavailableDialog(MainActivity.this).show();
                 } else {
                     // This is the final error code branch
-                    // TODO -> This is the error branch, we should handle this with a dialog or something
+                    new ErrorOccurredDialog(MainActivity.this, "Oops! Something went wrong").show();
                 }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                new ErrorOccurredDialog(MainActivity.this, "Oops! Something went wrong").show();
             }
         });
     }

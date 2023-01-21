@@ -27,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Lottie Animation Link = https://lottiefiles.com/103689-rate-us -->
+    <!-- Lottie Animation Link = https://lottiefiles.com/90060-maintanance-and-update -->
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/update_app_pop_up_dialog_lottie"
         android:layout_width="100dp"

@@ -17,9 +17,6 @@ import com.nerdcoredevelopment.inappbillingdemo.R;
 public class UpdateAppStaticAvailableDialog extends Dialog {
     private AppCompatTextView updateAppStaticAvailableTitleText;
     private LottieAnimationView updateAppStaticAvailableLottie;
-    private LinearLayout updateAppStaticAvailableVersionLinearLayout;
-    private AppCompatTextView updateVersionStartTextView;
-    private AppCompatTextView updateVersionEndTextView;
     private AppCompatTextView updateAppStaticAvailableText;
     private LinearLayout updateAppStaticAvailableButtonsLinearLayout;
     private AppCompatButton updateAppStaticAvailableNoThanks;
@@ -29,9 +26,6 @@ public class UpdateAppStaticAvailableDialog extends Dialog {
     private void initialise() {
         updateAppStaticAvailableTitleText = findViewById(R.id.update_app_static_available_dialog_title_text);
         updateAppStaticAvailableLottie = findViewById(R.id.update_app_static_available_dialog_lottie);
-        updateAppStaticAvailableVersionLinearLayout = findViewById(R.id.update_app_static_available_dialog_versions_linear_layout);
-        updateVersionStartTextView = findViewById(R.id.update_app_static_available_dialog_versions_start);
-        updateVersionEndTextView = findViewById(R.id.update_app_static_available_dialog_versions_end);
         updateAppStaticAvailableText = findViewById(R.id.update_app_static_available_dialog_text);
         updateAppStaticAvailableButtonsLinearLayout = findViewById(R.id.update_app_static_available_dialog_buttons_linear_layout);
         updateAppStaticAvailableNoThanks = findViewById(R.id.update_app_static_available_dialog_no_thanks);
@@ -41,18 +35,15 @@ public class UpdateAppStaticAvailableDialog extends Dialog {
     private void setVisibilityOfViews(int visibility) {
         updateAppStaticAvailableTitleText.setVisibility(visibility);
         updateAppStaticAvailableLottie.setVisibility(visibility);
-        updateAppStaticAvailableVersionLinearLayout.setVisibility(visibility);
         updateAppStaticAvailableText.setVisibility(visibility);
         updateAppStaticAvailableButtonsLinearLayout.setVisibility(visibility);
     }
 
-    public UpdateAppStaticAvailableDialog(@NonNull Context context, String oldVersion, String newVersion) {
+    public UpdateAppStaticAvailableDialog(@NonNull Context context) {
         super(context, R.style.CustomDialogTheme);
         setContentView(R.layout.dialog_update_app_static_available);
 
         initialise();
-        updateVersionStartTextView.setText("Update Version: " + oldVersion);
-        updateVersionEndTextView.setText(newVersion);
 
         updateAppStaticAvailableNoThanks.setOnClickListener(new View.OnClickListener() {
             @Override

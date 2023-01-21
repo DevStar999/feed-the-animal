@@ -27,48 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/update_app_static_available_dialog_versions_linear_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="12dp"
-        android:layout_marginHorizontal="16dp"
-        android:orientation="horizontal"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@id/update_app_static_available_dialog_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/update_app_static_available_dialog_lottie">
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/update_app_static_available_dialog_versions_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginHorizontal="8dp"
-            android:layout_gravity="center_vertical"
-            app:srcCompat="@drawable/update_version_arrow" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/update_app_static_available_dialog_versions_end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-    <!-- Lottie Animation Link = https://lottiefiles.com/103689-rate-us -->
+    <!-- Lottie Animation Link = https://lottiefiles.com/90060-maintanance-and-update -->
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/update_app_static_available_dialog_lottie"
         android:layout_width="100dp"
@@ -78,7 +37,7 @@
         android:scaleX="1.5"
         android:scaleY="1.5"
         app:lottie_clipToCompositionBounds="true"
-        app:layout_constraintBottom_toTopOf="@id/update_app_static_available_dialog_versions_linear_layout"
+        app:layout_constraintBottom_toTopOf="@id/update_app_static_available_dialog_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/update_app_static_available_dialog_title_text"
@@ -107,7 +66,7 @@
         app:layout_constraintBottom_toTopOf="@id/update_app_static_available_dialog_buttons_linear_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/update_app_static_available_dialog_versions_linear_layout" />
+        app:layout_constraintTop_toBottomOf="@id/update_app_static_available_dialog_lottie" />
 
     <LinearLayout
         android:id="@+id/update_app_static_available_dialog_buttons_linear_layout"
