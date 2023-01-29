@@ -87,7 +87,11 @@ public class FeedingFragment extends Fragment {
         }
     }
 
-    private void checkAnimalAccessPermissions() {
+    private void checkAnimalAccessPermissions(int retryAttemptCount) {
+        if (retryAttemptCount >= 10) {
+            return;
+        }
+
         Qonversion.checkPermissions(new QonversionPermissionsCallback() {
             @Override
             public void onSuccess(@NotNull Map<String, QPermission> permissions) {
@@ -95,7 +99,7 @@ public class FeedingFragment extends Fragment {
             }
             @Override
             public void onError(@NotNull QonversionError error) {
-                checkAnimalAccessPermissions();
+                checkAnimalAccessPermissions(retryAttemptCount + 1);
             }
         });
     }
@@ -131,7 +135,7 @@ public class FeedingFragment extends Fragment {
                     "zebraIsSelected"));
         }};
 
-        checkAnimalAccessPermissions();
+        checkAnimalAccessPermissions(0);
     }
 
     private void settingsAnimalOptions() {

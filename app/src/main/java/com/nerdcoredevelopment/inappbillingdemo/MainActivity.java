@@ -84,8 +84,8 @@ import java.util.List;
            '2048 Champs' app] We make do some create our own push-notifications regarding subscriptions using Qonversion
            data which we get in code.
 */
-/* TODO -> Set a max retry count & mechanism for the loading of things like any type of Ads; Qonversion offerings,
-           permissions etc.
+/* TODO -> Set a max retry count & mechanism for the loading of things like any type of Ads etc.
+           [Update - Completed the implementation of max retry count & mechanism for Qonversion related code]
 */
 /* TODO -> How to handle the situation when we change prices of the IAPs from Google Play Console without creating new
            products. We may need to think about this if we later decided that we don't want to load fresh prices and IAP

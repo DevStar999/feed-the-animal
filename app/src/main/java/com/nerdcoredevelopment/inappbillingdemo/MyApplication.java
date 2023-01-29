@@ -38,7 +38,11 @@ public class MyApplication extends Application implements Application.ActivityLi
     private AppOpenAdManager appOpenAdManager;
     private Activity currentActivity;
 
-    private void initialiseQonversion() {
+    private void initialiseQonversion(int retryAttemptCount) {
+        if (retryAttemptCount >= 10) {
+            return;
+        }
+
         // Qonversion.setDebugMode(); /* Always have this line commented out, un-comment only while testing */
         Qonversion.launch(this, "eEQe63QkAlB2XQZVUKLkUoHAFdudfVQ5",
             false, new QonversionLaunchCallback() {
@@ -46,7 +50,7 @@ public class MyApplication extends Application implements Application.ActivityLi
                 public void onSuccess(@NonNull QLaunchResult qLaunchResult) {}
                 @Override
                 public void onError(@NonNull QonversionError qonversionError) {
-                    initialiseQonversion();
+                    initialiseQonversion(retryAttemptCount + 1);
                 }
             }
         );
@@ -57,7 +61,7 @@ public class MyApplication extends Application implements Application.ActivityLi
         super.onCreate();
         this.registerActivityLifecycleCallbacks(this);
 
-        initialiseQonversion();
+        initialiseQonversion(0);
 
         RequestConfiguration requestConfiguration = MobileAds.getRequestConfiguration().toBuilder()
                 .setTagForChildDirectedTreatment(TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE)

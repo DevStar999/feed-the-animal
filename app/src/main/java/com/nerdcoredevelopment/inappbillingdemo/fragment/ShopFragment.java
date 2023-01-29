@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -82,7 +83,13 @@ public class ShopFragment extends Fragment {
         });
     }
 
-    private void loadItemPrices() {
+    private void loadItemPrices(int retryAttemptCount) {
+        if (retryAttemptCount >= 10) {
+            Toast.makeText(context, "Network connection failed. Please check Internet connectivity",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
         Qonversion.offerings(new QonversionOfferingsCallback() {
             @Override
             public void onSuccess(@NotNull QOfferings offerings) {
@@ -108,7 +115,7 @@ public class ShopFragment extends Fragment {
             }
             @Override
             public void onError(@NotNull QonversionError error) {
-                loadItemPrices();
+                loadItemPrices(retryAttemptCount + 1);
             }
         });
     }
@@ -151,7 +158,7 @@ public class ShopFragment extends Fragment {
 
         settingOnClickListeners();
 
-        loadItemPrices();
+        loadItemPrices(0);
 
         return view;
     }
