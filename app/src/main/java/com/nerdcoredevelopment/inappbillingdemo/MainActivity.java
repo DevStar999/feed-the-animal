@@ -87,10 +87,6 @@ import java.util.List;
 /* TODO -> Set a max retry count & mechanism for the loading of things like any type of Ads etc.
            [Update - Completed the implementation of max retry count & mechanism for Qonversion related code]
 */
-/* TODO -> How to handle the situation when we change prices of the IAPs from Google Play Console without creating new
-           products. We may need to think about this if we later decided that we don't want to load fresh prices and IAP
-           related details from Qonversion and want to use some effective implementation of local storage.
-*/
 /* TODO -> A purchase for hay units was made from this app for product id - hay_level3_v3 with the order id as follows -
            Order Id -> GPA.3339-7215-5645-79887
            # What happened during the purchase -> Clicked on option and went to PhonePe to make the purchase. Entered the UPI
