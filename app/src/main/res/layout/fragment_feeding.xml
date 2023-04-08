@@ -388,11 +388,11 @@
         android:id="@+id/post_feeding_message_left"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginVertical="24dp"
         android:layout_marginHorizontal="4dp"
+        android:layout_marginVertical="24dp"
+        android:background="@drawable/rounded_corner_post_feeding_message"
         android:paddingHorizontal="8dp"
         android:visibility="invisible"
-        android:background="@drawable/rounded_corner_post_feeding_message"
         app:layout_constraintBottom_toBottomOf="@id/horizontal_guide_bottom_1_feeding_fragment"
         app:layout_constraintEnd_toEndOf="@id/vertical_guide_left_2_feeding_fragment"
         app:layout_constraintStart_toStartOf="@id/vertical_guide_left_1_feeding_fragment"
@@ -401,16 +401,16 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:scrollHorizontally="false"
             android:text="Yum! This is good!"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="normal"
-            android:scrollHorizontally="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -418,11 +418,11 @@
         android:id="@+id/post_feeding_message_right"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginVertical="24dp"
         android:layout_marginHorizontal="4dp"
+        android:layout_marginVertical="24dp"
+        android:background="@drawable/rounded_corner_post_feeding_message"
         android:paddingHorizontal="8dp"
         android:visibility="invisible"
-        android:background="@drawable/rounded_corner_post_feeding_message"
         app:layout_constraintBottom_toBottomOf="@id/horizontal_guide_bottom_1_feeding_fragment"
         app:layout_constraintEnd_toEndOf="@id/vertical_guide_right_1_feeding_fragment"
         app:layout_constraintStart_toStartOf="@id/vertical_guide_right_2_feeding_fragment"
@@ -431,16 +431,16 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:scrollHorizontally="false"
             android:text="Thank you for feeding me!"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="normal"
-            android:scrollHorizontally="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -508,10 +508,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:visibility="invisible"
             android:background="@drawable/click_display"
             android:orientation="horizontal"
-            android:padding="12dp">
+            android:padding="12dp"
+            android:visibility="invisible">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/rewarded_ad_text_view_start_feeding_fragment"
@@ -561,10 +561,10 @@
         android:paddingVertical="15dp"
         android:scrollHorizontally="false"
         android:text="FEED ANIMAL"
+        android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="15sp"
         android:textStyle="bold"
-        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

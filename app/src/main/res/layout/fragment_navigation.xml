@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -27,8 +26,8 @@
             android:id="@+id/feed_animals_text_view_navigation_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
             android:background="@drawable/click_navigation_button"
+            android:padding="16dp"
             android:text="FEED ANIMALS"
             android:textAlignment="center"
             android:textColor="@color/white"
@@ -39,21 +38,21 @@
             android:id="@+id/meet_the_farmer_text_view_navigation_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
             android:background="@drawable/click_navigation_button"
-            android:visibility="gone"
+            android:padding="16dp"
             android:text="MEET THE FARMER"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:textStyle="normal" />
+            android:textStyle="normal"
+            android:visibility="gone" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/shop_feed_text_view_navigation_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
             android:background="@drawable/click_navigation_button"
+            android:padding="16dp"
             android:text="SHOP FEED"
             android:textAlignment="center"
             android:textColor="@color/white"
@@ -64,8 +63,8 @@
             android:id="@+id/settings_text_view_navigation_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
             android:background="@drawable/click_navigation_button"
+            android:padding="16dp"
             android:text="SETTINGS"
             android:textAlignment="center"
             android:textColor="@color/white"
